@@ -143,10 +143,23 @@
   <div class="sec-hdr">Danh sách kế hoạch hôm nay</div>
   <div id="plan-task-list"></div>
 
-  <!-- QR button -->
-  <div style="margin-top:16px;display:flex;gap:8px">
-    <button class="btn btn-primary" id="btn-show-qr" style="flex:2">
-      📲 Tạo QR cho công nhân
+  <!-- Share plan + QR buttons -->
+  <div style="margin-top:16px;display:grid;gap:8px">
+    <button class="btn btn-success" id="btn-send-zalo">
+      💬 Gửi kế hoạch qua Zalo
+    </button>
+    <button class="btn btn-outline full" id="btn-show-qr">
+      📲 QR cố định cho công nhân
+    </button>
+  </div>
+
+  <!-- Share URL fallback (hidden until needed) -->
+  <div id="share-url-wrap" style="display:none;margin-top:10px">
+    <textarea id="share-url-text" readonly
+      style="width:100%;padding:8px;border:1.5px solid #e2e8f0;border-radius:6px;
+             font-size:11px;color:#475569;height:80px;resize:none"></textarea>
+    <button class="btn btn-outline full btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('share-url-text').value).then(()=>toast('📋 Đã copy!'))">
+      📋 Copy để gửi Zalo
     </button>
   </div>
 </div>
@@ -196,16 +209,18 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════ -->
-<!-- QR MODAL                                       -->
+<!-- QR MODAL — QR cố định theo công nhân          -->
 <!-- ═══════════════════════════════════════════════ -->
 <div class="modal-overlay hidden" id="qr-modal" onclick="if(event.target===this)closeQR()">
-  <div class="modal-box">
-    <h3>📲 QR Kế hoạch hôm nay</h3>
-    <div class="modal-sub">Công nhân quét QR này bằng điện thoại</div>
-    <canvas id="qr-canvas" width="220" height="220"></canvas>
-    <div class="modal-url" id="qr-url-text"></div>
-    <div class="btn-row">
-      <button class="btn btn-outline btn-sm" id="btn-copy-link">📋 Copy link</button>
+  <div class="modal-box" style="max-width:380px;max-height:85vh;overflow-y:auto">
+    <h3 id="qr-modal-title">📲 QR cố định cho công nhân</h3>
+    <div class="modal-sub" id="qr-modal-sub">In ra hoặc gửi 1 lần. Họ quét để cài app.</div>
+
+    <!-- 5 QR codes, mỗi người 1 cái -->
+    <div id="worker-qrs" style="display:grid;grid-template-columns:1fr 1fr;gap:4px"></div>
+
+    <div class="btn-row" style="margin-top:12px">
+      <button class="btn btn-outline btn-sm" id="btn-copy-worker-links">📋 Copy tất cả link</button>
       <button class="btn btn-outline btn-sm" id="btn-close-qr">✕ Đóng</button>
     </div>
   </div>

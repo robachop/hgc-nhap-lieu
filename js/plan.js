@@ -164,35 +164,118 @@ function onPlanDateChange() {
   renderPlanStats();
 }
 
-// ── Generate QR ──────────────────────────────────────────────
-function showQR() {
+// ── Compact plan encoding (chỉ dữ liệu cần thiết) ────────────
+function encodePlan(plan) {
+  const compact = {
+    d: plan.date,
+    t: plan.tasks.map(t => ({
+      i: t.id, c: t.be_cap||'', l: t.lsx, n: t.be_nhan,
+      q: t.luong_dk||0, p: t.nguoi, g: t.ghi_chu||''
+    }))
+  };
+  return encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(compact)))));
+}
+
+function decodePlan(encoded) {
+  const compact = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(encoded)))));
+  return {
+    date: compact.d,
+    tasks: compact.t.map(t => {
+      const info = LSX_DATA[t.l] || {};
+      return { id:t.i, be_cap:t.c, lsx:t.l, mo_ta:info.mo_ta||t.l,
+               dvt:info.dvt||'', cong:info.cong||5,
+               be_nhan:t.n, luong_dk:t.q, nguoi:t.p, ghi_chu:t.g };
+    })
+  };
+}
+
+// ── Gửi kế hoạch qua Zalo ────────────────────────────────────
+function sendPlanZalo() {
   if (!editingPlan || editingPlan.tasks.length === 0) {
-    toast('⚠️ Chưa có task nào để tạo QR'); return;
+    toast('⚠️ Chưa có task nào'); return;
   }
   editingPlan.date = document.getElementById('plan-date').value;
   savePlan(editingPlan);
 
-  const encoded = encodeURIComponent(btoa(JSON.stringify(editingPlan)));
-  const base = location.origin + '/hgc-nhap-lieu/';
-  const url  = base + '?plan=' + encoded;
+  const encoded = encodePlan(editingPlan);
+  const base    = 'https://robachop.github.io/hgc-nhap-lieu/';
+  const url     = base + '?plan=' + encoded;
+  const msg     = `📋 Kế hoạch HGC ${fmtDate(editingPlan.date)} (${editingPlan.tasks.length} task)\nMở link để xem việc của bạn:\n${url}`;
 
-  document.getElementById('qr-url-text').textContent = url;
+  if (navigator.share) {
+    navigator.share({ title: 'Kế hoạch HGC ' + fmtDate(editingPlan.date), text: msg })
+      .catch(() => fallbackCopy(url, msg));
+  } else {
+    fallbackCopy(url, msg);
+  }
+}
 
-  const canvas = document.getElementById('qr-canvas');
-  QRCode.toCanvas(canvas, url, { width: 220, margin: 2, color: { dark:'#0f172a', light:'#ffffff' } },
-    err => { if (err) toast('❌ Lỗi tạo QR: ' + err.message); }
-  );
+function fallbackCopy(url, msg) {
+  navigator.clipboard.writeText(msg)
+    .then(() => toast('📋 Đã copy! Dán vào Zalo gửi công nhân'))
+    .catch(() => {
+      // Last resort: show the URL
+      document.getElementById('share-url-wrap').style.display = 'block';
+      document.getElementById('share-url-text').value = msg;
+    });
+}
 
-  document.getElementById('qr-modal').classList.remove('hidden');
+// ── QR cố định cho từng công nhân ────────────────────────────
+function showWorkerQRs() {
+  const modal = document.getElementById('qr-modal');
+  const base  = 'https://robachop.github.io/hgc-nhap-lieu/';
+  const wrap  = document.getElementById('worker-qrs');
+  wrap.innerHTML = '';
+
+  WORKERS.forEach(name => {
+    const url = base + '?worker=' + name;
+    const div = document.createElement('div');
+    div.style.cssText = 'text-align:center;padding:8px 0;border-bottom:1px solid #e2e8f0';
+
+    const label = document.createElement('div');
+    label.style.cssText = 'font-weight:700;font-size:14px;margin-bottom:6px';
+    label.textContent = '👷 ' + name;
+    div.appendChild(label);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 150; canvas.height = 150;
+    div.appendChild(canvas);
+
+    const urlEl = document.createElement('div');
+    urlEl.style.cssText = 'font-size:9px;color:#94a3b8;word-break:break-all;margin:4px 0 2px';
+    urlEl.textContent = url;
+    div.appendChild(urlEl);
+
+    const copyBtn = document.createElement('button');
+    copyBtn.textContent = '📋 Copy link';
+    copyBtn.style.cssText = 'font-size:11px;padding:4px 10px;border:1px solid #e2e8f0;border-radius:5px;background:#fff;cursor:pointer;margin-top:2px';
+    copyBtn.onclick = () => navigator.clipboard.writeText(url).then(() => { copyBtn.textContent = '✅ Đã copy!'; setTimeout(() => copyBtn.textContent='📋 Copy link', 1500); });
+    div.appendChild(copyBtn);
+
+    wrap.appendChild(div);
+
+    if (typeof QRCode !== 'undefined') {
+      QRCode.toCanvas(canvas, url, { width: 150, margin: 1,
+        color: { dark:'#0f172a', light:'#ffffff' } }, () => {});
+    } else {
+      canvas.getContext('2d').fillText('QR N/A', 10, 75);
+    }
+  });
+
+  document.getElementById('qr-modal-title').textContent = '📲 QR cố định cho công nhân';
+  document.getElementById('qr-modal-sub').textContent   = 'In ra hoặc gửi cho từng người 1 lần. Họ quét để cài app.';
+  modal.classList.remove('hidden');
 }
 
 function closeQR() {
   document.getElementById('qr-modal').classList.add('hidden');
 }
 
-function copyQRLink() {
-  const url = document.getElementById('qr-url-text').textContent;
-  navigator.clipboard.writeText(url).then(() => toast('📋 Đã copy link'));
+function copyWorkerLinks() {
+  const base  = 'https://robachop.github.io/hgc-nhap-lieu/';
+  const links = WORKERS.map(n => `${n}: ${base}?worker=${n}`).join('\n');
+  navigator.clipboard.writeText(links)
+    .then(() => toast('📋 Đã copy link tất cả công nhân'));
 }
 
 // ── Wire up events (called after DOM ready) ──────────────────
@@ -200,9 +283,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('plan-date').value = today();
   document.getElementById('plan-date').addEventListener('change', onPlanDateChange);
   document.getElementById('btn-add-task').addEventListener('click', addTask);
-  document.getElementById('btn-show-qr').addEventListener('click', showQR);
+  document.getElementById('btn-send-zalo').addEventListener('click', sendPlanZalo);
+  document.getElementById('btn-show-qr').addEventListener('click', showWorkerQRs);
   document.getElementById('btn-close-qr').addEventListener('click', closeQR);
-  document.getElementById('btn-copy-link').addEventListener('click', copyQRLink);
+  document.getElementById('btn-copy-worker-links').addEventListener('click', copyWorkerLinks);
   document.getElementById('inp-lsx').addEventListener('input', e => updateLSXHint(e.target.value.toUpperCase()));
 
   // Person quick-select for Tim form

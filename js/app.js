@@ -66,20 +66,35 @@ function toast(msg, ms=2500) {
   setTimeout(() => t.classList.remove('show'), ms);
 }
 
-// ── URL plan decode (workers open QR link) ──────────────────
-function tryLoadPlanFromURL() {
+// ── URL params decode on load ───────────────────────────────
+function tryLoadFromURL() {
   const params = new URLSearchParams(location.search);
-  const encoded = params.get('plan');
-  if (!encoded) return;
-  try {
-    const plan = JSON.parse(atob(decodeURIComponent(encoded)));
-    savePlan(plan);
-    state.date = plan.date;
+
+  // ?plan=BASE64 — Tim gửi kế hoạch qua Zalo
+  const planEncoded = params.get('plan');
+  if (planEncoded) {
+    try {
+      const plan = decodePlan(planEncoded);
+      savePlan(plan);
+      state.date = plan.date;
+      state.role = 'worker';
+      toast('✅ Đã tải kế hoạch ' + fmtDate(plan.date));
+      setTimeout(() => { initEntry(); goto('entry'); }, 400);
+    } catch(e) {
+      toast('❌ Link kế hoạch không hợp lệ');
+    }
+    return;
+  }
+
+  // ?worker=Ha — link cố định của công nhân
+  const workerName = params.get('worker') || params.get('w');
+  if (workerName && WORKERS.includes(workerName)) {
+    state.workerName = workerName;
     state.role = 'worker';
-    toast('✅ Đã tải kế hoạch ' + plan.date);
-    setTimeout(() => goto('entry'), 600);
-  } catch(e) {
-    toast('❌ Link kế hoạch không hợp lệ');
+    initEntry();
+    goto('entry');
+    // Auto-select worker name
+    setTimeout(() => selectWorker(workerName), 100);
   }
 }
 
@@ -123,6 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
     navigator.serviceWorker.register('/hgc-nhap-lieu/sw.js').catch(() => {});
   }
 
-  // Check URL for plan data (worker opens QR link)
-  tryLoadPlanFromURL();
+  // Check URL for plan data or worker name
+  tryLoadFromURL();
 });
