@@ -179,6 +179,22 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:var(--slat
 .worker-header .wh-count{margin-left:auto;background:rgba(255,255,255,.2);
   padding:3px 10px;border-radius:10px;font-size:12px;font-weight:700}
 
+/* ── NƠI CẤP / NƠI NHẬN (worker card) ── */
+.w-flow-col{margin:8px 0;display:flex;flex-direction:column;gap:5px}
+.w-loc-row{display:flex;align-items:center;gap:8px}
+.w-loc-label{font-size:11px;color:#94a3b8;min-width:70px;font-weight:600}
+.w-loc-input{flex:1;padding:5px 8px;border:1.5px solid #e2e8f0;border-radius:6px;
+             font-size:13px;font-weight:600;color:#1e293b;background:#fff;outline:none;
+             text-transform:uppercase}
+.w-loc-input::placeholder{text-transform:none;font-weight:400;font-style:italic;color:#cbd5e1}
+.w-loc-input:focus{border-color:#3b82f6}
+.w-loc-input:disabled{background:#f8fafc;color:#94a3b8}
+.w-be-dest{background:#f0fdf4;color:#15803d;border:1.5px solid #22c55e}
+
+/* task do nhân viên tự thêm — viền nét đứt */
+.w-card.worker-added{border-style:dashed;border-color:#3b82f6;background:#eff6ff}
+.w-card.worker-added .w-lsx::after{content:" ✏️";font-size:12px}
+
 /* ── IMPORT ZONE ── */
 .import-zone{border:2px dashed var(--border);border-radius:var(--r);padding:24px;
              text-align:center;cursor:pointer;background:#fafafa;transition:.15s}
