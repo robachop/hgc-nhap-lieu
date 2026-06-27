@@ -143,23 +143,22 @@
   <div class="sec-hdr">Danh sách kế hoạch hôm nay</div>
   <div id="plan-task-list"></div>
 
-  <!-- Share plan + QR buttons -->
-  <div style="margin-top:16px;display:grid;gap:8px">
-    <button class="btn btn-success" id="btn-send-zalo">
-      💬 Gửi kế hoạch qua Zalo
-    </button>
-    <button class="btn btn-outline full" id="btn-show-qr">
-      📲 QR cố định cho công nhân
+  <!-- Share links button -->
+  <div style="margin-top:16px">
+    <button class="btn btn-primary" id="btn-show-qr" style="width:100%">
+      🔗 Xem link & Gửi cho công nhân
     </button>
   </div>
 
-  <!-- Share URL fallback (hidden until needed) -->
+  <!-- Fallback copy textarea (hidden) -->
   <div id="share-url-wrap" style="display:none;margin-top:10px">
+    <div style="font-size:11px;color:#64748b;margin-bottom:4px">Copy tin nhắn rồi dán vào Zalo:</div>
     <textarea id="share-url-text" readonly
       style="width:100%;padding:8px;border:1.5px solid #e2e8f0;border-radius:6px;
-             font-size:11px;color:#475569;height:80px;resize:none"></textarea>
-    <button class="btn btn-outline full btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('share-url-text').value).then(()=>toast('📋 Đã copy!'))">
-      📋 Copy để gửi Zalo
+             font-size:11px;color:#475569;height:90px;resize:none"></textarea>
+    <button class="btn btn-outline full btn-sm" style="margin-top:4px"
+      onclick="navigator.clipboard.writeText(document.getElementById('share-url-text').value).then(()=>toast('📋 Đã copy!'))">
+      📋 Copy
     </button>
   </div>
 </div>
@@ -219,9 +218,8 @@
     <!-- 5 QR codes, mỗi người 1 cái -->
     <div id="worker-qrs" style="display:grid;grid-template-columns:1fr 1fr;gap:4px"></div>
 
-    <div class="btn-row" style="margin-top:12px">
-      <button class="btn btn-outline btn-sm" id="btn-copy-worker-links">📋 Copy tất cả link</button>
-      <button class="btn btn-outline btn-sm" id="btn-close-qr">✕ Đóng</button>
+    <div style="margin-top:12px">
+      <button class="btn btn-outline full" id="btn-close-qr">✕ Đóng</button>
     </div>
   </div>
 </div>

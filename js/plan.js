@@ -189,93 +189,96 @@ function decodePlan(encoded) {
   };
 }
 
-// ── Gửi kế hoạch qua Zalo ────────────────────────────────────
-function sendPlanZalo() {
+// ── Hiển thị link kế hoạch ─────────────────────────────────
+function showShareLinks() {
   if (!editingPlan || editingPlan.tasks.length === 0) {
-    toast('⚠️ Chưa có task nào'); return;
+    toast('⚠️ Chưa có task nào — thêm task trước'); return;
   }
   editingPlan.date = document.getElementById('plan-date').value;
   savePlan(editingPlan);
 
   const encoded = encodePlan(editingPlan);
   const base    = 'https://robachop.github.io/hgc-nhap-lieu/';
-  const url     = base + '?plan=' + encoded;
-  const msg     = `📋 Kế hoạch HGC ${fmtDate(editingPlan.date)} (${editingPlan.tasks.length} task)\nMở link để xem việc của bạn:\n${url}`;
 
+  // Build per-worker links (plan embedded + worker auto-selected)
+  const modal   = document.getElementById('qr-modal');
+  const wrap    = document.getElementById('worker-qrs');
+  wrap.innerHTML = '';
+
+  // Workers who have tasks today
+  const activeWorkers = [...new Set(editingPlan.tasks.map(t => t.nguoi))];
+  const allWorkers    = [...activeWorkers, ...WORKERS.filter(w => !activeWorkers.includes(w))];
+
+  allWorkers.forEach(name => {
+    const myTasks  = editingPlan.tasks.filter(t => t.nguoi === name);
+    const url      = base + '?plan=' + encoded + '&worker=' + name;
+    const hasTask  = myTasks.length > 0;
+
+    const div = document.createElement('div');
+    div.style.cssText = `padding:10px 0;border-bottom:1px solid #f1f5f9;opacity:${hasTask?1:.45}`;
+
+    div.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-weight:700;font-size:14px">👷 ${name}</span>
+        <span style="font-size:11px;color:#64748b;background:${hasTask?'#d1fae5':'#f1f5f9'};
+              padding:2px 8px;border-radius:10px">
+          ${hasTask ? myTasks.length + ' task' : 'không có task'}
+        </span>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;
+                  padding:6px 8px;font-size:10px;color:#94a3b8;word-break:break-all;
+                  margin-bottom:6px;font-family:monospace">${url}</div>
+      <div style="display:flex;gap:6px">
+        <button onclick="copyLink('${name}','${url}')" id="copybtn-${name}"
+          style="flex:1;padding:7px;border:1.5px solid #e2e8f0;border-radius:6px;
+                 background:#fff;font-size:12px;font-weight:600;cursor:pointer">
+          📋 Copy link
+        </button>
+        <button onclick="shareLink('${name}','${url}')"
+          style="flex:1;padding:7px;border:1.5px solid #22c55e;border-radius:6px;
+                 background:#f0fdf4;color:#15803d;font-size:12px;font-weight:600;cursor:pointer">
+          💬 Gửi Zalo
+        </button>
+      </div>`;
+    wrap.appendChild(div);
+  });
+
+  document.getElementById('qr-modal-title').textContent = '🔗 Link kế hoạch cho công nhân';
+  document.getElementById('qr-modal-sub').textContent   =
+    `${fmtDate(editingPlan.date)} · ${editingPlan.tasks.length} task · Gửi link cho từng người qua Zalo`;
+  modal.classList.remove('hidden');
+}
+
+function copyLink(name, url) {
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copybtn-' + name);
+    if (btn) { btn.textContent = '✅ Đã copy!'; setTimeout(() => btn.textContent='📋 Copy link', 2000); }
+    toast('📋 Copy link ' + name + ' xong!');
+  });
+}
+
+function shareLink(name, url) {
+  const date = editingPlan?.date || state.date;
+  const tasks = (editingPlan?.tasks || []).filter(t => t.nguoi === name);
+  const msg = `📋 Kế hoạch HGC ${fmtDate(date)}\n👷 ${name}: ${tasks.length} task hôm nay\nMở link xem và nhập kết quả:\n${url}`;
   if (navigator.share) {
-    navigator.share({ title: 'Kế hoạch HGC ' + fmtDate(editingPlan.date), text: msg })
-      .catch(() => fallbackCopy(url, msg));
+    navigator.share({ title: `HGC Kế hoạch ${name}`, text: msg }).catch(() => fallbackCopy(name, msg));
   } else {
-    fallbackCopy(url, msg);
+    fallbackCopy(name, msg);
   }
 }
 
-function fallbackCopy(url, msg) {
+function fallbackCopy(name, msg) {
   navigator.clipboard.writeText(msg)
-    .then(() => toast('📋 Đã copy! Dán vào Zalo gửi công nhân'))
+    .then(() => toast('📋 Đã copy tin nhắn cho ' + name + ' — dán vào Zalo'))
     .catch(() => {
-      // Last resort: show the URL
       document.getElementById('share-url-wrap').style.display = 'block';
       document.getElementById('share-url-text').value = msg;
     });
 }
 
-// ── QR cố định cho từng công nhân ────────────────────────────
-function showWorkerQRs() {
-  const modal = document.getElementById('qr-modal');
-  const base  = 'https://robachop.github.io/hgc-nhap-lieu/';
-  const wrap  = document.getElementById('worker-qrs');
-  wrap.innerHTML = '';
-
-  WORKERS.forEach(name => {
-    const url = base + '?worker=' + name;
-    const div = document.createElement('div');
-    div.style.cssText = 'text-align:center;padding:8px 0;border-bottom:1px solid #e2e8f0';
-
-    const label = document.createElement('div');
-    label.style.cssText = 'font-weight:700;font-size:14px;margin-bottom:6px';
-    label.textContent = '👷 ' + name;
-    div.appendChild(label);
-
-    const canvas = document.createElement('canvas');
-    canvas.width = 150; canvas.height = 150;
-    div.appendChild(canvas);
-
-    const urlEl = document.createElement('div');
-    urlEl.style.cssText = 'font-size:9px;color:#94a3b8;word-break:break-all;margin:4px 0 2px';
-    urlEl.textContent = url;
-    div.appendChild(urlEl);
-
-    const copyBtn = document.createElement('button');
-    copyBtn.textContent = '📋 Copy link';
-    copyBtn.style.cssText = 'font-size:11px;padding:4px 10px;border:1px solid #e2e8f0;border-radius:5px;background:#fff;cursor:pointer;margin-top:2px';
-    copyBtn.onclick = () => navigator.clipboard.writeText(url).then(() => { copyBtn.textContent = '✅ Đã copy!'; setTimeout(() => copyBtn.textContent='📋 Copy link', 1500); });
-    div.appendChild(copyBtn);
-
-    wrap.appendChild(div);
-
-    if (typeof QRCode !== 'undefined') {
-      QRCode.toCanvas(canvas, url, { width: 150, margin: 1,
-        color: { dark:'#0f172a', light:'#ffffff' } }, () => {});
-    } else {
-      canvas.getContext('2d').fillText('QR N/A', 10, 75);
-    }
-  });
-
-  document.getElementById('qr-modal-title').textContent = '📲 QR cố định cho công nhân';
-  document.getElementById('qr-modal-sub').textContent   = 'In ra hoặc gửi cho từng người 1 lần. Họ quét để cài app.';
-  modal.classList.remove('hidden');
-}
-
 function closeQR() {
   document.getElementById('qr-modal').classList.add('hidden');
-}
-
-function copyWorkerLinks() {
-  const base  = 'https://robachop.github.io/hgc-nhap-lieu/';
-  const links = WORKERS.map(n => `${n}: ${base}?worker=${n}`).join('\n');
-  navigator.clipboard.writeText(links)
-    .then(() => toast('📋 Đã copy link tất cả công nhân'));
 }
 
 // ── Wire up events (called after DOM ready) ──────────────────
@@ -283,10 +286,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('plan-date').value = today();
   document.getElementById('plan-date').addEventListener('change', onPlanDateChange);
   document.getElementById('btn-add-task').addEventListener('click', addTask);
-  document.getElementById('btn-send-zalo').addEventListener('click', sendPlanZalo);
-  document.getElementById('btn-show-qr').addEventListener('click', showWorkerQRs);
+  document.getElementById('btn-show-qr').addEventListener('click', showShareLinks);
   document.getElementById('btn-close-qr').addEventListener('click', closeQR);
-  document.getElementById('btn-copy-worker-links').addEventListener('click', copyWorkerLinks);
   document.getElementById('inp-lsx').addEventListener('input', e => updateLSXHint(e.target.value.toUpperCase()));
 
   // Person quick-select for Tim form

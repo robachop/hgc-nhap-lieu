@@ -68,33 +68,36 @@ function toast(msg, ms=2500) {
 
 // ── URL params decode on load ───────────────────────────────
 function tryLoadFromURL() {
-  const params = new URLSearchParams(location.search);
-
-  // ?plan=BASE64 — Tim gửi kế hoạch qua Zalo
+  const params      = new URLSearchParams(location.search);
   const planEncoded = params.get('plan');
+  const workerName  = params.get('worker') || params.get('w');
+
+  // Load plan from URL if present (?plan=BASE64)
   if (planEncoded) {
     try {
       const plan = decodePlan(planEncoded);
       savePlan(plan);
       state.date = plan.date;
-      state.role = 'worker';
       toast('✅ Đã tải kế hoạch ' + fmtDate(plan.date));
-      setTimeout(() => { initEntry(); goto('entry'); }, 400);
     } catch(e) {
       toast('❌ Link kế hoạch không hợp lệ');
+      return;
     }
-    return;
   }
 
-  // ?worker=Ha — link cố định của công nhân
-  const workerName = params.get('worker') || params.get('w');
+  // Auto-open worker screen if ?worker=Name given
   if (workerName && WORKERS.includes(workerName)) {
     state.workerName = workerName;
     state.role = 'worker';
     initEntry();
     goto('entry');
-    // Auto-select worker name
-    setTimeout(() => selectWorker(workerName), 100);
+    // Small delay to let DOM render name picker before selecting
+    setTimeout(() => selectWorker(workerName), 150);
+  } else if (planEncoded) {
+    // Plan loaded but no worker specified — go to worker screen, let them pick name
+    state.role = 'worker';
+    initEntry();
+    goto('entry');
   }
 }
 
