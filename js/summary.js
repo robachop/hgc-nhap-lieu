@@ -154,7 +154,6 @@ function exportS500() {
         ngay,                    // H: Ngày thực hiện
         r.luong_tt || r.luong_dk || 0, // I: Lượng thực tế
         r.nguoi,                 // J: Người thực hiện1
-        '',                      // K: Lô
         r.so_lo || '',           // K: Lô
         r.ghi_chu || '',         // L: Ghi chú
         r.mo_ta || info.mo_ta || '', // M: Diễn giải
