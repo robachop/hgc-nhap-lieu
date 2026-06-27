@@ -123,15 +123,12 @@ function renderWorkerTasks(name, tasks) {
       <div class="w-flow-col">
         <div class="w-loc-row">
           <span class="w-loc-label">🏺 Nơi cấp</span>
-          ${task.be_cap
-            ? `<span class="w-be">${task.be_cap}</span>`
-            : `<input type="text" class="w-loc-input" id="becap-${task.id}"
-                 placeholder="Bỏ trống nếu không có" list="be-datalist"
-                 autocomplete="off"
-                 value="${res.be_cap||''}"
-                 onchange="setBeCap('${task.id}', this.value)"
-                 ${st === 'pending' ? 'disabled' : ''}>`
-          }
+          <input type="text" class="w-loc-input" id="becap-${task.id}"
+            placeholder="Bỏ trống nếu không có" list="be-datalist"
+            autocomplete="off"
+            value="${res.be_cap || task.be_cap || ''}"
+            onchange="setBeCap('${task.id}', this.value)"
+            ${st === 'pending' ? 'disabled' : ''}>
         </div>
         <div class="w-loc-row">
           <span class="w-loc-label">📦 Nơi nhận</span>
