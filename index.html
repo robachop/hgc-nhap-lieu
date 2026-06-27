@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HGC Nhập Liệu">
+<meta name="theme-color" content="#0f172a">
+<title>HGC Nhập Liệu Real-time</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/app.css">
+<!-- QR Code -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<!-- SheetJS (Excel export) -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<!-- ── TOPBAR ── -->
+<div class="topbar" id="topbar">
+  <button class="back-btn" id="back-btn" style="display:none">‹</button>
+  <div>
+    <div class="logo">HGC</div>
+  </div>
+  <div class="app-title" id="app-title">Chọn vai trò</div>
+  <div class="version version-txt"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: HOME                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="screen active" id="screen-home">
+  <div class="home-hero">
+    <div class="hgc-badge">HGC</div>
+    <h2>Nhập Liệu Real-time</h2>
+    <div class="sub">Nhà máy Hương Giang · Masan</div>
+    <div class="date-badge" id="home-date"></div>
+  </div>
+
+  <div class="role-grid">
+    <div class="role-card tim" id="btn-tim">
+      <div class="role-icon">👨‍💼</div>
+      <div class="role-name">Tim</div>
+      <div class="role-desc">Nhập kế hoạch<br>Tạo QR code</div>
+    </div>
+    <div class="role-card worker" id="btn-worker">
+      <div class="role-icon">👷</div>
+      <div class="role-name">Công nhân</div>
+      <div class="role-desc">Nhập kết quả<br>Gửi qua Zalo</div>
+    </div>
+  </div>
+
+  <div style="margin-top:16px">
+    <button class="btn btn-outline" id="btn-summary" style="width:100%">
+      📊 Tổng hợp & Xuất S500
+    </button>
+  </div>
+
+  <div style="text-align:center;margin-top:24px;font-size:10px;color:#94a3b8">
+    <span class="version-txt"></span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: KẾ HOẠCH (Tim)                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-plan">
+
+  <!-- Date + stats -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+    <div class="field" style="flex:1;margin:0">
+      <label>Ngày kế hoạch</label>
+      <input type="date" id="plan-date">
+    </div>
+    <div style="font-size:12px;color:#64748b;white-space:nowrap;padding-top:18px" id="plan-stats"></div>
+  </div>
+
+  <!-- Add task form -->
+  <div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:4px">
+    <div class="sec-hdr" style="margin-top:0">Thêm task mới</div>
+
+    <!-- LSX -->
+    <div class="field">
+      <label>Lệnh SX (LSX) <span style="color:#ef4444">*</span></label>
+      <input type="text" id="inp-lsx" placeholder="VD: C040, PM00, S030..."
+        list="lsx-datalist" autocomplete="off" style="text-transform:uppercase">
+      <datalist id="lsx-datalist"></datalist>
+      <div class="hint" id="lsx-hint"></div>
+    </div>
+
+    <!-- Quick LSX -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;color:#94a3b8;margin-bottom:4px">Hay dùng:</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px" id="quick-lsx"></div>
+    </div>
+
+    <!-- Bể nhận + Bể cấp -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="field">
+        <label>Bể nhận <span style="color:#ef4444">*</span></label>
+        <input type="text" id="inp-be-nhan" placeholder="L001" list="be-datalist"
+          autocomplete="off" style="text-transform:uppercase">
+      </div>
+      <div class="field">
+        <label>Bể cấp (nguồn)</label>
+        <input type="text" id="inp-be-cap" placeholder="T016 (nếu có)" list="be-datalist"
+          autocomplete="off" style="text-transform:uppercase">
+      </div>
+    </div>
+    <datalist id="be-datalist"></datalist>
+
+    <!-- Lượng DK -->
+    <div class="field">
+      <label>Lượng dự kiến</label>
+      <input type="number" id="inp-luong" placeholder="VD: 4500" inputmode="numeric">
+    </div>
+
+    <!-- Người -->
+    <div class="field">
+      <label>Người thực hiện <span style="color:#ef4444">*</span></label>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px">
+        <button class="name-btn tim-person-btn" data-name="Ha">Ha</button>
+        <button class="name-btn tim-person-btn" data-name="Hao">Hao</button>
+        <button class="name-btn tim-person-btn" data-name="Mien">Miên</button>
+        <button class="name-btn tim-person-btn" data-name="Phong">Phong</button>
+        <button class="name-btn tim-person-btn" data-name="Toan">Toàn</button>
+      </div>
+      <input type="hidden" id="inp-nguoi">
+    </div>
+
+    <!-- Ghi chú Tim -->
+    <div class="field">
+      <label>Ghi chú (tùy chọn)</label>
+      <input type="text" id="inp-ghi-chu" placeholder="Ghi chú thêm cho công nhân">
+    </div>
+
+    <button class="btn btn-primary" id="btn-add-task">➕ Thêm task</button>
+  </div>
+
+  <!-- Task list -->
+  <div class="sec-hdr">Danh sách kế hoạch hôm nay</div>
+  <div id="plan-task-list"></div>
+
+  <!-- QR button -->
+  <div style="margin-top:16px;display:flex;gap:8px">
+    <button class="btn btn-primary" id="btn-show-qr" style="flex:2">
+      📲 Tạo QR cho công nhân
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: NHẬP LIỆU (Công nhân)                 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-entry">
+  <div style="font-size:13px;color:#64748b;margin-bottom:8px">
+    📅 Ngày: <strong id="entry-date-lbl"></strong>
+  </div>
+
+  <div class="sec-hdr" style="margin-top:0">Chọn tên bạn</div>
+  <div id="name-picker-wrap"></div>
+
+  <div id="worker-task-area" style="margin-top:12px"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: TỔNG HỢP (Tim)                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-summary">
+
+  <!-- Import zone -->
+  <div class="sec-hdr" style="margin-top:0">Import kết quả từ công nhân</div>
+  <div class="import-zone" id="import-zone">
+    <div class="iz-icon">📂</div>
+    <p>Bấm vào đây để chọn file JSON từ công nhân<br>
+    <span style="font-size:11px;color:#94a3b8">(Chọn nhiều file cùng lúc được)</span></p>
+  </div>
+  <input type="file" id="import-file" accept=".json" multiple style="display:none">
+
+  <!-- Summary content -->
+  <div class="sec-hdr">Kết quả tổng hợp</div>
+  <div id="summary-content"></div>
+
+  <!-- Export buttons -->
+  <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn btn-primary" id="btn-export-s500" disabled style="flex:2">
+      📥 Xuất S500.xlsx (gửi Cod)
+    </button>
+    <button class="btn btn-outline btn-sm full" id="btn-clear-summary" style="flex:0 0 auto;width:auto">🗑 Xóa</button>
+  </div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;text-align:center">
+    File xuất đúng 15 cột S500 kể cả cột O (Bể/xe cấp)
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- QR MODAL                                       -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="modal-overlay hidden" id="qr-modal" onclick="if(event.target===this)closeQR()">
+  <div class="modal-box">
+    <h3>📲 QR Kế hoạch hôm nay</h3>
+    <div class="modal-sub">Công nhân quét QR này bằng điện thoại</div>
+    <canvas id="qr-canvas" width="220" height="220"></canvas>
+    <div class="modal-url" id="qr-url-text"></div>
+    <div class="btn-row">
+      <button class="btn btn-outline btn-sm" id="btn-copy-link">📋 Copy link</button>
+      <button class="btn btn-outline btn-sm" id="btn-close-qr">✕ Đóng</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<!-- ── SCRIPTS ── -->
+<script src="js/lsx_data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/plan.js"></script>
+<script src="js/entry.js"></script>
+<script src="js/summary.js"></script>
+
+<script>
+  // Set today date on home screen
+  document.getElementById('home-date').textContent =
+    new Date().toLocaleDateString('vi-VN', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+</script>
+</body>
+</html>
