@@ -127,8 +127,7 @@ function renderWorkerTasks(name, tasks) {
             placeholder="Bỏ trống nếu không có" list="be-datalist"
             autocomplete="off"
             value="${res.be_cap || task.be_cap || ''}"
-            onchange="setBeCap('${task.id}', this.value)"
-            ${st === 'pending' ? 'disabled' : ''}>
+            onchange="setBeCap('${task.id}', this.value)">
         </div>
         <div class="w-loc-row">
           <span class="w-loc-label">📦 Nơi nhận</span>
@@ -193,10 +192,45 @@ function setStatus(taskId, status) {
   if (status === 'skip') res.luong_tt = 0;
   saveResult(currentResult);
 
-  // Re-render worker tasks
+  // Update chỉ card này — tránh re-render 78 cards
+  const card = document.getElementById('wcard-' + taskId);
+  if (!card) return;
+
+  // Cập nhật class card
+  card.className = `w-card ${status !== 'pending' ? status : ''} ${card.classList.contains('worker-added') ? 'worker-added' : ''}`;
+
+  // Cập nhật nút status
+  const selMap = { done:'sel-done', partial:'sel-partial', skip:'sel-skip' };
+  card.querySelectorAll('.w-status-btn').forEach(btn => {
+    btn.classList.remove('sel-done','sel-partial','sel-skip');
+    if (btn.getAttribute('onclick')?.includes(`'${status}'`)) {
+      btn.classList.add(selMap[status]);
+    }
+  });
+
+  // Enable/disable qty, so_lo, note (be_cap luôn enabled)
+  const dis = status === 'pending';
+  ['qty','lo','note'].forEach(pfx => {
+    const el = document.getElementById(pfx + '-' + taskId);
+    if (el) el.disabled = dis;
+  });
+
+  // Qty row: skip → ẩn, khác → hiện
+  const qtyRow = card.querySelector('.w-qty-row');
+  if (qtyRow) qtyRow.style.display = status === 'skip' ? 'none' : '';
+
+  // Cập nhật stats header
   const plan = state.plan;
   const myTasks = plan.tasks.filter(t => t.nguoi === state.workerName);
-  renderWorkerTasks(state.workerName, myTasks);
+  const done    = currentResult.results.filter(r => r.status === 'done').length;
+  const partial = currentResult.results.filter(r => r.status === 'partial').length;
+  const skip2   = currentResult.results.filter(r => r.status === 'skip').length;
+  const whCount = document.querySelector('.wh-count');
+  if (whCount) whCount.textContent = `${done}/${myTasks.length} xong`;
+  const svs = document.querySelectorAll('.sv');
+  if (svs[0]) svs[0].textContent = done;
+  if (svs[1]) svs[1].textContent = partial;
+  if (svs[2]) svs[2].textContent = skip2;
 }
 
 function setQty(taskId, val) {
