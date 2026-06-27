@@ -70,9 +70,39 @@ function toast(msg, ms=2500) {
 function tryLoadFromURL() {
   const params      = new URLSearchParams(location.search);
   const planEncoded = params.get('plan');
+  const planFile    = params.get('plan_file');
   const workerName  = params.get('worker') || params.get('w');
 
-  // Load plan from URL if present (?plan=BASE64)
+  function afterPlanLoaded() {
+    if (workerName && WORKERS.includes(workerName)) {
+      state.workerName = workerName;
+      state.role = 'worker';
+      initEntry();
+      goto('entry');
+      setTimeout(() => selectWorker(workerName), 150);
+    } else {
+      state.role = 'worker';
+      initEntry();
+      goto('entry');
+    }
+  }
+
+  // ?plan_file=phong-29062026 → fetch từ /plans/phong-29062026.json
+  if (planFile) {
+    const base = location.origin + location.pathname.replace(/\/[^/]*$/, '/');
+    fetch(base + 'plans/' + planFile + '.json')
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(plan => {
+        savePlan(plan);
+        state.date = plan.date;
+        toast('✅ Đã tải kế hoạch ' + fmtDate(plan.date));
+        afterPlanLoaded();
+      })
+      .catch(() => toast('❌ Không tải được kế hoạch: ' + planFile));
+    return;
+  }
+
+  // ?plan=BASE64 (kế hoạch nhỏ — giữ tương thích cũ)
   if (planEncoded) {
     try {
       const plan = decodePlan(planEncoded);
@@ -83,21 +113,17 @@ function tryLoadFromURL() {
       toast('❌ Link kế hoạch không hợp lệ');
       return;
     }
+    afterPlanLoaded();
+    return;
   }
 
-  // Auto-open worker screen if ?worker=Name given
+  // Auto-open nếu chỉ có ?w= (dùng plan đã lưu trong localStorage)
   if (workerName && WORKERS.includes(workerName)) {
     state.workerName = workerName;
     state.role = 'worker';
     initEntry();
     goto('entry');
-    // Small delay to let DOM render name picker before selecting
     setTimeout(() => selectWorker(workerName), 150);
-  } else if (planEncoded) {
-    // Plan loaded but no worker specified — go to worker screen, let them pick name
-    state.role = 'worker';
-    initEntry();
-    goto('entry');
   }
 }
 
