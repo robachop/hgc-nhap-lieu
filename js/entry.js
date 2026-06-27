@@ -2,7 +2,9 @@
 let currentResult = null;
 
 function initEntry() {
+  // Nếu không có date từ URL param thì dùng hôm nay
   const date = state.date || today();
+  state.date = date;
 
   // Try load plan (from URL already saved, or localStorage)
   const plan = loadPlan(date);

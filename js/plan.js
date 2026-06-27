@@ -3,12 +3,23 @@ let editingPlan = null;   // current plan being built
 let taskCounter = 0;
 
 function initPlan() {
-  const date = document.getElementById('plan-date').value || today();
+  // Luôn dùng ngày hôm nay khi mở màn — không đọc giá trị cũ từ Chrome cache
+  const date = today();
   document.getElementById('plan-date').value = date;
   state.date = date;
 
   // Load existing plan for this date
   editingPlan = loadPlan(date) || { date, tasks: [] };
+
+  // Clear form inputs (Chrome có thể giữ giá trị cũ từ session trước)
+  ['inp-lsx','inp-be-nhan','inp-be-cap','inp-luong','inp-ghi-chu'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('lsx-hint').textContent = '';
+  document.getElementById('inp-nguoi').value = '';
+  document.querySelectorAll('.tim-person-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('share-url-wrap').style.display = 'none';
 
   // Populate LSX datalist
   buildLSXDatalist();
