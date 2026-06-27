@@ -138,8 +138,7 @@ function renderWorkerTasks(name, tasks) {
           <input type="text" class="w-loc-input" id="lo-${task.id}"
             placeholder="Tùy chọn" autocomplete="off"
             value="${res.so_lo||''}"
-            onchange="setLo('${task.id}', this.value)"
-            ${st === 'pending' ? 'disabled' : ''}>
+            onchange="setLo('${task.id}', this.value)">
         </div>
         <div style="font-size:11px;color:#94a3b8;margin-top:4px">DK: ${task.luong_dk ? task.luong_dk.toLocaleString()+' '+task.dvt : '—'}</div>
       </div>
@@ -158,16 +157,14 @@ function renderWorkerTasks(name, tasks) {
         <input type="number" inputmode="numeric" id="qty-${task.id}"
           value="${res.luong_tt || task.luong_dk || ''}"
           placeholder="${task.luong_dk || 0}"
-          onchange="setQty('${task.id}', this.value)"
-          ${st === 'pending' ? 'disabled' : ''}>
+          onchange="setQty('${task.id}', this.value)">
         <span class="dvt">${task.dvt || 'lít'}</span>
       </div>` : ''}
 
       <div class="w-note">
         <input type="text" id="note-${task.id}" placeholder="Ghi chú (nếu có)"
           value="${res.ghi_chu || ''}"
-          onchange="setNote('${task.id}', this.value)"
-          ${st === 'pending' ? 'disabled' : ''}>
+          onchange="setNote('${task.id}', this.value)">
       </div>
     </div>`;
   });
@@ -206,13 +203,6 @@ function setStatus(taskId, status) {
     if (btn.getAttribute('onclick')?.includes(`'${status}'`)) {
       btn.classList.add(selMap[status]);
     }
-  });
-
-  // Enable/disable qty, so_lo, note (be_cap luôn enabled)
-  const dis = status === 'pending';
-  ['qty','lo','note'].forEach(pfx => {
-    const el = document.getElementById(pfx + '-' + taskId);
-    if (el) el.disabled = dis;
   });
 
   // Qty row: skip → ẩn, khác → hiện
