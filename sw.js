@@ -25,6 +25,12 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  const url = e.request.url;
+  // JS files: luôn lấy từ network (không dùng cache cũ)
+  if (url.includes('/js/')) {
+    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then(r => r || fetch(e.request).catch(() =>
       caches.match('/hgc-nhap-lieu/index.html')
