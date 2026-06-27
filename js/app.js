@@ -162,9 +162,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initSummary();
   });
 
-  // Register SW
+  // Register SW — unregister cũ trước để force dùng code mới
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/hgc-nhap-lieu/sw.js').catch(() => {});
+    navigator.serviceWorker.getRegistrations().then(regs => {
+      regs.forEach(r => r.unregister());
+    }).finally(() => {
+      navigator.serviceWorker.register('/hgc-nhap-lieu/sw.js').catch(() => {});
+    });
   }
 
   // Check URL for plan data or worker name
