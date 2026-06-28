@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hướng dẫn nhập liệu — Phong</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1e293b;line-height:1.7;padding-bottom:40px}
+
+.topbar{background:#0f172a;color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px}
+.topbar .logo{font-size:20px;font-weight:900;color:#60a5fa}
+.topbar h1{font-size:15px;font-weight:600}
+
+.container{max-width:600px;margin:0 auto;padding:20px 16px}
+
+.intro{background:#fff;border-radius:12px;padding:16px 18px;margin-bottom:20px;
+       border-left:4px solid #3b82f6;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.intro p{font-size:14px;color:#475569}
+
+.step{background:#fff;border-radius:12px;padding:18px;margin-bottom:14px;
+      box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.step-header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.step-num{width:40px;height:40px;border-radius:50%;background:#1e40af;color:#fff;
+          font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-title{font-size:16px;font-weight:700;color:#0f172a}
+.step p{font-size:14px;color:#475569;margin-bottom:8px}
+
+table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+th{background:#f8fafc;padding:8px 10px;text-align:left;font-size:12px;
+   color:#64748b;font-weight:600;border-bottom:2px solid #e2e8f0}
+td{padding:10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+td:first-child{font-size:18px;width:40px;text-align:center}
+
+.note{background:#fefce8;border:1.5px solid #fde68a;border-radius:10px;
+      padding:14px 16px;margin-bottom:14px}
+.note strong{color:#92400e;display:block;margin-bottom:6px}
+.note ul{padding-left:18px;font-size:14px;color:#78350f}
+.note li{margin-bottom:4px}
+
+.contact{background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:10px;
+         padding:14px 16px;text-align:center;font-size:14px;color:#166534}
+.contact strong{font-size:16px;display:block;margin-bottom:4px}
+
+.link-box{background:#1e40af;color:#fff;border-radius:10px;padding:14px 16px;
+          margin-bottom:20px;text-align:center}
+.link-box p{font-size:12px;opacity:.8;margin-bottom:6px}
+.link-box a{color:#fff;font-weight:700;font-size:15px;word-break:break-all}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">HGC</div>
+  <h1>Hướng dẫn Nhập Liệu — Phong</h1>
+</div>
+
+<div class="container">
+
+  <div class="intro">
+    <p>Tim gửi link kế hoạch qua Zalo mỗi sáng. Phong bấm vào link → nhập kết quả → gửi về cho Tim. Chỉ vậy thôi.</p>
+  </div>
+
+  <div class="link-box">
+    <p>App nhập liệu (khi cần mở thẳng):</p>
+    <a href="https://robachop.github.io/hgc-nhap-lieu/" target="_blank">robachop.github.io/hgc-nhap-lieu</a>
+  </div>
+
+  <!-- Bước 1 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div class="step-title">Nhận link từ Tim qua Zalo</div>
+    </div>
+    <p>Mỗi sáng Tim gửi link kế hoạch ngày đó qua Zalo. Phong bấm vào link → app tự mở, tự load danh sách lệnh của Phong.</p>
+  </div>
+
+  <!-- Bước 2 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div class="step-title">Xem danh sách lệnh</div>
+    </div>
+    <p>App hiện danh sách lệnh được giao hôm nay. Mỗi lệnh có: mã lệnh, mô tả, bể cấp, bể nhận.</p>
+  </div>
+
+  <!-- Bước 3 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div class="step-title">Làm việc và nhập kết quả</div>
+    </div>
+    <p>Mỗi lệnh làm xong → chọn trạng thái:</p>
+    <table>
+      <tr><th></th><th>Nút</th><th>Khi nào dùng</th></tr>
+      <tr><td>✅</td><td><strong>Xong</strong></td><td>Hoàn thành đủ lượng</td></tr>
+      <tr><td>⚠️</td><td><strong>Một phần</strong></td><td>Làm được một phần — nhập lượng thực tế</td></tr>
+      <tr><td>❌</td><td><strong>Bỏ qua</strong></td><td>Không làm được — ghi lý do vào Ghi chú</td></tr>
+    </table>
+    <p style="margin-top:8px">Nếu bể cấp sai → sửa lại ô <strong>Nơi cấp</strong> trước khi tick.</p>
+  </div>
+
+  <!-- Bước 4 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div class="step-title">Gửi kết quả về Tim</div>
+    </div>
+    <p>Làm xong tất cả → bấm <strong>📤 Gửi kết quả qua Zalo</strong> → chọn Zalo → gửi cho Tim. Xong! 🎉</p>
+  </div>
+
+  <!-- Lưu ý -->
+  <div class="note">
+    <strong>⚠️ Lưu ý quan trọng</strong>
+    <ul>
+      <li>Không tắt app giữa chừng — làm xong rồi mới gửi</li>
+      <li>Nếu link không mở được → nhắn Tim gửi lại</li>
+      <li>Nếu lệnh sai → nhắn Tim, đừng tự ý sửa mã lệnh</li>
+      <li>Dùng Chrome hoặc Safari đều được</li>
+    </ul>
+  </div>
+
+  <!-- Liên hệ -->
+  <div class="contact">
+    <strong>📞 Gặp sự cố → nhắn Zalo Tim (anh Bửu)</strong>
+    Đừng để đến cuối ca mới báo
+  </div>
+
+</div>
+</body>
+</html>
