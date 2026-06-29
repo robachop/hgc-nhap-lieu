@@ -55,23 +55,30 @@ def group(lsx):
 def dvt(lsx):
     return "kg" if lsx.startswith("Px") else "lít"
 
+# Phân công theo LSX
+# C___  → Phong
+# Px___ + PM00 → Ha
+def nguoi(lsx):
+    if lsx.startswith('C'):  return 'Phong'
+    return 'Ha'
+
 # ── Đọc sheet "Dãy kéo rút" ──────────────────────────────────
 def read_day_keo_rut(excel_path):
     """
-    Đọc sheet 'Dãy kéo rút', trả về list dict task cho Phong.
-    Cấu trúc sheet: col1=Bể cấp, col2=Bể Nhận, col3=LSX (từ row 1 trở đi).
-    Cột 0 là ngày của plan (bỏ qua — chỉ dùng để nhận biết đây là plan mới nhất).
+    Đọc sheet 'Dãy kéo rút', tách task theo người:
+      - Cxxx  → Phong
+      - Pxxx + PM00 → Ha
+    Trả về dict: {'Phong': [...], 'Ha': [...]}
     """
     df = pd.read_excel(excel_path, sheet_name="Dãy kéo rút", header=None)
 
     plan_date_raw = df.iloc[0, 0]
-    if hasattr(plan_date_raw, 'strftime'):
-        plan_date = plan_date_raw.strftime('%d/%m/%Y')
-    else:
-        plan_date = str(plan_date_raw)
+    plan_date = plan_date_raw.strftime('%d/%m/%Y') if hasattr(plan_date_raw, 'strftime') else str(plan_date_raw)
     print(f"  📅 Ngày ghi trong sheet Dãy kéo rút: {plan_date}")
 
-    tasks = []
+    by_worker = {'Phong': [], 'Ha': []}
+    counters  = {'Phong': 0, 'Ha': 0}
+
     for i in range(1, len(df)):
         be_cap_raw = str(df.iloc[i, 1]) if pd.notna(df.iloc[i, 1]) else ''
         be_nhan    = str(df.iloc[i, 2]).strip() if pd.notna(df.iloc[i, 2]) else ''
@@ -80,12 +87,13 @@ def read_day_keo_rut(excel_path):
         if not lsx or lsx == 'nan':
             continue
 
-        # BM00 hoặc Xxxx → bể cấp để trống (Phong tự điền)
         be_cap = '' if be_cap_raw.strip() in ('BM00', 'Xxxx', 'nan', '') else be_cap_raw.strip()
+        w      = nguoi(lsx)
+        counters[w] += 1
 
-        tasks.append({
-            "id":       f"t{len(tasks)+1}",
-            "nguoi":    "Phong",
+        by_worker[w].append({
+            "id":       f"t{counters[w]}",
+            "nguoi":    w,
             "lsx":      lsx,
             "mo_ta":    mo_ta(lsx),
             "be_cap":   be_cap,
@@ -96,50 +104,61 @@ def read_day_keo_rut(excel_path):
             "group":    group(lsx)
         })
 
-    return tasks
+    return by_worker
 
 # ── Deploy ────────────────────────────────────────────────────
-def deploy(target_date, tasks):
-    slug      = target_date.strftime("%d%m%Y")
-    date_str  = target_date.strftime("%d/%m/%Y")
-    day_vn    = ['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7','Chủ Nhật'][target_date.weekday()]
+def deploy_worker(target_date, worker, tasks):
+    """Tạo plan JSON + redirect HTML cho 1 người, trả về link."""
+    slug     = target_date.strftime("%d%m%Y")
+    date_str = target_date.strftime("%d/%m/%Y")
+    w_lower  = worker.lower()
 
-    # 1. Lưu plan JSON
-    plan = {"date": target_date.isoformat(), "tasks": tasks}
-    plan_file = f"phong-{slug}.json"
+    plan      = {"date": target_date.isoformat(), "tasks": tasks}
+    plan_file = f"{w_lower}-{slug}.json"
     plan_path = REPO_DIR / "plans" / plan_file
     plan_path.parent.mkdir(exist_ok=True)
     plan_path.write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding='utf-8')
-    print(f"  ✅ JSON: plans/{plan_file} ({len(tasks)} tasks)")
 
-    # 2. Tạo redirect HTML
-    app_url   = f"{BASE_URL}?plan_file=phong-{slug}&w=Phong"
-    html_file = f"kehoach-{slug}.html"
+    app_url   = f"{BASE_URL}?plan_file={w_lower}-{slug}&w={worker}"
+    html_file = f"kehoach-{w_lower}-{slug}.html"
     html_path = REPO_DIR / html_file
     html = f"""<!DOCTYPE html>
 <html lang="vi"><head><meta charset="UTF-8">
 <meta http-equiv="refresh" content="0;url={app_url}">
-<title>HGC Kế Hoạch Phong — {date_str}</title>
+<title>HGC Kế Hoạch {worker} — {date_str}</title>
 </head><body>
 <p>Đang chuyển hướng... <a href="{app_url}">Bấm đây nếu không tự chuyển</a></p>
 <script>window.location.replace("{app_url}");</script>
 </body></html>"""
     html_path.write_text(html, encoding='utf-8')
-    print(f"  ✅ HTML: {html_file}")
+    return plan_file, html_file, app_url
 
-    # 3. Git push
-    msg = f"Ke hoach Phong {date_str}: {len(tasks)} tasks"
+def deploy(target_date, by_worker):
+    date_str = target_date.strftime("%d/%m/%Y")
+    slug     = target_date.strftime("%d%m%Y")
+
+    files_to_add = []
+    links = {}
+    for worker, tasks in by_worker.items():
+        if not tasks:
+            continue
+        plan_file, html_file, url = deploy_worker(target_date, worker, tasks)
+        files_to_add += [f"plans/{plan_file}", html_file]
+        links[worker] = BASE_URL + html_file
+        print(f"  ✅ {worker}: {len(tasks)} tasks → {html_file}")
+
+    msg    = f"Ke hoach {date_str}: " + ", ".join(f"{w}={len(t)}" for w,t in by_worker.items() if t)
+    add_cmd = " ".join(files_to_add)
     result = subprocess.run(
-        f'cd "{REPO_DIR}" && git add plans/{plan_file} {html_file} '
-        f'&& git commit -m "{msg}" && git push origin main',
+        f'cd "{REPO_DIR}" && git add {add_cmd} && git commit -m "{msg}" && git push origin main',
         shell=True, capture_output=True, text=True
     )
     if result.returncode == 0:
         print(f"  ✅ Đã push lên GitHub Pages")
     else:
-        print(f"  ⚠️  Git output: {result.stdout.strip()} {result.stderr.strip()}")
+        print(f"  ⚠️  Git: {result.stdout.strip()} {result.stderr.strip()}")
 
-    return BASE_URL + html_file
+    return links
 
 # ── Main ──────────────────────────────────────────────────────
 def main():
@@ -167,21 +186,21 @@ def main():
     print(f"\n📅 Lên kế hoạch cho: {day_vn} {target.strftime('%d/%m/%Y')}")
     print(f"📊 Đọc sheet 'Dãy kéo rút'...")
 
-    tasks = read_day_keo_rut(excel_path)
-    print(f"  → {len(tasks)} tasks cho Phong")
+    by_worker = read_day_keo_rut(excel_path)
 
-    # In tóm tắt theo dãy
     from collections import Counter
-    grp = Counter(t['group'] for t in tasks)
-    for g, n in grp.most_common():
-        print(f"     {g}: {n} tasks")
+    for w, tasks in by_worker.items():
+        grp = Counter(t['group'] for t in tasks)
+        detail = ', '.join(f"{g}:{n}" for g,n in grp.most_common())
+        print(f"  → {w}: {len(tasks)} tasks ({detail})")
 
     print(f"\n🚀 Deploy lên GitHub Pages...")
-    link = deploy(target, tasks)
+    links = deploy(target, by_worker)
 
     print(f"\n{'═'*50}")
-    print(f"  ✅ XONG! Gửi link này cho Phong qua Zalo:")
-    print(f"  {link}")
+    print(f"  ✅ XONG! Gửi link qua Zalo:")
+    for w, link in links.items():
+        print(f"  {w:8}: {link}")
     print(f"{'═'*50}\n")
 
 if __name__ == '__main__':

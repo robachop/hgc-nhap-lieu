@@ -118,8 +118,12 @@ function renderWorkerTasks(name, tasks) {
     const capFlow = task.be_cap
       ? `<span class="w-be">${task.be_cap}</span><span class="w-arrow">→</span>` : '';
 
-    html += `<div class="w-card ${st !== 'pending' ? st : ''} ${task.worker_added ? 'worker-added' : ''}" id="wcard-${task.id}">
-      <div class="w-lsx">${task.lsx}</div>
+    const isPx = /^Px\d0$/.test(task.lsx);
+    const curLsx = res.lsx || task.lsx;
+    const curBeNhan = res.be_nhan || task.be_nhan || '';
+
+    html += `<div class="w-card ${st !== 'pending' ? st : ''} ${task.worker_added ? 'worker-added' : ''} ${isPx ? 'px-card' : ''}" id="wcard-${task.id}">
+      <div class="w-lsx" id="lsx-display-${task.id}">${curLsx}</div>
       <div class="w-desc">${task.mo_ta}</div>
       <div class="w-flow-col">
         <div class="w-loc-row">
@@ -130,13 +134,22 @@ function renderWorkerTasks(name, tasks) {
             value="${res.be_cap || task.be_cap || ''}"
             onchange="setBeCap('${task.id}', this.value)">
         </div>
+        ${isPx ? `
+        <div style="font-size:11px;color:#a855f7;font-weight:600;margin-bottom:4px">📦 Nơi đến — chọn nhanh:</div>
+        <div class="tp-grid" id="tpgrid-${task.id}">
+          ${['L113','L114','L133','L134','L138','L213'].map((be,i)=>`
+            <button class="tp-btn ${curBeNhan===be?'tp-sel':''}" onclick="pickTP('${task.id}','${be}',${i+1})">${be}<br><small>x=${i+1}</small></button>
+          `).join('')}
+          <button class="tp-btn ${curBeNhan.startsWith('T')?'tp-t':''}" id="tbtn-${task.id}" onclick="pickT('${task.id}')">Txxx<br><small>tại trổ</small></button>
+          <button class="tp-btn" onclick="clearTP('${task.id}')">✕<br><small>xóa</small></button>
+        </div>` : ''}
         <div class="w-loc-row">
           <span class="w-loc-label">📦 Nơi nhận</span>
           <input type="text" class="w-loc-input" id="benhan-${task.id}"
-            placeholder="L113, L114..." list="be-datalist"
+            placeholder="${isPx ? 'L113, L114... hoặc Txxx' : 'Bể nhận'}" list="be-datalist"
             autocomplete="off" style="text-transform:uppercase"
-            value="${res.be_nhan || task.be_nhan || ''}"
-            onchange="setBeNhan('${task.id}', this.value)">
+            value="${curBeNhan}"
+            onchange="${isPx ? `onPxBeNhan('${task.id}',this.value)` : `setBeNhan('${task.id}',this.value)`}">
         </div>
         <div class="w-loc-row" style="margin-top:2px">
           <span class="w-loc-label">📋 Số lô</span>
@@ -246,6 +259,86 @@ function setBeCap(taskId, val) {
 function setBeNhan(taskId, val) {
   const res = currentResult.results.find(r => r.task_id === taskId);
   if (res) { res.be_nhan = val.trim().toUpperCase(); saveResult(currentResult); }
+}
+
+// ── Px task helpers ───────────────────────────────────────────
+const TP_MAP = {
+  'L113':'1','L114':'2','L133':'3','L134':'4','L138':'5','L213':'6'
+};
+
+function pxNewLsx(baseLsx, x) {
+  // Px10 + x=1 → P110 | Px20 + x=2 → P220
+  const day = baseLsx[2]; // '1'..'9'
+  return `P${x}${day}0`;
+}
+
+function updatePxCard(taskId, beNhan, newLsx) {
+  const res = currentResult.results.find(r => r.task_id === taskId);
+  if (!res) return;
+  res.be_nhan = beNhan;
+  res.lsx     = newLsx;
+  saveResult(currentResult);
+  // Cập nhật hiển thị LSX
+  const el = document.getElementById('lsx-display-' + taskId);
+  if (el) el.textContent = newLsx;
+  // Highlight nút đã chọn
+  const grid = document.getElementById('tpgrid-' + taskId);
+  if (grid) {
+    grid.querySelectorAll('.tp-btn').forEach(b => b.classList.remove('tp-sel','tp-t'));
+    grid.querySelectorAll('.tp-btn').forEach(b => {
+      if (b.textContent.includes(beNhan)) b.classList.add('tp-sel');
+    });
+    if (beNhan.startsWith('T')) {
+      const tbtn = document.getElementById('tbtn-' + taskId);
+      if (tbtn) tbtn.classList.add('tp-t');
+    }
+  }
+}
+
+function pickTP(taskId, be, x) {
+  const res = currentResult.results.find(r => r.task_id === taskId);
+  if (!res) return;
+  const baseLsx = res.lsx.startsWith('P') ? res.lsx : res.lsx; // giữ base từ plan
+  const task = state.plan?.tasks.find(t => t.id === taskId);
+  const base = task?.lsx || res.lsx;
+  const newLsx = pxNewLsx(base, String(x));
+  document.getElementById('benhan-' + taskId).value = be;
+  updatePxCard(taskId, be, newLsx);
+}
+
+function pickT(taskId) {
+  const inp = document.getElementById('benhan-' + taskId);
+  inp.value = '';
+  inp.placeholder = 'T... (nhập số bể trổ)';
+  inp.focus();
+  const task = state.plan?.tasks.find(t => t.id === taskId);
+  const baseLsx = task?.lsx || 'Px?0';
+  updatePxCard(taskId, '', baseLsx);
+  const grid = document.getElementById('tpgrid-' + taskId);
+  if (grid) {
+    grid.querySelectorAll('.tp-btn').forEach(b => b.classList.remove('tp-sel','tp-t'));
+    const tbtn = document.getElementById('tbtn-' + taskId);
+    if (tbtn) tbtn.classList.add('tp-t');
+  }
+}
+
+function clearTP(taskId) {
+  document.getElementById('benhan-' + taskId).value = '';
+  const task = state.plan?.tasks.find(t => t.id === taskId);
+  const baseLsx = task?.lsx || 'Px?0';
+  updatePxCard(taskId, '', baseLsx);
+}
+
+function onPxBeNhan(taskId, val) {
+  val = val.trim().toUpperCase();
+  const task = state.plan?.tasks.find(t => t.id === taskId);
+  const baseLsx = task?.lsx || 'Px?0';
+  const x = TP_MAP[val];
+  if (x) {
+    updatePxCard(taskId, val, pxNewLsx(baseLsx, x));
+  } else {
+    updatePxCard(taskId, val, baseLsx);
+  }
 }
 
 function setLo(taskId, val) {

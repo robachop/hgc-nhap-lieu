@@ -207,3 +207,12 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:var(--slat
   .role-grid{grid-template-columns:1fr 1fr}
   .name-grid{grid-template-columns:repeat(5,1fr)}
 }
+
+/* ── Px card (thành phẩm) ── */
+.w-card.px-card { border-color: #7e22ce; }
+.tp-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-bottom:8px; }
+.tp-btn  { background:#0f172a; border:1.5px solid #334155; color:#94a3b8;
+           border-radius:8px; padding:7px 2px; font-size:12px; font-weight:700;
+           text-align:center; cursor:pointer; line-height:1.4; }
+.tp-btn.tp-sel { background:#3b0764; border-color:#a855f7; color:#e879f9; }
+.tp-btn.tp-t   { background:#1e3a5f; border-color:#3b82f6; color:#93c5fd; }
