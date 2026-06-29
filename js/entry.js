@@ -63,6 +63,7 @@ function selectWorker(name) {
       luong_dk: t.luong_dk,
       status: 'pending',  // pending | done | partial | skip
       luong_tt: t.luong_dk || 0,
+      be_nhan: t.be_nhan || '',
       so_lo: '',
       ghi_chu: ''
     }))
@@ -131,7 +132,11 @@ function renderWorkerTasks(name, tasks) {
         </div>
         <div class="w-loc-row">
           <span class="w-loc-label">📦 Nơi nhận</span>
-          <span class="w-be w-be-dest">${task.be_nhan}</span>
+          <input type="text" class="w-loc-input" id="benhan-${task.id}"
+            placeholder="L113, L114..." list="be-datalist"
+            autocomplete="off" style="text-transform:uppercase"
+            value="${res.be_nhan || task.be_nhan || ''}"
+            onchange="setBeNhan('${task.id}', this.value)">
         </div>
         <div class="w-loc-row" style="margin-top:2px">
           <span class="w-loc-label">📋 Số lô</span>
@@ -236,6 +241,11 @@ function setNote(taskId, val) {
 function setBeCap(taskId, val) {
   const res = currentResult.results.find(r => r.task_id === taskId);
   if (res) { res.be_cap = val.trim().toUpperCase(); saveResult(currentResult); }
+}
+
+function setBeNhan(taskId, val) {
+  const res = currentResult.results.find(r => r.task_id === taskId);
+  if (res) { res.be_nhan = val.trim().toUpperCase(); saveResult(currentResult); }
 }
 
 function setLo(taskId, val) {
