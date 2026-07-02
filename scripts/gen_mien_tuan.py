@@ -23,6 +23,20 @@ Dùng:
 import sys, json, datetime
 import openpyxl
 
+# Đối chiếu S500 (2026-07-02) — Tim đã xác nhận 4 nhóm nghi vấn của Tuần 28:
+#   1. NHẢY CÓC chu kỳ (Tim: "Đồng ý" = sửa về đúng chu kỳ kế tiếp so với S500)
+CK_OVERRIDE = {
+    167: 5,   # S500 cao nhất CK4 -> đúng ra CK5, sheet gốc ghi nhầm CK6
+    168: 4,   # S500 cao nhất CK3 -> đúng ra CK4, sheet gốc ghi nhầm CK5
+    169: 4,   # S500 cao nhất CK3 -> đúng ra CK4, sheet gốc ghi nhầm CK5
+}
+#   2. Đã hết hạn ngày chu kỳ hiện tại nhưng sheet gốc lặp lại CK cũ
+#      (Tim: "ghi là trùng lặp" — giữ nguyên CK, chỉ đánh dấu trong mô tả)
+DUPLICATE_NOTE_BE = {163, 188}
+#   3. 7 bể quay lại CK1 sau khi đã xong CK7 (Tim: "đã qua chượp mới, không phải lỗi") -> không sửa gì
+#   4. Bể 354 không có lịch sử trong S500 (Tim: "lỗi đánh máy sai") -> CHỜ Tim cho số bể đúng,
+#      hiện vẫn giữ nguyên 354 tạm thời, cần cập nhật khi có xác nhận.
+
 def read_be_ck(excel_path, sheet_name):
     wb = openpyxl.load_workbook(excel_path, data_only=True)
     ws = wb[sheet_name]
@@ -35,6 +49,8 @@ def read_be_ck(excel_path, sheet_name):
         if stt is None and be is None:
             break
         if be is not None and ck is not None:
+            if be in CK_OVERRIDE:
+                ck = CK_OVERRIDE[be]
             rows.append((be, ck))
         r += 1
     return rows
@@ -42,11 +58,14 @@ def read_be_ck(excel_path, sheet_name):
 def build_tasks(rows, day_idx):
     tasks = []
     for i, (be, ck) in enumerate(rows, start=1):
+        mo_ta = f"Đảo trộn bể {be} (CK{ck})"
+        if be in DUPLICATE_NOTE_BE:
+            mo_ta += " ⚠️ TRÙNG LẶP (đã hết hạn CK cũ trong S500)"
         tasks.append({
             "id": f"t{i}",
             "nguoi": "Mien",
             "lsx": f"S{ck}{day_idx:02d}",
-            "mo_ta": f"Đảo trộn bể {be} (CK{ck})",
+            "mo_ta": mo_ta,
             "be_cap": f"T{be:03d}",
             "be_nhan": f"L{be:03d}",
             "luong_dk": 0,
