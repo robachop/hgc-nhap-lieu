@@ -34,8 +34,8 @@ CK_OVERRIDE = {
 #      (Tim: "ghi là trùng lặp" — giữ nguyên CK, chỉ đánh dấu trong mô tả)
 DUPLICATE_NOTE_BE = {163, 188}
 #   3. 7 bể quay lại CK1 sau khi đã xong CK7 (Tim: "đã qua chượp mới, không phải lỗi") -> không sửa gì
-#   4. Bể 354 không có lịch sử trong S500 (Tim: "lỗi đánh máy sai") -> CHỜ Tim cho số bể đúng,
-#      hiện vẫn giữ nguyên 354 tạm thời, cần cập nhật khi có xác nhận.
+#   4. Bể 354 không có lịch sử trong S500 (Tim: "lỗi đánh máy sai", xác nhận số đúng là 35)
+BE_NUMBER_FIX = {354: 35}
 
 def read_be_ck(excel_path, sheet_name):
     wb = openpyxl.load_workbook(excel_path, data_only=True)
@@ -49,6 +49,8 @@ def read_be_ck(excel_path, sheet_name):
         if stt is None and be is None:
             break
         if be is not None and ck is not None:
+            if be in BE_NUMBER_FIX:
+                be = BE_NUMBER_FIX[be]
             if be in CK_OVERRIDE:
                 ck = CK_OVERRIDE[be]
             rows.append((be, ck))
