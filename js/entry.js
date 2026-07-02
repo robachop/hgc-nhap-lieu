@@ -121,9 +121,13 @@ function renderWorkerTasks(name, tasks) {
     const isPx = /^Px\d0$/.test(task.lsx);
     const curLsx = res.lsx || task.lsx;
     const curBeNhan = res.be_nhan || task.be_nhan || '';
+    const pxFinalized = isPx && curLsx !== task.lsx;
 
     html += `<div class="w-card ${st !== 'pending' ? st : ''} ${task.worker_added ? 'worker-added' : ''} ${isPx ? 'px-card' : ''}" id="wcard-${task.id}">
       <div class="w-lsx" id="lsx-display-${task.id}">${curLsx}</div>
+      ${isPx ? `<div class="px-state ${pxFinalized ? 'px-done' : 'px-pending'}" id="pxstate-${task.id}">
+        ${pxFinalized ? '✅ Đã đấu bể ' + curBeNhan : '⏳ Tạm ở bể trổ — chưa đấu TP'}
+      </div>` : ''}
       <div class="w-desc">${task.mo_ta}</div>
       <div class="w-flow-col">
         <div class="w-loc-row">
@@ -281,6 +285,14 @@ function updatePxCard(taskId, beNhan, newLsx) {
   // Cập nhật hiển thị LSX
   const el = document.getElementById('lsx-display-' + taskId);
   if (el) el.textContent = newLsx;
+  // Cập nhật nhãn trạng thái tạm/đã đấu
+  const task = state.plan?.tasks.find(t => t.id === taskId);
+  const stateEl = document.getElementById('pxstate-' + taskId);
+  if (stateEl && task) {
+    const finalized = newLsx !== task.lsx;
+    stateEl.className = 'px-state ' + (finalized ? 'px-done' : 'px-pending');
+    stateEl.textContent = finalized ? `✅ Đã đấu bể ${beNhan}` : '⏳ Tạm ở bể trổ — chưa đấu TP';
+  }
   // Highlight nút đã chọn
   const grid = document.getElementById('tpgrid-' + taskId);
   if (grid) {
