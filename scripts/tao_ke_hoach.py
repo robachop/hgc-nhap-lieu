@@ -255,8 +255,11 @@ def main():
     print(f"📊 Đọc sheet 'Dãy kéo rút' (Phong + Ha)...")
     by_worker = read_day_keo_rut(excel_path)
 
-    print(f"📊 Suy ra đảo trộn Miên từ sheet 'S500'...")
-    by_worker['Mien'] = read_dao_tron(excel_path, target)
+    # ⚠️ ĐÃ TẮT 2026-07-02: Miên không dùng logic suy luận từ S500 nữa (read_dao_tron()),
+    # giờ dùng script riêng scripts/gen_mien_tuan.py đọc sheet "Tuần XX" (Miên viết tay).
+    # Không được bật lại dòng dưới — sẽ ghi đè nhầm lên kế hoạch Miên đang dùng đúng.
+    # by_worker['Mien'] = read_dao_tron(excel_path, target)
+    by_worker['Mien'] = []   # không tự tạo — dùng gen_mien_tuan.py riêng cho Miên
 
     by_worker['Hao'] = []   # khung trống thành phẩm — Hao tự nhập
 
