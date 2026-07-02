@@ -102,6 +102,10 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:var(--slat
 .w-card.partial{border-color:#f59e0b;background:#fffbeb}
 .w-card.skip{border-color:var(--slate-4);background:#f8fafc;opacity:.7}
 .w-card .w-lsx{font-size:16px;font-weight:800;color:var(--slate);font-family:monospace}
+.w-card input.w-lsx-edit{font-size:16px;font-weight:800;color:var(--slate);font-family:monospace;
+        border:1px dashed var(--slate-4);border-radius:4px;padding:2px 6px;width:110px;
+        background:#fffbeb}
+.w-card input.w-lsx-edit:focus{outline:none;border-color:#f59e0b;background:#fff}
 .w-card .w-desc{font-size:13px;color:var(--slate-3);margin-top:2px}
 .w-card .w-flow{display:flex;gap:6px;align-items:center;margin:8px 0;font-size:12px}
 .w-card .w-be{background:var(--blue-bg);color:var(--blue);padding:3px 8px;

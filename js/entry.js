@@ -122,9 +122,14 @@ function renderWorkerTasks(name, tasks) {
     const curLsx = res.lsx || task.lsx;
     const curBeNhan = res.be_nhan || task.be_nhan || '';
     const pxFinalized = isPx && curLsx !== task.lsx;
+    const lsxEditable = task.group === 'S_dao_tron';
 
     html += `<div class="w-card ${st !== 'pending' ? st : ''} ${task.worker_added ? 'worker-added' : ''} ${isPx ? 'px-card' : ''}" id="wcard-${task.id}">
-      <div class="w-lsx" id="lsx-display-${task.id}">${curLsx}</div>
+      ${lsxEditable
+        ? `<input type="text" class="w-lsx-edit" id="lsx-display-${task.id}" autocomplete="off"
+             style="text-transform:uppercase" value="${curLsx}" title="Bấm để sửa nếu mã LSX sai"
+             onchange="setLsx('${task.id}', this.value)">`
+        : `<div class="w-lsx" id="lsx-display-${task.id}">${curLsx}</div>`}
       ${isPx ? `<div class="px-state ${pxFinalized ? 'px-done' : 'px-pending'}" id="pxstate-${task.id}">
         ${pxFinalized ? '✅ Đã đấu bể ' + curBeNhan : '⏳ Tạm ở bể trổ — chưa đấu TP'}
       </div>` : ''}
@@ -263,6 +268,11 @@ function setBeCap(taskId, val) {
 function setBeNhan(taskId, val) {
   const res = currentResult.results.find(r => r.task_id === taskId);
   if (res) { res.be_nhan = val.trim().toUpperCase(); saveResult(currentResult); }
+}
+
+function setLsx(taskId, val) {
+  const res = currentResult.results.find(r => r.task_id === taskId);
+  if (res) { res.lsx = val.trim().toUpperCase(); saveResult(currentResult); }
 }
 
 // ── Px task helpers ───────────────────────────────────────────
