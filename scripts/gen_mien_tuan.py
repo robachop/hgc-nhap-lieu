@@ -32,10 +32,21 @@ CK_OVERRIDE = {
 }
 #   2. Đã hết hạn ngày chu kỳ hiện tại nhưng sheet gốc lặp lại CK cũ
 #      (Tim: "ghi là trùng lặp" — giữ nguyên CK, chỉ đánh dấu trong mô tả)
-DUPLICATE_NOTE_BE = {163, 188}
+#      Bể 188 gỡ khỏi danh sách 2026-07-02 (phiên 15): file Excel mới Tim gửi
+#      đã tự cập nhật CK 5->6 cho bể này -> không còn trùng lặp, là tiến độ thật.
+DUPLICATE_NOTE_BE = {163}
 #   3. 7 bể quay lại CK1 sau khi đã xong CK7 (Tim: "đã qua chượp mới, không phải lỗi") -> không sửa gì
 #   4. Bể 354 không có lịch sử trong S500 (Tim: "lỗi đánh máy sai", xác nhận số đúng là 35)
 BE_NUMBER_FIX = {354: 35}
+
+def parse_be(value):
+    """Cột B từng là số thô (148), từ 2026-07-02 Tim đổi sang dạng chữ 'L148' -> hỗ trợ cả 2."""
+    if isinstance(value, str):
+        v = value.strip()
+        if v[:1].upper() == 'L':
+            v = v[1:]
+        return int(v)
+    return int(value)
 
 def read_be_ck(excel_path, sheet_name):
     wb = openpyxl.load_workbook(excel_path, data_only=True)
@@ -43,12 +54,13 @@ def read_be_ck(excel_path, sheet_name):
     rows = []
     r = 4
     while True:
-        be = ws.cell(r, 2).value
+        be_raw = ws.cell(r, 2).value
         ck = ws.cell(r, 3).value
         stt = ws.cell(r, 1).value
-        if stt is None and be is None:
+        if stt is None and be_raw is None:
             break
-        if be is not None and ck is not None:
+        if be_raw is not None and ck is not None:
+            be = parse_be(be_raw)
             if be in BE_NUMBER_FIX:
                 be = BE_NUMBER_FIX[be]
             if be in CK_OVERRIDE:
