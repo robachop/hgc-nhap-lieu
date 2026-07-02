@@ -8,14 +8,25 @@ Usage:
     Nếu không truyền file  → tìm file mới nhất trong ~/Downloads
     Nếu không truyền ngày  → ngày làm việc tiếp theo (bỏ qua CN)
 
-Cách đọc sheet "Dãy kéo rút" (Phong):
+Phân công 4 người:
+    - Phong : C___          (bơm nước long / kéo rút)     ← sheet "Dãy kéo rút"
+    - Ha    : Px___ + PM00  (phá xác + pha muối)          ← sheet "Dãy kéo rút"
+    - Mien  : S[1-7]__      (đảo trộn) — suy ra +1 ngày   ← sheet "S500"
+    - Hao   : (khung trống thành phẩm — tự nhập tại chỗ)
+
+Cách đọc sheet "Dãy kéo rút" (Phong + Ha):
     - Row 0: header (col1=Bể cấp, col2=Bể Nhận, col3=LSX)
     - Rows 1+: data — đọc cols 1,2,3 cho đến hết dữ liệu
-    - be_cap: BM00 hoặc Xxxx → "" (để trống, Phong tự điền)
-    - be_cap: Txxx → dùng nguyên
+    - be_cap: BM00 hoặc Xxxx → "" (để trống, tự điền); Txxx → dùng nguyên
+
+Cách suy ra đảo trộn cho Miên (sheet "S500"):
+    - Lấy các bể Miên đang đảo trộn (S[cycle][day]) trong `LOOKBACK` ngày gần nhất
+    - Với mỗi bể: lấy bản ghi mới nhất, cộng thêm số ngày tới ngày kế hoạch
+    - Chu kỳ 1 tối đa 15 ngày (biến động), chu kỳ 2–7 tối đa 5 ngày
+    - Bể vượt quá max chu kỳ → coi như đã hết chu kỳ → KHÔNG tự tạo (Miên tự thêm)
 """
 
-import sys, json, datetime, subprocess
+import sys, json, datetime, subprocess, re
 from pathlib import Path
 
 try:
@@ -26,6 +37,9 @@ except ImportError:
 # ── Config ────────────────────────────────────────────────────
 REPO_DIR = Path(__file__).parent.parent   # /tmp/hgc-nhap-lieu
 BASE_URL  = "https://robachop.github.io/hgc-nhap-lieu/"
+WORKERS   = ['Phong', 'Ha', 'Mien', 'Hao']          # thứ tự sinh trang
+CYCLE_MAX = {1: 15, 2: 5, 3: 5, 4: 5, 5: 5, 6: 5, 7: 5}  # số ngày tối đa mỗi chu kỳ đảo trộn
+LOOKBACK  = 6                                        # cửa sổ ngày tìm bể đang đảo trộn
 
 # ── Helpers ───────────────────────────────────────────────────
 def next_workday(ref=None):
@@ -38,38 +52,31 @@ def next_workday(ref=None):
 def mo_ta(lsx):
     if lsx == "PM00": return "P-Pha muối"
     if lsx.startswith("C") and len(lsx) == 4 and lsx[1:].isdigit():
-        lan = int(lsx[1])
-        day = int(lsx[2])
-        return f"C-Nước long {lan} dãy {day}"
+        return f"C-Nước long {int(lsx[1])} dãy {int(lsx[2])}"
     if lsx.startswith("Px") and len(lsx) == 4:
-        day = int(lsx[2])
-        return f"Phá xác dãy {day}"
+        return f"Phá xác dãy {int(lsx[2])}"
+    if re.match(r'^S[1-7]\d\d$', lsx):
+        return f"S-Đảo trộn {int(lsx[1])} ngày {int(lsx[2:])}"
     return lsx
 
 def group(lsx):
-    if lsx == "PM00":           return "PM_pha_muoi"
-    if lsx.startswith("C"):     return "C_keo_rut"
-    if lsx.startswith("Px"):    return "PX_rut_kiet"
+    if lsx == "PM00":               return "PM_pha_muoi"
+    if lsx.startswith("Px"):        return "PX_rut_kiet"
+    if lsx.startswith("C"):         return "C_keo_rut"
+    if re.match(r'^S[1-7]\d\d$', lsx): return "S_dao_tron"
     return "other"
 
 def dvt(lsx):
     return "kg" if lsx.startswith("Px") else "lít"
 
-# Phân công theo LSX
-# C___  → Phong
-# Px___ + PM00 → Ha
+# Phân công theo LSX trong sheet "Dãy kéo rút"
+#   C___  → Phong ; Px___ + PM00 → Ha
 def nguoi(lsx):
     if lsx.startswith('C'):  return 'Phong'
     return 'Ha'
 
-# ── Đọc sheet "Dãy kéo rút" ──────────────────────────────────
+# ── Đọc sheet "Dãy kéo rút" → Phong + Ha ─────────────────────
 def read_day_keo_rut(excel_path):
-    """
-    Đọc sheet 'Dãy kéo rút', tách task theo người:
-      - Cxxx  → Phong
-      - Pxxx + PM00 → Ha
-    Trả về dict: {'Phong': [...], 'Ha': [...]}
-    """
     df = pd.read_excel(excel_path, sheet_name="Dãy kéo rút", header=None)
 
     plan_date_raw = df.iloc[0, 0]
@@ -106,6 +113,62 @@ def read_day_keo_rut(excel_path):
 
     return by_worker
 
+# ── Suy ra đảo trộn cho Miên từ sheet "S500" ─────────────────
+def read_dao_tron(excel_path, target_date):
+    """
+    Suy ra kế hoạch đảo trộn cho Miên: lấy bể đang đảo dở → cộng +1 ngày
+    cho tới ngày kế hoạch. Bể vượt max chu kỳ → bỏ (Miên tự thêm qua nút ➕).
+    An toàn: mọi lỗi đọc S500 → trả [] (không làm hỏng Phong/Ha).
+    """
+    try:
+        df = pd.read_excel(excel_path, sheet_name="S500", header=0)
+        df['ngay'] = pd.to_datetime(df['Ngày thực hiện'], errors='coerce')
+        df['lsx']  = df['Lệnh sản xuất'].astype(str).str.strip()
+        last = df['ngay'].max()
+
+        m = df[(df['Người thực hiện1'] == 'Mien')
+               & (df['lsx'].str.match(r'^S[1-7]\d\d$'))
+               & (df['ngay'] >= last - pd.Timedelta(days=LOOKBACK))].copy()
+        if m.empty:
+            print("  ⚠️  Không tìm thấy bể đảo trộn nào của Miên trong S500 gần đây")
+            return []
+
+        m['cycle'] = m['lsx'].str[1].astype(int)
+        m['day']   = m['lsx'].str[2:].astype(int)
+        m = m.sort_values('ngay')
+        latest = m.groupby('Bể / xe').tail(1)
+
+        tdt   = pd.Timestamp(target_date)
+        tasks = []
+        n = 0
+        skipped = 0
+        for _, x in latest.sort_values(['cycle', 'Bể / xe']).iterrows():
+            delta  = (tdt - x['ngay']).days
+            newday = int(x['day']) + delta
+            cyc    = int(x['cycle'])
+            if delta <= 0 or newday > CYCLE_MAX[cyc]:
+                skipped += 1
+                continue
+            n += 1
+            lsx = f"S{cyc}{newday:02d}"
+            tasks.append({
+                "id":       f"t{n}",
+                "nguoi":    "Mien",
+                "lsx":      lsx,
+                "mo_ta":    mo_ta(lsx),
+                "be_cap":   "",
+                "be_nhan":  str(x['Bể / xe']).strip(),
+                "luong_dk": 0,
+                "dvt":      "lít",
+                "cong":     5,
+                "group":    "S_dao_tron"
+            })
+        print(f"  📅 S500 ngày cuối: {last.strftime('%d/%m/%Y')} | đảo trộn: {n} bể (bỏ {skipped} bể hết chu kỳ)")
+        return tasks
+    except Exception as e:
+        print(f"  ⚠️  Lỗi đọc đảo trộn Miên: {e}")
+        return []
+
 # ── Deploy ────────────────────────────────────────────────────
 def deploy_worker(target_date, worker, tasks):
     """Tạo plan JSON + redirect HTML cho 1 người, trả về link."""
@@ -133,21 +196,25 @@ def deploy_worker(target_date, worker, tasks):
     html_path.write_text(html, encoding='utf-8')
     return plan_file, html_file, app_url
 
-def deploy(target_date, by_worker):
+def deploy(target_date, by_worker, do_push=True):
     date_str = target_date.strftime("%d/%m/%Y")
-    slug     = target_date.strftime("%d%m%Y")
 
     files_to_add = []
     links = {}
-    for worker, tasks in by_worker.items():
-        if not tasks:
-            continue
+    # Sinh trang cho TẤT CẢ người trong WORKERS (kể cả 0 task → khung trống)
+    for worker in WORKERS:
+        tasks = by_worker.get(worker, [])
         plan_file, html_file, url = deploy_worker(target_date, worker, tasks)
         files_to_add += [f"plans/{plan_file}", html_file]
         links[worker] = BASE_URL + html_file
-        print(f"  ✅ {worker}: {len(tasks)} tasks → {html_file}")
+        tag = f"{len(tasks)} tasks" if tasks else "khung trống"
+        print(f"  ✅ {worker}: {tag} → {html_file}")
 
-    msg    = f"Ke hoach {date_str}: " + ", ".join(f"{w}={len(t)}" for w,t in by_worker.items() if t)
+    if not do_push:
+        print("  ⏸  (Chưa push — chế độ tạo local)")
+        return links
+
+    msg     = f"Ke hoach {date_str}: " + ", ".join(f"{w}={len(by_worker.get(w, []))}" for w in WORKERS)
     add_cmd = " ".join(files_to_add)
     result = subprocess.run(
         f'cd "{REPO_DIR}" && git add {add_cmd} && git commit -m "{msg}" && git push origin main',
@@ -184,24 +251,30 @@ def main():
 
     day_vn = ['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7','CN'][target.weekday()]
     print(f"\n📅 Lên kế hoạch cho: {day_vn} {target.strftime('%d/%m/%Y')}")
-    print(f"📊 Đọc sheet 'Dãy kéo rút'...")
 
+    print(f"📊 Đọc sheet 'Dãy kéo rút' (Phong + Ha)...")
     by_worker = read_day_keo_rut(excel_path)
 
+    print(f"📊 Suy ra đảo trộn Miên từ sheet 'S500'...")
+    by_worker['Mien'] = read_dao_tron(excel_path, target)
+
+    by_worker['Hao'] = []   # khung trống thành phẩm — Hao tự nhập
+
     from collections import Counter
-    for w, tasks in by_worker.items():
+    for w in WORKERS:
+        tasks = by_worker.get(w, [])
         grp = Counter(t['group'] for t in tasks)
-        detail = ', '.join(f"{g}:{n}" for g,n in grp.most_common())
+        detail = ', '.join(f"{g}:{n}" for g, n in grp.most_common()) or "khung trống"
         print(f"  → {w}: {len(tasks)} tasks ({detail})")
 
     print(f"\n🚀 Deploy lên GitHub Pages...")
     links = deploy(target, by_worker)
 
-    print(f"\n{'═'*50}")
+    print(f"\n{'═'*54}")
     print(f"  ✅ XONG! Gửi link qua Zalo:")
-    for w, link in links.items():
-        print(f"  {w:8}: {link}")
-    print(f"{'═'*50}\n")
+    for w in WORKERS:
+        print(f"  {w:8}: {links.get(w, '—')}")
+    print(f"{'═'*54}\n")
 
 if __name__ == '__main__':
     main()
