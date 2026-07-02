@@ -67,7 +67,7 @@ def group(lsx):
     return "other"
 
 def dvt(lsx):
-    return "kg" if lsx.startswith("Px") else "lít"
+    return "lít"
 
 # Phân công theo LSX trong sheet "Dãy kéo rút"
 #   C___  → Phong ; Px___ + PM00 → Ha

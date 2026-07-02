@@ -21,7 +21,7 @@
       "be_cap": "L081",
       "be_nhan": "Bể TP",
       "luong_dk": 0,
-      "dvt": "kg",
+      "dvt": "lít",
       "cong": 5,
       "group": "PX_rut_kiet"
     },
@@ -33,7 +33,7 @@
       "be_cap": "T107",
       "be_nhan": "Bể TP",
       "luong_dk": 0,
-      "dvt": "kg",
+      "dvt": "lít",
       "cong": 5,
       "group": "PX_rut_kiet"
     },
@@ -57,7 +57,7 @@
       "be_cap": "T088",
       "be_nhan": "Bể TP",
       "luong_dk": 0,
-      "dvt": "kg",
+      "dvt": "lít",
       "cong": 5,
       "group": "PX_rut_kiet"
     },
@@ -81,7 +81,7 @@
       "be_cap": "L082",
       "be_nhan": "Bể TP",
       "luong_dk": 0,
-      "dvt": "kg",
+      "dvt": "lít",
       "cong": 5,
       "group": "PX_rut_kiet"
     },
@@ -105,7 +105,7 @@
       "be_cap": "L120",
       "be_nhan": "Bể TP",
       "luong_dk": 0,
-      "dvt": "kg",
+      "dvt": "lít",
       "cong": 5,
       "group": "PX_rut_kiet"
     },
@@ -117,7 +117,7 @@
       "be_cap": "T093",
       "be_nhan": "Bể TP",
       "luong_dk": 0,
-      "dvt": "kg",
+      "dvt": "lít",
       "cong": 5,
       "group": "PX_rut_kiet"
     },
@@ -129,7 +129,7 @@
       "be_cap": "T102",
       "be_nhan": "Bể TP",
       "luong_dk": 0,
-      "dvt": "kg",
+      "dvt": "lít",
       "cong": 5,
       "group": "PX_rut_kiet"
     },
@@ -141,7 +141,7 @@
       "be_cap": "T080",
       "be_nhan": "Bể TP",
       "luong_dk": 0,
-      "dvt": "kg",
+      "dvt": "lít",
       "cong": 5,
       "group": "PX_rut_kiet"
     },
@@ -165,7 +165,7 @@
       "be_cap": "T094",
       "be_nhan": "Bể TP",
       "luong_dk": 0,
-      "dvt": "kg",
+      "dvt": "lít",
       "cong": 5,
       "group": "PX_rut_kiet"
     }
