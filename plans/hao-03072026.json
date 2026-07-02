@@ -1,4 +1,17 @@
 {
   "date": "2026-07-03",
-  "tasks": []
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Hao",
+      "lsx": "PP00",
+      "mo_ta": "P-Xuất TP 07NM031 (Đạm 31.25) Lô 300626-S066",
+      "be_cap": "",
+      "be_nhan": "MSI",
+      "luong_dk": 12080,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    }
+  ]
 }
