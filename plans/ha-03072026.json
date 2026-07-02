@@ -1,0 +1,173 @@
+{
+  "date": "2026-07-03",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Ha",
+      "lsx": "PM00",
+      "mo_ta": "P-Pha muối",
+      "be_cap": "",
+      "be_nhan": "L048",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PM_pha_muoi"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Ha",
+      "lsx": "Px10",
+      "mo_ta": "Phá xác dãy 1",
+      "be_cap": "T084",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Ha",
+      "lsx": "Px20",
+      "mo_ta": "Phá xác dãy 2",
+      "be_cap": "T107",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Ha",
+      "lsx": "PM00",
+      "mo_ta": "P-Pha muối",
+      "be_cap": "",
+      "be_nhan": "L066",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PM_pha_muoi"
+    },
+    {
+      "id": "t5",
+      "nguoi": "Ha",
+      "lsx": "Px30",
+      "mo_ta": "Phá xác dãy 3",
+      "be_cap": "T088",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t6",
+      "nguoi": "Ha",
+      "lsx": "PM00",
+      "mo_ta": "P-Pha muối",
+      "be_cap": "",
+      "be_nhan": "L025",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PM_pha_muoi"
+    },
+    {
+      "id": "t7",
+      "nguoi": "Ha",
+      "lsx": "Px40",
+      "mo_ta": "Phá xác dãy 4",
+      "be_cap": "T075",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t8",
+      "nguoi": "Ha",
+      "lsx": "PM00",
+      "mo_ta": "P-Pha muối",
+      "be_cap": "",
+      "be_nhan": "L034",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PM_pha_muoi"
+    },
+    {
+      "id": "t9",
+      "nguoi": "Ha",
+      "lsx": "Px50",
+      "mo_ta": "Phá xác dãy 5",
+      "be_cap": "T055",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t10",
+      "nguoi": "Ha",
+      "lsx": "Px60",
+      "mo_ta": "Phá xác dãy 6",
+      "be_cap": "T093",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t11",
+      "nguoi": "Ha",
+      "lsx": "Px70",
+      "mo_ta": "Phá xác dãy 7",
+      "be_cap": "T102",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t12",
+      "nguoi": "Ha",
+      "lsx": "Px80",
+      "mo_ta": "Phá xác dãy 8",
+      "be_cap": "T080",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t13",
+      "nguoi": "Ha",
+      "lsx": "PM00",
+      "mo_ta": "P-Pha muối",
+      "be_cap": "",
+      "be_nhan": "L215",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PM_pha_muoi"
+    },
+    {
+      "id": "t14",
+      "nguoi": "Ha",
+      "lsx": "Px90",
+      "mo_ta": "Phá xác dãy 9",
+      "be_cap": "T094",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    }
+  ]
+}
