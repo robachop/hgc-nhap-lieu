@@ -24,6 +24,30 @@
       "dvt": "lít",
       "cong": 5,
       "group": "P_xuat_tp"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Hao",
+      "lsx": "PT00",
+      "mo_ta": "P-Thành phẩm tồn — kiểm tra bể L134",
+      "be_cap": "L134",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Hao",
+      "lsx": "PT00",
+      "mo_ta": "P-Thành phẩm tồn — kiểm tra bể L138",
+      "be_cap": "L138",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
     }
   ]
 }

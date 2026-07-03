@@ -113,6 +113,30 @@ def read_day_keo_rut(excel_path):
 
     return by_worker
 
+# ── Kiểm tồn thành phẩm (PT00) ───────────────────────────────
+def append_pt00(by_worker, worker, be_cap=''):
+    """Thêm 1 lệnh PT00 (P-Thành phẩm tồn) vào cuối danh sách của 1 người.
+    Tim chốt 2026-07-02: suy luận tồn = nhập - xuất không an toàn (đã kiểm
+    chứng bằng dữ liệu S500 thật, lệch hàng nghìn lít) -> luôn kèm 1 lệnh
+    kiểm tồn thật (PT00) cho Ha (sau khi đấu) và Hao (trước khi xuất)."""
+    tasks = by_worker.setdefault(worker, [])
+    n = len(tasks) + 1
+    mo_ta = f'P-Thành phẩm tồn — kiểm tra bể {be_cap}' if be_cap \
+        else 'P-Thành phẩm tồn — kiểm tra lượng tồn thật tại bể đang làm'
+    tasks.append({
+        "id":       f"t{n}",
+        "nguoi":    worker,
+        "lsx":      "PT00",
+        "mo_ta":    mo_ta,
+        "be_cap":   be_cap,
+        "be_nhan":  "",
+        "luong_dk": 0,
+        "dvt":      "lít",
+        "cong":     5,
+        "group":    "P_xuat_tp"
+    })
+    return by_worker
+
 # ── Suy ra đảo trộn cho Miên từ sheet "S500" ─────────────────
 def read_dao_tron(excel_path, target_date):
     """
@@ -254,6 +278,9 @@ def main():
 
     print(f"📊 Đọc sheet 'Dãy kéo rút' (Phong + Ha)...")
     by_worker = read_day_keo_rut(excel_path)
+
+    # Luôn kèm 1 lệnh kiểm tồn thật (PT00) cho Ha — xem append_pt00() ở trên
+    append_pt00(by_worker, 'Ha')
 
     # ⚠️ ĐÃ TẮT 2026-07-02: Miên không dùng logic suy luận từ S500 nữa (read_dao_tron()),
     # giờ dùng script riêng scripts/gen_mien_tuan.py đọc sheet "Tuần XX" (Miên viết tay).

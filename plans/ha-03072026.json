@@ -168,6 +168,18 @@
       "dvt": "lít",
       "cong": 5,
       "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t15",
+      "nguoi": "Ha",
+      "lsx": "PT00",
+      "mo_ta": "P-Thành phẩm tồn — kiểm tra lượng tồn thật tại bể đang làm",
+      "be_cap": "",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
     }
   ]
 }
