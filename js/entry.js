@@ -82,6 +82,7 @@ function renderWorkerTasks(name, tasks) {
         style="width:100%;border-color:#3b82f6;color:#1e40af;margin-bottom:12px">
         ➕ Thêm lệnh sản xuất
       </button>
+      ${transferBoiButtonHtml()}
       <div class="empty"><div class="empty-icon">✌️</div>
         <p>Không có lệnh nào được giao cho <strong>${name}</strong> hôm nay.<br>
         Bấm nút trên để tự thêm lệnh.</p>
@@ -99,6 +100,7 @@ function renderWorkerTasks(name, tasks) {
       style="width:100%;border-color:#3b82f6;color:#1e40af;margin-bottom:12px">
       ➕ Thêm lệnh sản xuất
     </button>
+    ${transferBoiButtonHtml()}
     <div class="worker-header">
       <div>
         <div class="wh-name">👷 ${name}</div>
@@ -564,5 +566,128 @@ function submitWorkerTask() {
 
   // Re-render toàn bộ (inline card sẽ tự biến mất)
   const myTasks = state.plan?.tasks.filter(t => t.nguoi === state.workerName) || [];
+  renderWorkerTasks(state.workerName, myTasks);
+}
+
+// ── Chuyển bể nước bổi (chỉ Miên) ──────────────────────────────
+function transferBoiButtonHtml() {
+  return state.workerName === 'Mien'
+    ? `<button class="btn btn-outline" onclick="openTransferBoi()"
+        style="width:100%;border-color:#0ea5e9;color:#0369a1;margin-bottom:12px">
+        🔄 Chuyển bể nước bổi
+      </button>`
+    : '';
+}
+
+function openTransferBoi() {
+  const existing = document.getElementById('transfer-boi-inline');
+  if (existing) { existing.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+
+  const card = document.createElement('div');
+  card.id = 'transfer-boi-inline';
+  card.className = 'w-card worker-added';
+  card.innerHTML = `
+    <div style="font-size:13px;font-weight:700;color:#0369a1;margin-bottom:10px">
+      🔄 Chuyển bể nước bổi
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <div class="w-loc-label" style="margin-bottom:4px">🏺 Bể nguồn <span style="color:#ef4444">*</span></div>
+        <input type="text" id="tb-nguon" class="w-loc-input" style="width:100%"
+          placeholder="L148" list="be-datalist" autocomplete="off">
+      </div>
+      <div>
+        <div class="w-loc-label" style="margin-bottom:4px">📦 Bể đích <span style="color:#ef4444">*</span></div>
+        <input type="text" id="tb-dich" class="w-loc-input" style="width:100%"
+          placeholder="L163" list="be-datalist" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="w-qty-row" style="margin-bottom:8px">
+      <input type="number" id="tb-luong" inputmode="numeric" placeholder="0"
+        style="flex:1;padding:10px;border:1.5px solid #e2e8f0;border-radius:6px;
+               font-size:18px;font-weight:700;text-align:right;width:100%">
+      <span class="dvt">lít</span>
+    </div>
+
+    <div class="w-note" style="margin-bottom:12px">
+      <input type="text" id="tb-ghichu" placeholder="Ghi chú (vd: đấu lại, dồn bể...)"
+        style="width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;
+               border-radius:6px;font-size:13px">
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-outline btn-sm" onclick="cancelTransferBoi()" style="flex:1">✕ Huỷ</button>
+      <button class="btn btn-primary btn-sm" onclick="submitTransferBoi()" style="flex:2">✅ Xác nhận chuyển</button>
+    </div>`;
+
+  const wrap = document.getElementById('worker-task-area');
+  const addBtn = wrap.querySelector('button'); // nút đầu tiên (Thêm lệnh SX)
+  if (addBtn) addBtn.insertAdjacentElement('afterend', card);
+  else wrap.prepend(card);
+
+  card.scrollIntoView({behavior:'smooth', block:'start'});
+  setTimeout(() => document.getElementById('tb-nguon')?.focus(), 300);
+}
+
+function cancelTransferBoi() {
+  document.getElementById('transfer-boi-inline')?.remove();
+}
+
+function beNumFromInput(val) {
+  const digits = (val || '').replace(/\D/g, '');
+  return digits ? digits.padStart(3, '0') : null;
+}
+
+function submitTransferBoi() {
+  const nguonRaw = (document.getElementById('tb-nguon')?.value || '').trim();
+  const dichRaw  = (document.getElementById('tb-dich')?.value  || '').trim();
+  const luong    = parseInt(document.getElementById('tb-luong')?.value) || 0;
+  const ghiChu   = (document.getElementById('tb-ghichu')?.value || '').trim();
+
+  const numNguon = beNumFromInput(nguonRaw);
+  const numDich  = beNumFromInput(dichRaw);
+
+  if (!numNguon) { toast('⚠️ Chưa nhập bể nguồn'); return; }
+  if (!numDich)  { toast('⚠️ Chưa nhập bể đích'); return; }
+  if (numNguon === numDich) { toast('⚠️ Bể nguồn và bể đích phải khác nhau'); return; }
+  if (luong <= 0) { toast('⚠️ Chưa nhập lượng chuyển'); return; }
+
+  const beNguon  = 'L' + numNguon;
+  const beDich   = 'L' + numDich;
+  const lsxNguon = 'B' + numNguon;
+  const lsxDich  = 'B' + numDich;
+  const congNguon = LSX_DATA[lsxNguon]?.cong || 10;
+  const congDich  = LSX_DATA[lsxDich]?.cong  || 10;
+  const ts = Date.now();
+
+  if (!state.plan) state.plan = { date: state.date, tasks: [] };
+  if (!currentResult) currentResult = { date: state.date, nguoi: state.workerName, submitted: false, results: [] };
+
+  const idOut = 'w_' + ts + '_out';
+  const idIn  = 'w_' + ts + '_in';
+  const moTaOut = `B-Nước bổi (chuyển đi) - ${beNguon} → ${beDich}`;
+  const moTaIn  = `B-Nước bổi (nhận vào) - ${beDich} ← ${beNguon}`;
+
+  state.plan.tasks.push(
+    { id: idOut, be_cap: beNguon, lsx: lsxNguon, mo_ta: moTaOut,
+      dvt: 'lít', cong: congNguon, be_nhan: beDich, luong_dk: 0, nguoi: state.workerName, ghi_chu: ghiChu, worker_added: true },
+    { id: idIn, be_cap: beNguon, lsx: lsxDich, mo_ta: moTaIn,
+      dvt: 'lít', cong: congDich, be_nhan: beDich, luong_dk: 0, nguoi: state.workerName, ghi_chu: ghiChu, worker_added: true }
+  );
+  savePlan(state.plan);
+
+  currentResult.results.push(
+    { task_id: idOut, be_cap: beNguon, lsx: lsxNguon, mo_ta: moTaOut,
+      dvt: 'lít', cong: congNguon, be_nhan: beDich, luong_dk: 0, luong_tt: luong, so_lo: '', status: 'done', ghi_chu: ghiChu, worker_added: true },
+    { task_id: idIn, be_cap: beNguon, lsx: lsxDich, mo_ta: moTaIn,
+      dvt: 'lít', cong: congDich, be_nhan: beDich, luong_dk: 0, luong_tt: luong, so_lo: '', status: 'done', ghi_chu: ghiChu, worker_added: true }
+  );
+  saveResult(currentResult);
+
+  toast(`✅ Đã ghi chuyển ${luong.toLocaleString()} lít: ${beNguon} → ${beDich}`);
+
+  const myTasks = state.plan.tasks.filter(t => t.nguoi === state.workerName);
   renderWorkerTasks(state.workerName, myTasks);
 }
