@@ -569,12 +569,16 @@ function submitWorkerTask() {
   renderWorkerTasks(state.workerName, myTasks);
 }
 
-// ── Chuyển bể nước bổi (chỉ Miên) ──────────────────────────────
+// ── Chuyển bể trổ nước bổi — Nhánh B (chỉ Miên) ────────────────
+// Vòng đời bổi: sinh ở S0xx (~5.000-6.000L, tại 1 bể trổ Txxx) → tách 2 nhánh:
+//   Nhánh A (~2.500-3.000L): gài nén bơm lên Lxxx — đã có mã S090, không liên quan hàm này
+//   Nhánh B (~2.500L còn lại): nằm ở bể trổ, mỗi ~1 tháng chuyển sang 1 bể trổ KHÁC (Txxx→Txx2→Txx3...),
+//     lượng có thể đổi mỗi lần, tới khi "chín" thì bơm lên bể kéo rút (Lxx1) — đây là hàm bên dưới lo.
 function transferBoiButtonHtml() {
   return state.workerName === 'Mien'
     ? `<button class="btn btn-outline" onclick="openTransferBoi()"
         style="width:100%;border-color:#0ea5e9;color:#0369a1;margin-bottom:12px">
-        🔄 Chuyển bể nước bổi
+        🔄 Chuyển bể trổ nước bổi
       </button>`
     : '';
 }
@@ -588,21 +592,26 @@ function openTransferBoi() {
   card.className = 'w-card worker-added';
   card.innerHTML = `
     <div style="font-size:13px;font-weight:700;color:#0369a1;margin-bottom:10px">
-      🔄 Chuyển bể nước bổi
+      🔄 Chuyển bể trổ nước bổi
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
       <div>
-        <div class="w-loc-label" style="margin-bottom:4px">🏺 Bể nguồn <span style="color:#ef4444">*</span></div>
+        <div class="w-loc-label" style="margin-bottom:4px">🏺 Bể trổ nguồn <span style="color:#ef4444">*</span></div>
         <input type="text" id="tb-nguon" class="w-loc-input" style="width:100%"
-          placeholder="L148" list="be-datalist" autocomplete="off">
+          placeholder="T148" list="be-datalist" autocomplete="off">
       </div>
       <div>
         <div class="w-loc-label" style="margin-bottom:4px">📦 Bể đích <span style="color:#ef4444">*</span></div>
         <input type="text" id="tb-dich" class="w-loc-input" style="width:100%"
-          placeholder="L163" list="be-datalist" autocomplete="off">
+          placeholder="T163" list="be-datalist" autocomplete="off">
       </div>
     </div>
+
+    <label style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:12px;color:#0369a1">
+      <input type="checkbox" id="tb-chin" style="width:16px;height:16px">
+      Bổi đã chín — bơm lên bể kéo rút (đích là L, không phải T nữa)
+    </label>
 
     <div class="w-qty-row" style="margin-bottom:8px">
       <input type="number" id="tb-luong" inputmode="numeric" placeholder="0"
@@ -612,7 +621,7 @@ function openTransferBoi() {
     </div>
 
     <div class="w-note" style="margin-bottom:12px">
-      <input type="text" id="tb-ghichu" placeholder="Ghi chú (vd: đấu lại, dồn bể...)"
+      <input type="text" id="tb-ghichu" placeholder="Ghi chú (nếu có)"
         style="width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;
                border-radius:6px;font-size:13px">
     </div>
@@ -648,14 +657,17 @@ function submitTransferBoi() {
 
   const numNguon = beNumFromInput(nguonRaw);
   const numDich  = beNumFromInput(dichRaw);
+  const daChin   = !!document.getElementById('tb-chin')?.checked;
 
-  if (!numNguon) { toast('⚠️ Chưa nhập bể nguồn'); return; }
+  if (!numNguon) { toast('⚠️ Chưa nhập bể trổ nguồn'); return; }
   if (!numDich)  { toast('⚠️ Chưa nhập bể đích'); return; }
   if (numNguon === numDich) { toast('⚠️ Bể nguồn và bể đích phải khác nhau'); return; }
   if (luong <= 0) { toast('⚠️ Chưa nhập lượng chuyển'); return; }
 
-  const beNguon  = 'L' + numNguon;
-  const beDich   = 'L' + numDich;
+  // Nguồn luôn là bể trổ (T) — đang trong Nhánh B, chưa chín.
+  // Đích là T (chuyển sang bể trổ khác chờ tiếp) hoặc L (đã chín, lên bể kéo rút).
+  const beNguon  = 'T' + numNguon;
+  const beDich   = (daChin ? 'L' : 'T') + numDich;
   const lsxNguon = 'B' + numNguon;
   const lsxDich  = 'B' + numDich;
   const congNguon = LSX_DATA[lsxNguon]?.cong || 10;
@@ -667,8 +679,12 @@ function submitTransferBoi() {
 
   const idOut = 'w_' + ts + '_out';
   const idIn  = 'w_' + ts + '_in';
-  const moTaOut = `B-Nước bổi (chuyển đi) - ${beNguon} → ${beDich}`;
-  const moTaIn  = `B-Nước bổi (nhận vào) - ${beDich} ← ${beNguon}`;
+  const moTaOut = daChin
+    ? `B-Nước bổi (chín, bơm lên bể kéo rút) - ${beNguon} → ${beDich}`
+    : `B-Nước bổi (chuyển bể trổ) - ${beNguon} → ${beDich}`;
+  const moTaIn = daChin
+    ? `B-Nước bổi (nhận vào bể kéo rút) - ${beDich} ← ${beNguon}`
+    : `B-Nước bổi (nhận vào bể trổ) - ${beDich} ← ${beNguon}`;
 
   state.plan.tasks.push(
     { id: idOut, be_cap: beNguon, lsx: lsxNguon, mo_ta: moTaOut,

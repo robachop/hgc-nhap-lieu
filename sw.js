@@ -6,7 +6,7 @@ const ASSETS = [
   '/hgc-nhap-lieu/js/app.js?v=20260627e',
   '/hgc-nhap-lieu/js/lsx_data.js?v=20260627e',
   '/hgc-nhap-lieu/js/plan.js?v=20260627e',
-  '/hgc-nhap-lieu/js/entry.js?v=20260703a',
+  '/hgc-nhap-lieu/js/entry.js?v=20260703b',
   '/hgc-nhap-lieu/js/summary.js?v=20260627e',
   'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
   'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js'
