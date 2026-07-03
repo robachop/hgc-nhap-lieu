@@ -1,0 +1,17 @@
+{
+  "date": "2026-07-08",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Hao",
+      "lsx": "PP00",
+      "mo_ta": "P-Xuất TP 07NM00021 (Đạm 21.46) Lô 300626-S067 — Nam Ngư — Tải 11 khối",
+      "be_cap": "",
+      "be_nhan": "MBA",
+      "luong_dk": 6150,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    }
+  ]
+}
