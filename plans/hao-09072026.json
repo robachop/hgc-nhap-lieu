@@ -1,0 +1,17 @@
+{
+  "date": "2026-07-09",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Hao",
+      "lsx": "PP50",
+      "mo_ta": "P-Xuất TP ❓ ITEM/Đạm (đã đấu xong, đang chờ kết quả KCS) Lô S068 — Nam Ngư — Bồn 12 khối",
+      "be_cap": "L138",
+      "be_nhan": "MBA",
+      "luong_dk": 12080,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    }
+  ]
+}
