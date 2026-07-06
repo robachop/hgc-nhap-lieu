@@ -456,6 +456,13 @@ function openAddLSX() {
       ✏️ Lệnh mới — tự thêm
     </div>
 
+    <!-- Ngày thực hiện (sửa được — dùng để nhập bù ngày trước) -->
+    <div style="margin-bottom:8px">
+      <div class="w-loc-label" style="margin-bottom:4px">📅 Ngày thực hiện <span style="color:#ef4444">*</span></div>
+      <input type="date" id="ai-ngay" class="w-loc-input" style="width:100%" value="${state.date}">
+      <div style="font-size:11px;color:#94a3b8;margin-top:3px">Để nhập bù ngày trước: đổi ngày ở đây</div>
+    </div>
+
     <!-- LSX -->
     <div style="margin-bottom:8px">
       <div class="w-loc-label" style="margin-bottom:4px">Lệnh SX (LSX) <span style="color:#ef4444">*</span></div>
@@ -557,9 +564,11 @@ function submitWorkerTask() {
   const lo    = (document.getElementById('ai-lo')?.value    || '').trim();
   const luong = parseInt(document.getElementById('ai-luong')?.value) || 0;
   const ghi   = (document.getElementById('ai-ghichu')?.value|| '').trim();
+  const ngay  = (document.getElementById('ai-ngay')?.value  || '').trim();
 
   if (!lsx)    { toast('⚠️ Chưa nhập mã lệnh SX'); return; }
   if (!nhan)   { toast('⚠️ Chưa nhập Nơi nhận');   return; }
+  if (!ngay)   { toast('⚠️ Chưa chọn ngày thực hiện'); return; }
   if (!inlineSt){ toast('⚠️ Chưa chọn trạng thái'); return; }
 
   const info  = LSX_DATA[lsx] || {};
@@ -581,12 +590,14 @@ function submitWorkerTask() {
     task_id: newId, be_cap: cap, lsx, mo_ta: info.mo_ta||lsx,
     dvt: info.dvt||'lít', cong: info.cong||5,
     be_nhan: nhan, luong_dk: 0, luong_tt: luong,
-    so_lo: lo, status: inlineSt, ghi_chu: ghi, worker_added: true
+    so_lo: lo, status: inlineSt, ghi_chu: ghi, worker_added: true,
+    ngay_th: ngay   // ngày thực hiện riêng cho lệnh này (nhập bù ngày trước)
   });
   saveResult(currentResult);
 
   inlineSt = '';
-  toast('✅ Đã thêm lệnh ' + lsx);
+  const ngayMsg = (ngay !== state.date) ? ` (ngày ${ngay})` : '';
+  toast('✅ Đã thêm lệnh ' + lsx + ngayMsg);
 
   // Re-render toàn bộ (inline card sẽ tự biến mất)
   const myTasks = state.plan?.tasks.filter(t => t.nguoi === state.workerName) || [];
