@@ -2,7 +2,7 @@
 let currentResult = null;
 
 // Endpoint Apps Script (Google Sheet). Để rỗng "" = tắt, dùng Web Share như cũ.
-const SHEET_ENDPOINT = "";
+const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbzu8JigHnQszScbRmBEfrrDwR4XuCQl7rmaJiFNpYsd2OxgF3LqfDpi2n8cn5pM6Zrr4Q/exec";
 
 function initEntry() {
   // Nếu không có date từ URL param thì dùng hôm nay
