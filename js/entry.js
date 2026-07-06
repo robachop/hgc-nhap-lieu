@@ -205,7 +205,7 @@ function renderWorkerTasks(name, tasks) {
   const allDone = currentResult.results.every(r => r.status !== 'pending');
   html += `<div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
     <button class="btn btn-success" onclick="submitResult()">
-      📤 Gửi kết quả qua Zalo
+      📤 Gửi kết quả cho Giám sát
     </button>
     ${allDone ? '' : '<p style="font-size:11px;color:#94a3b8;text-align:center">Điền xong tất cả task rồi bấm Gửi</p>'}
   </div>`;
@@ -393,16 +393,16 @@ function submitResult() {
 
   // Ưu tiên: gửi thẳng lên Google Sheet qua Apps Script (không cần thao tác gì)
   if (SHEET_ENDPOINT) {
-    toast('⏳ Đang gửi lên bảng...');
+    toast('⏳ Đang gửi cho Giám sát...');
     fetch(SHEET_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: json
     })
-      .then(() => toast('✅ Đã gửi kết quả lên bảng của Tim!'))
+      .then(() => toast('✅ Đã gửi kết quả cho Giám sát!'))
       .catch(() => {
         // Mất mạng / lỗi → quay về cách cũ (Web Share / tải file)
-        toast('⚠️ Không gửi được lên bảng — dùng cách gửi file');
+        toast('⚠️ Mạng lỗi — lưu file tạm, gửi lại khi có mạng');
         shareOrDownload(blob, filename);
       });
     return;
@@ -428,7 +428,7 @@ function shareOrDownload(blob, filename) {
   }
   // Fallback: download file
   downloadJSON(blob, filename);
-  toast('📥 Đã tải file — gửi cho Tim qua Zalo');
+  toast('📥 Đã lưu file — nhờ gửi Zalo cho Giám sát');
 }
 
 function downloadJSON(blob, filename) {
