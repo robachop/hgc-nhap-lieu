@@ -1,6 +1,9 @@
 // ── ENTRY SCREEN (Nhân viên) ───────────────────────────────
 let currentResult = null;
 
+// Endpoint Apps Script (Google Sheet). Để rỗng "" = tắt, dùng Web Share như cũ.
+const SHEET_ENDPOINT = "";
+
 function initEntry() {
   // Nếu không có date từ URL param thì dùng hôm nay
   const date = state.date || today();
@@ -388,7 +391,29 @@ function submitResult() {
   const blob = new Blob([json], { type: 'application/json' });
   const filename = `HGC_${currentResult.date}_${currentResult.nguoi}.json`;
 
-  // Try Web Share API (Android share sheet — includes Zalo)
+  // Ưu tiên: gửi thẳng lên Google Sheet qua Apps Script (không cần thao tác gì)
+  if (SHEET_ENDPOINT) {
+    toast('⏳ Đang gửi lên bảng...');
+    fetch(SHEET_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: json
+    })
+      .then(() => toast('✅ Đã gửi kết quả lên bảng của Tim!'))
+      .catch(() => {
+        // Mất mạng / lỗi → quay về cách cũ (Web Share / tải file)
+        toast('⚠️ Không gửi được lên bảng — dùng cách gửi file');
+        shareOrDownload(blob, filename);
+      });
+    return;
+  }
+
+  // Không có endpoint → cách cũ (Web Share / tải file)
+  shareOrDownload(blob, filename);
+}
+
+// Web Share API (Android share sheet — gồm Zalo); không được thì tải file
+function shareOrDownload(blob, filename) {
   if (navigator.share && navigator.canShare) {
     const file = new File([blob], filename, { type: 'application/json' });
     if (navigator.canShare({ files: [file] })) {
@@ -401,7 +426,6 @@ function submitResult() {
       return;
     }
   }
-
   // Fallback: download file
   downloadJSON(blob, filename);
   toast('📥 Đã tải file — gửi cho Tim qua Zalo');
