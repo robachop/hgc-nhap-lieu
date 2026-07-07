@@ -1,14 +1,14 @@
 {
-  "date": "2026-07-10",
+  "date": "2026-07-13",
   "tasks": [
     {
       "id": "t1",
       "nguoi": "Hao",
-      "lsx": "PP50",
-      "mo_ta": "P-Xuất TP 07NM028 (Đạm 27.86) Lô 030726-S068 — Nam Ngư — Bồn 12 khối",
-      "be_cap": "L138",
+      "lsx": "PP10",
+      "mo_ta": "P-Xuất TP 07NM028 (Đạm 27.79) Lô 060726-S069 — Nam Ngư — Tải 11 khối",
+      "be_cap": "L113",
       "be_nhan": "MBA",
-      "luong_dk": 12080,
+      "luong_dk": 6150,
       "dvt": "lít",
       "cong": 5,
       "group": "P_xuat_tp"
@@ -17,8 +17,8 @@
       "id": "t2",
       "nguoi": "Hao",
       "lsx": "PT00",
-      "mo_ta": "P-Thành phẩm tồn — kiểm tra bể L138",
-      "be_cap": "L138",
+      "mo_ta": "P-Thành phẩm tồn — kiểm tra bể L113",
+      "be_cap": "L113",
       "be_nhan": "",
       "luong_dk": 0,
       "dvt": "lít",

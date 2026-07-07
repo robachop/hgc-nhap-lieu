@@ -1,0 +1,41 @@
+{
+  "date": "2026-07-11",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Hao",
+      "lsx": "PP10",
+      "mo_ta": "P-Xuất TP 07NM028 (Đạm 27.79) Lô 060726-S069 — Nam Ngư — Bồn 12 khối",
+      "be_cap": "L113",
+      "be_nhan": "MBA",
+      "luong_dk": 12080,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Hao",
+      "lsx": "PP10",
+      "mo_ta": "P-Xuất TP 07NM028 (Đạm 27.79) Lô 060726-S069 — Nam Ngư — Tải 11 khối",
+      "be_cap": "L113",
+      "be_nhan": "MBA",
+      "luong_dk": 11220,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Hao",
+      "lsx": "PT00",
+      "mo_ta": "P-Thành phẩm tồn — kiểm tra bể L113",
+      "be_cap": "L113",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    }
+  ]
+}
