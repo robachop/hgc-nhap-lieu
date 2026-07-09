@@ -125,7 +125,7 @@ function renderWorkerTasks(name, tasks) {
     const curLsx = res.lsx || task.lsx;
     const curBeNhan = res.be_nhan || task.be_nhan || '';
     const pxFinalized = isPx && curLsx !== task.lsx;
-    const lsxEditable = task.group === 'S_dao_tron';
+    const lsxEditable = true;   // tất cả LSX sửa được (trước chỉ Mien/S_dao_tron)
 
     html += `<div class="w-card ${st !== 'pending' ? st : ''} ${task.worker_added ? 'worker-added' : ''} ${isPx ? 'px-card' : ''}" id="wcard-${task.id}">
       ${lsxEditable
@@ -295,9 +295,9 @@ function updatePxCard(taskId, beNhan, newLsx) {
   res.be_nhan = beNhan;
   res.lsx     = newLsx;
   saveResult(currentResult);
-  // Cập nhật hiển thị LSX
+  // Cập nhật hiển thị LSX (ô LSX giờ là input editable → set .value; fallback textContent)
   const el = document.getElementById('lsx-display-' + taskId);
-  if (el) el.textContent = newLsx;
+  if (el) { if (el.tagName === 'INPUT') el.value = newLsx; else el.textContent = newLsx; }
   // Cập nhật nhãn trạng thái tạm/đã đấu
   const task = state.plan?.tasks.find(t => t.id === taskId);
   const stateEl = document.getElementById('pxstate-' + taskId);
