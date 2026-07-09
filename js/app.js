@@ -93,6 +93,7 @@ function tryLoadFromURL() {
     fetch(base + 'plans/' + planFile + '.json')
       .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(plan => {
+        if (isPlanExpired(plan.date)) { showExpiredPlan(plan.date); return; }
         savePlan(plan);
         state.date = plan.date;
         toast('✅ Đã tải kế hoạch ' + fmtDate(plan.date));
@@ -106,6 +107,7 @@ function tryLoadFromURL() {
   if (planEncoded) {
     try {
       const plan = decodePlan(planEncoded);
+      if (isPlanExpired(plan.date)) { showExpiredPlan(plan.date); return; }
       savePlan(plan);
       state.date = plan.date;
       toast('✅ Đã tải kế hoạch ' + fmtDate(plan.date));
@@ -131,6 +133,24 @@ function tryLoadFromURL() {
 function fmtDate(d) {
   const [y,m,day] = d.split('-');
   return `${day}/${m}/${y}`;
+}
+
+// ── Khóa kế hoạch quá khứ: chỉ HÔM NAY trở đi mới nhập được ──
+// (nhập bù ngày trước: mở link hôm nay → nút Thêm lệnh → đổi ô Ngày)
+function isPlanExpired(dateStr) {
+  return !!dateStr && dateStr < today();   // ISO YYYY-MM-DD so sánh chuỗi
+}
+function showExpiredPlan(dateStr) {
+  const el = document.getElementById('screen-entry');
+  if (el) el.innerHTML = `<div class="empty" style="margin-top:48px;padding:0 14px">
+    <div class="empty-icon">🔒</div>
+    <p><strong>Kế hoạch ngày ${fmtDate(dateStr)} đã hết hạn.</strong></p>
+    <p style="margin-top:10px">Chỉ nhập được kế hoạch <strong>hôm nay trở đi</strong>.<br>
+    Vui lòng mở <strong>link kế hoạch hôm nay</strong> mà Giám sát gửi.</p>
+    <p style="margin-top:14px;font-size:12px;color:#94a3b8">
+      Quên nhập hôm qua? Mở link hôm nay → bấm ➕ Thêm lệnh sản xuất → đổi ô 📅 Ngày để nhập bù.</p>
+  </div>`;
+  goto('entry');
 }
 
 // ── Init ────────────────────────────────────────────────────
