@@ -352,7 +352,7 @@
     {
       "id": "t30",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S111",
       "mo_ta": "Đảo trộn bể 9 (CK1)",
       "be_cap": "T009",
       "be_nhan": "L009",
@@ -364,7 +364,7 @@
     {
       "id": "t31",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S110",
       "mo_ta": "Đảo trộn bể 10 (CK1)",
       "be_cap": "T010",
       "be_nhan": "L010",
@@ -376,7 +376,7 @@
     {
       "id": "t32",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S110",
       "mo_ta": "Đảo trộn bể 11 (CK1)",
       "be_cap": "T011",
       "be_nhan": "L011",
@@ -388,7 +388,7 @@
     {
       "id": "t33",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S110",
       "mo_ta": "Đảo trộn bể 12 (CK1)",
       "be_cap": "T012",
       "be_nhan": "L012",
@@ -400,7 +400,7 @@
     {
       "id": "t34",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S107",
       "mo_ta": "Đảo trộn bể 15 (CK1)",
       "be_cap": "T015",
       "be_nhan": "L015",
@@ -412,7 +412,7 @@
     {
       "id": "t35",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S111",
       "mo_ta": "Đảo trộn bể 17 (CK1)",
       "be_cap": "T017",
       "be_nhan": "L017",
@@ -424,7 +424,7 @@
     {
       "id": "t36",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S107",
       "mo_ta": "Đảo trộn bể 19 (CK1)",
       "be_cap": "T019",
       "be_nhan": "L019",
@@ -436,7 +436,7 @@
     {
       "id": "t37",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S111",
       "mo_ta": "Đảo trộn bể 26 (CK1)",
       "be_cap": "T026",
       "be_nhan": "L026",
@@ -448,7 +448,7 @@
     {
       "id": "t38",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S107",
       "mo_ta": "Đảo trộn bể 29 (CK1)",
       "be_cap": "T029",
       "be_nhan": "L029",
@@ -460,7 +460,7 @@
     {
       "id": "t39",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S107",
       "mo_ta": "Đảo trộn bể 35 (CK1)",
       "be_cap": "T035",
       "be_nhan": "L035",
@@ -472,7 +472,7 @@
     {
       "id": "t40",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S107",
       "mo_ta": "Đảo trộn bể 36 (CK1)",
       "be_cap": "T036",
       "be_nhan": "L036",
@@ -484,7 +484,7 @@
     {
       "id": "t41",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S107",
       "mo_ta": "Đảo trộn bể 37 (CK1)",
       "be_cap": "T037",
       "be_nhan": "L037",
@@ -496,7 +496,7 @@
     {
       "id": "t42",
       "nguoi": "Mien",
-      "lsx": "S105",
+      "lsx": "S111",
       "mo_ta": "Đảo trộn bể 8 (CK1)",
       "be_cap": "T008",
       "be_nhan": "L008",
