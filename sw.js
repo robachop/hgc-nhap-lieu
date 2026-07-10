@@ -1,4 +1,4 @@
-const CACHE = 'hgc-v2.1';
+const CACHE = 'hgc-v2.2';
 const ASSETS = [
   '/hgc-nhap-lieu/',
   '/hgc-nhap-lieu/index.html',

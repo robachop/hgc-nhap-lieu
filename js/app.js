@@ -1,6 +1,10 @@
-// HGC Nhập Liệu Real-time — V1.0
-const APP_VERSION = 'V1.0';
-const BUILD_DATE  = '2026-06-27';
+// HGC Nhập Liệu Real-time
+// Version badge lấy tự động từ ?v= của chính script này (luôn khớp bản deploy thật,
+// vì không bump ?v= thì trình duyệt còn chẳng tải bản JS mới).
+const SELF_SCRIPT_SRC = document.currentScript ? document.currentScript.src : '';
+const VERSION_MATCH = SELF_SCRIPT_SRC.match(/[?&]v=(\d{4})(\d{2})(\d{2})([a-z]?)/);
+const APP_VERSION = VERSION_MATCH ? `v${VERSION_MATCH[1]}${VERSION_MATCH[2]}${VERSION_MATCH[3]}${VERSION_MATCH[4]}` : 'v?';
+const BUILD_DATE  = VERSION_MATCH ? `${VERSION_MATCH[1]}-${VERSION_MATCH[2]}-${VERSION_MATCH[3]}` : '?';
 const WORKERS = ['Ha', 'Hao', 'Mien', 'Phong', 'Toan'];
 
 // ── State ──────────────────────────────────────────────────
