@@ -384,6 +384,16 @@ function submitResult() {
     return;
   }
 
+  // Chặn gửi khi còn task "đấu bể TP" (Px_rut_kiet) chưa chọn nơi đến —
+  // tránh mã tạm (Px10, Px20...) bị gửi thẳng lên Sheet như dữ liệu thật (xem row 1445, Ha, 2026-07-11).
+  const unresolvedPx = currentResult.results.filter(
+    r => r.status !== 'skip' && /^Px\d0$/.test(r.lsx || '')
+  );
+  if (unresolvedPx.length > 0) {
+    toast(`⚠️ Còn ${unresolvedPx.length} lệnh "đấu bể TP" chưa chọn nơi đến — bấm nút bể ở trên`);
+    return;
+  }
+
   currentResult.submitted_at = new Date().toISOString();
   currentResult.submitted = true;
   saveResult(currentResult);
