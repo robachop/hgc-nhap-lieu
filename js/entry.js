@@ -4,6 +4,9 @@ let currentResult = null;
 // Endpoint Apps Script (Google Sheet). Để rỗng "" = tắt, dùng Web Share như cũ.
 const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbzu8JigHnQszScbRmBEfrrDwR4XuCQl7rmaJiFNpYsd2OxgF3LqfDpi2n8cn5pM6Zrr4Q/exec";
 
+// Canary rollout chống nhập sai LSX ở "Tự thêm" — mở rộng dần, xoá khi áp dụng cho tất cả
+const STRICT_LSX_WORKERS = ['Phong'];
+
 function initEntry() {
   // Nếu không có date từ URL param thì dùng hôm nay
   const date = state.date || today();
@@ -570,6 +573,13 @@ function submitWorkerTask() {
   if (!inlineSt){ toast('⚠️ Chưa chọn trạng thái'); return; }
 
   const info  = LSX_DATA[lsx] || {};
+
+  // Giai đoạn 1 (canary): cảnh báo mềm nếu mã không có trong danh sách chuẩn — không chặn
+  if (STRICT_LSX_WORKERS.includes(state.workerName) && !LSX_DATA[lsx]) {
+    const ok = confirm(`⚠️ Mã lệnh "${lsx}" không có trong danh sách chuẩn (703 LSX).\nBạn có chắc muốn gửi?`);
+    if (!ok) return;
+  }
+
   const newId = 'w_' + Date.now();
 
   // Thêm vào plan local
