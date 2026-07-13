@@ -216,6 +216,30 @@
       "dvt": "lít",
       "cong": 5,
       "group": "P_xuat_tp"
+    },
+    {
+      "id": "t19",
+      "nguoi": "Ha",
+      "lsx": "N105",
+      "mo_ta": "P-Cốt nhỉ bể - L105",
+      "be_cap": "T105",
+      "be_nhan": "L138",
+      "luong_dk": 2000,
+      "dvt": "lít",
+      "cong": 10,
+      "group": "N_cot_nhi"
+    },
+    {
+      "id": "t20",
+      "nguoi": "Ha",
+      "lsx": "N111",
+      "mo_ta": "P-Cốt nhỉ bể - L111",
+      "be_cap": "T111",
+      "be_nhan": "L138",
+      "luong_dk": 1700,
+      "dvt": "lít",
+      "cong": 10,
+      "group": "N_cot_nhi"
     }
   ]
 }
