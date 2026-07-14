@@ -1,5 +1,11 @@
 // ── ENTRY SCREEN (Nhân viên) ───────────────────────────────
 let currentResult = null;
+let isSending = false;
+
+// Gửi lại tối đa 3 lần/ngày, mỗi lần cách nhau ít nhất 5 phút —
+// chặn double-tap/spam nhưng vẫn cho công nhân tự sửa khi gõ sai (không cần báo Giám sát mỗi lần).
+const MAX_SUBMIT_COUNT = 3;
+const MIN_SUBMIT_GAP_MS = 5 * 60 * 1000;
 
 // Endpoint Apps Script (Google Sheet). Để rỗng "" = tắt, dùng Web Share như cũ.
 const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbzu8JigHnQszScbRmBEfrrDwR4XuCQl7rmaJiFNpYsd2OxgF3LqfDpi2n8cn5pM6Zrr4Q/exec";
@@ -205,13 +211,7 @@ function renderWorkerTasks(name, tasks) {
   // Send button (nút Thêm LSX đã ở trên cùng)
   const allDone = currentResult.results.every(r => r.status !== 'pending');
   html += `<div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
-    ${currentResult.submitted
-      ? `<button class="btn btn-success" disabled style="opacity:.55;cursor:not-allowed">
-           ✅ Đã gửi — có sai sót báo Giám sát xử lý
-         </button>`
-      : `<button class="btn btn-success" onclick="submitResult()">
-           📤 Gửi kết quả cho Giám sát
-         </button>`}
+    ${renderSubmitButtonHTML()}
     ${allDone ? '' : '<p style="font-size:11px;color:#94a3b8;text-align:center">Điền xong tất cả task rồi bấm Gửi</p>'}
   </div>`;
 
@@ -379,15 +379,63 @@ function setLo(taskId, val) {
 }
 
 // ── Submit / Share ────────────────────────────────────────────
+
+// Tô màu theo số lần gửi — phát hiện ngay khi rà Sheet (lần 1 xanh, 2 vàng, 3 đỏ = hết lượt).
+function submitCountStyle(count) {
+  if (!count) return { bg: '', color: '', label: '📤 Gửi kết quả cho Giám sát', disabled: false };
+  if (count === 1) return { bg: '#dcfce7', color: '#166534', label: '✅ Đã gửi (lần 1/3) — bấm lại nếu cần sửa', disabled: false };
+  if (count === 2) return { bg: '#fef9c3', color: '#854d0e', label: '⚠️ Đã gửi (lần 2/3) — bấm lại nếu cần sửa', disabled: false };
+  return { bg: '#fee2e2', color: '#991b1b', label: '🔴 Đã gửi đủ 3/3 lần — có sai sót báo Giám sát', disabled: true };
+}
+
+function renderSubmitButtonHTML() {
+  const count = currentResult.submit_count || 0;
+  const st = submitCountStyle(count);
+  const styleAttr = count ? `style="background:${st.bg};color:${st.color};border-color:${st.color}${st.disabled ? ';cursor:not-allowed;opacity:.7' : ''}"` : '';
+  return `<button id="btn-submit-result" class="btn btn-success" ${styleAttr} onclick="submitResult()" ${st.disabled ? 'disabled' : ''}>
+    ${st.label}
+  </button>`;
+}
+
+// Cập nhật nút tại chỗ trong lúc/sau khi gửi — không cần render lại cả danh sách task.
+function setSubmitButtonState(mode) {
+  const btn = document.getElementById('btn-submit-result');
+  if (!btn) return;
+  if (mode === 'sending') {
+    btn.disabled = true;
+    btn.style.opacity = '.55';
+    btn.style.cursor = 'not-allowed';
+    btn.textContent = '⏳ Đang gửi...';
+    return;
+  }
+  const st = submitCountStyle(currentResult.submit_count || 0);
+  btn.disabled = st.disabled;
+  btn.style.opacity = st.disabled ? '.7' : '';
+  btn.style.cursor = st.disabled ? 'not-allowed' : '';
+  btn.style.background = st.bg;
+  btn.style.color = st.color;
+  btn.style.borderColor = st.color;
+  btn.textContent = st.label;
+}
+
 function submitResult() {
   if (!currentResult) return;
+  if (isSending) return; // chặn double-tap trong lúc fetch() đang chạy
 
-  // Chỉ được gửi 1 lần — chống gửi trùng/lệch số liệu khi bấm lại
-  // (double-tap hoặc quay lại gửi lần 2 sau khi đã gửi thành công).
-  // Sai sót sau khi đã gửi → báo Giám sát xử lý, không tự gửi lại qua app.
-  if (currentResult.submitted) {
-    toast('✅ Đã gửi rồi — có sai sót báo Giám sát xử lý');
+  const count = currentResult.submit_count || 0;
+
+  if (count >= MAX_SUBMIT_COUNT) {
+    toast(`⚠️ Đã gửi đủ ${MAX_SUBMIT_COUNT} lần — có sai sót báo Giám sát xử lý`);
     return;
+  }
+
+  if (count > 0 && currentResult.submitted_at) {
+    const elapsed = Date.now() - new Date(currentResult.submitted_at).getTime();
+    if (elapsed < MIN_SUBMIT_GAP_MS) {
+      const waitMin = Math.ceil((MIN_SUBMIT_GAP_MS - elapsed) / 60000);
+      toast(`⏳ Vừa gửi xong — đợi thêm ${waitMin} phút rồi gửi lại`);
+      return;
+    }
   }
 
   const pending = currentResult.results.filter(r => r.status === 'pending');
@@ -406,10 +454,16 @@ function submitResult() {
     return;
   }
 
+  const prevCount = count;
+  const prevAt = currentResult.submitted_at;
+
+  isSending = true;
+  setSubmitButtonState('sending');
+
+  currentResult.submit_count = count + 1;
   currentResult.submitted_at = new Date().toISOString();
   currentResult.submitted = true;
   saveResult(currentResult);
-  lockSubmitButton();
 
   const json = JSON.stringify(currentResult, null, 2);
   const blob = new Blob([json], { type: 'application/json' });
@@ -417,34 +471,36 @@ function submitResult() {
 
   // Ưu tiên: gửi thẳng lên Google Sheet qua Apps Script (không cần thao tác gì)
   if (SHEET_ENDPOINT) {
-    toast('⏳ Đang gửi cho Giám sát...');
+    toast(currentResult.submit_count > 1
+      ? `⏳ Đang gửi lại (lần ${currentResult.submit_count}/${MAX_SUBMIT_COUNT})...`
+      : '⏳ Đang gửi cho Giám sát...');
     fetch(SHEET_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: json
     })
-      .then(() => toast('✅ Đã gửi kết quả cho Giám sát!'))
+      .then(() => {
+        toast('✅ Đã gửi kết quả cho Giám sát!');
+        isSending = false;
+        setSubmitButtonState('idle');
+      })
       .catch(() => {
-        // Mất mạng / lỗi → quay về cách cũ (Web Share / tải file)
+        // Mất mạng / lỗi → không tính là 1 lần gửi thật, quay về cách cũ (Web Share / tải file)
         toast('⚠️ Mạng lỗi — lưu file tạm, gửi lại khi có mạng');
+        currentResult.submit_count = prevCount;
+        currentResult.submitted_at = prevAt;
+        saveResult(currentResult);
+        isSending = false;
+        setSubmitButtonState('idle');
         shareOrDownload(blob, filename);
       });
     return;
   }
 
   // Không có endpoint → cách cũ (Web Share / tải file)
+  isSending = false;
+  setSubmitButtonState('idle');
   shareOrDownload(blob, filename);
-}
-
-// Khoá nút Gửi ngay lập tức (trước khi chờ render lại) — chặn bấm 2 lần liên tiếp
-// trong lúc fetch() đang chạy (xem case Miên 22 task gửi trùng cách nhau 2.85s).
-function lockSubmitButton() {
-  const btn = document.querySelector('#worker-task-area button[onclick="submitResult()"]');
-  if (!btn) return;
-  btn.disabled = true;
-  btn.style.cursor = 'not-allowed';
-  btn.style.opacity = '.55';
-  btn.textContent = '✅ Đã gửi — có sai sót báo Giám sát xử lý';
 }
 
 // Web Share API (Android share sheet — gồm Zalo); không được thì tải file
