@@ -205,9 +205,13 @@ function renderWorkerTasks(name, tasks) {
   // Send button (nút Thêm LSX đã ở trên cùng)
   const allDone = currentResult.results.every(r => r.status !== 'pending');
   html += `<div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
-    <button class="btn btn-success" onclick="submitResult()">
-      📤 Gửi kết quả cho Giám sát
-    </button>
+    ${currentResult.submitted
+      ? `<button class="btn btn-success" disabled style="opacity:.55;cursor:not-allowed">
+           ✅ Đã gửi — có sai sót báo Giám sát xử lý
+         </button>`
+      : `<button class="btn btn-success" onclick="submitResult()">
+           📤 Gửi kết quả cho Giám sát
+         </button>`}
     ${allDone ? '' : '<p style="font-size:11px;color:#94a3b8;text-align:center">Điền xong tất cả task rồi bấm Gửi</p>'}
   </div>`;
 
@@ -378,6 +382,14 @@ function setLo(taskId, val) {
 function submitResult() {
   if (!currentResult) return;
 
+  // Chỉ được gửi 1 lần — chống gửi trùng/lệch số liệu khi bấm lại
+  // (double-tap hoặc quay lại gửi lần 2 sau khi đã gửi thành công).
+  // Sai sót sau khi đã gửi → báo Giám sát xử lý, không tự gửi lại qua app.
+  if (currentResult.submitted) {
+    toast('✅ Đã gửi rồi — có sai sót báo Giám sát xử lý');
+    return;
+  }
+
   const pending = currentResult.results.filter(r => r.status === 'pending');
   if (pending.length > 0) {
     toast(`⚠️ Còn ${pending.length} task chưa điền trạng thái`);
@@ -397,6 +409,7 @@ function submitResult() {
   currentResult.submitted_at = new Date().toISOString();
   currentResult.submitted = true;
   saveResult(currentResult);
+  lockSubmitButton();
 
   const json = JSON.stringify(currentResult, null, 2);
   const blob = new Blob([json], { type: 'application/json' });
@@ -421,6 +434,17 @@ function submitResult() {
 
   // Không có endpoint → cách cũ (Web Share / tải file)
   shareOrDownload(blob, filename);
+}
+
+// Khoá nút Gửi ngay lập tức (trước khi chờ render lại) — chặn bấm 2 lần liên tiếp
+// trong lúc fetch() đang chạy (xem case Miên 22 task gửi trùng cách nhau 2.85s).
+function lockSubmitButton() {
+  const btn = document.querySelector('#worker-task-area button[onclick="submitResult()"]');
+  if (!btn) return;
+  btn.disabled = true;
+  btn.style.cursor = 'not-allowed';
+  btn.style.opacity = '.55';
+  btn.textContent = '✅ Đã gửi — có sai sót báo Giám sát xử lý';
 }
 
 // Web Share API (Android share sheet — gồm Zalo); không được thì tải file
