@@ -7,7 +7,7 @@
       "lsx": "PM00",
       "mo_ta": "P-Pha muối",
       "be_cap": "",
-      "be_nhan": "L030",
+      "be_nhan": "L041",
       "luong_dk": 0,
       "dvt": "lít",
       "cong": 5,
@@ -42,7 +42,7 @@
       "nguoi": "Ha",
       "lsx": "Px20",
       "mo_ta": "Thành phẩm dãy 2",
-      "be_cap": "T107",
+      "be_cap": "T105",
       "be_nhan": "Bể TP",
       "luong_dk": 0,
       "dvt": "lít",
@@ -55,7 +55,7 @@
       "lsx": "PM00",
       "mo_ta": "P-Pha muối",
       "be_cap": "",
-      "be_nhan": "L023",
+      "be_nhan": "L063",
       "luong_dk": 0,
       "dvt": "lít",
       "cong": 5,
@@ -216,30 +216,6 @@
       "dvt": "lít",
       "cong": 5,
       "group": "P_xuat_tp"
-    },
-    {
-      "id": "t19",
-      "nguoi": "Ha",
-      "lsx": "N105",
-      "mo_ta": "P-Cốt nhỉ bể - L105",
-      "be_cap": "T105",
-      "be_nhan": "L138",
-      "luong_dk": 2000,
-      "dvt": "lít",
-      "cong": 10,
-      "group": "N_cot_nhi"
-    },
-    {
-      "id": "t20",
-      "nguoi": "Ha",
-      "lsx": "N111",
-      "mo_ta": "P-Cốt nhỉ bể - L111",
-      "be_cap": "T111",
-      "be_nhan": "L138",
-      "luong_dk": 1700,
-      "dvt": "lít",
-      "cong": 10,
-      "group": "N_cot_nhi"
     }
   ]
 }
