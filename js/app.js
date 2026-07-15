@@ -76,6 +76,7 @@ function tryLoadFromURL() {
   const planEncoded = params.get('plan');
   const planFile    = params.get('plan_file');
   const workerName  = params.get('worker') || params.get('w');
+  const forceOpen   = params.get('force') === '1';
 
   function afterPlanLoaded() {
     if (workerName && WORKERS.includes(workerName)) {
@@ -97,10 +98,10 @@ function tryLoadFromURL() {
     fetch(base + 'plans/' + planFile + '.json')
       .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(plan => {
-        if (isPlanExpired(plan.date)) { showExpiredPlan(plan.date); return; }
+        if (!forceOpen && isPlanExpired(plan.date)) { showExpiredPlan(plan.date); return; }
         savePlan(plan);
         state.date = plan.date;
-        toast('✅ Đã tải kế hoạch ' + fmtDate(plan.date));
+        toast('✅ Đã tải kế hoạch ' + fmtDate(plan.date) + (forceOpen ? ' (mở lại)' : ''));
         afterPlanLoaded();
       })
       .catch(() => toast('❌ Không tải được kế hoạch: ' + planFile));
@@ -111,7 +112,7 @@ function tryLoadFromURL() {
   if (planEncoded) {
     try {
       const plan = decodePlan(planEncoded);
-      if (isPlanExpired(plan.date)) { showExpiredPlan(plan.date); return; }
+      if (!forceOpen && isPlanExpired(plan.date)) { showExpiredPlan(plan.date); return; }
       savePlan(plan);
       state.date = plan.date;
       toast('✅ Đã tải kế hoạch ' + fmtDate(plan.date));

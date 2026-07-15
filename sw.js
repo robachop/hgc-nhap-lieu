@@ -1,9 +1,9 @@
-const CACHE = 'hgc-v2.4';
+const CACHE = 'hgc-v2.5';
 const ASSETS = [
   '/hgc-nhap-lieu/',
   '/hgc-nhap-lieu/index.html',
   '/hgc-nhap-lieu/css/app.css',
-  '/hgc-nhap-lieu/js/app.js?v=20260709a',
+  '/hgc-nhap-lieu/js/app.js?v=20260715a',
   '/hgc-nhap-lieu/js/lsx_data.js?v=20260627e',
   '/hgc-nhap-lieu/js/plan.js?v=20260627e',
   '/hgc-nhap-lieu/js/entry.js?v=20260714b',
