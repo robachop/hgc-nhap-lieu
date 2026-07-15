@@ -483,14 +483,18 @@ function submitResult() {
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: json
     })
-      .then(() => {
+      .then(res => res.json())
+      .then(result => {
+        // Apps Script trả HTTP 200 kể cả khi ghi Sheet thất bại (vd Sheet đầy) —
+        // phải đọc field "ok" trong JSON, không thể coi fetch không lỗi là gửi thành công.
+        if (!result || !result.ok) throw new Error(result && result.error || 'Ghi Sheet thất bại');
         toast('✅ Đã gửi kết quả cho Giám sát!');
         isSending = false;
         setSubmitButtonState('idle');
       })
       .catch(() => {
-        // Mất mạng / lỗi → không tính là 1 lần gửi thật, quay về cách cũ (Web Share / tải file)
-        toast('⚠️ Mạng lỗi — lưu file tạm, gửi lại khi có mạng');
+        // Mất mạng / lỗi ghi Sheet → không tính là 1 lần gửi thật, quay về cách cũ (Web Share / tải file)
+        toast('⚠️ Gửi thất bại — lưu file tạm, thử gửi lại sau');
         currentResult.submit_count = prevCount;
         currentResult.submitted_at = prevAt;
         saveResult(currentResult);
