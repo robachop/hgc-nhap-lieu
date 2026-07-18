@@ -1,0 +1,17 @@
+{
+  "date": "2026-07-19",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Hao",
+      "lsx": "PT00",
+      "mo_ta": "P-Thành phẩm tồn — kiểm tra bể L114 (không có giao hàng 19/07 theo lịch xuất TP)",
+      "be_cap": "L114",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    }
+  ]
+}
