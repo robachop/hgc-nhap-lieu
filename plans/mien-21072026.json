@@ -1,0 +1,77 @@
+{
+  "date": "2026-07-21",
+  "tasks": [
+    {
+      "id": "t7",
+      "nguoi": "Mien",
+      "lsx": "S113",
+      "mo_ta": "Đảo trộn bể 15 (CK1)",
+      "be_cap": "T015",
+      "be_nhan": "L015",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t11",
+      "nguoi": "Mien",
+      "lsx": "S113",
+      "mo_ta": "Đảo trộn bể 19 (CK1)",
+      "be_cap": "T019",
+      "be_nhan": "L019",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t13",
+      "nguoi": "Mien",
+      "lsx": "S113",
+      "mo_ta": "Đảo trộn bể 29 (CK1)",
+      "be_cap": "T029",
+      "be_nhan": "L029",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t14",
+      "nguoi": "Mien",
+      "lsx": "S113",
+      "mo_ta": "Đảo trộn bể 35 (CK1)",
+      "be_cap": "T035",
+      "be_nhan": "L035",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t15",
+      "nguoi": "Mien",
+      "lsx": "S113",
+      "mo_ta": "Đảo trộn bể 36 (CK1)",
+      "be_cap": "T036",
+      "be_nhan": "L036",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t16",
+      "nguoi": "Mien",
+      "lsx": "S113",
+      "mo_ta": "Đảo trộn bể 37 (CK1)",
+      "be_cap": "T037",
+      "be_nhan": "L037",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    }
+  ]
+}
