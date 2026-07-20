@@ -206,16 +206,23 @@ def deploy_worker(target_date, worker, tasks):
     plan_path.parent.mkdir(exist_ok=True)
     plan_path.write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding='utf-8')
 
-    app_url   = f"{BASE_URL}?plan_file={w_lower}-{slug}&w={worker}"
+    # ⚠️ Dùng đường dẫn TƯƠNG ĐỐI (không domain) — file này được deploy y hệt
+    # lên cả GitHub Pages (Phương án A, path /hgc-nhap-lieu/) lẫn Cloudflare
+    # Pages (Phương án B, path gốc /). Nếu viết cứng domain GitHub ở đây, khi
+    # host trên Cloudflare file sẽ tự redirect NGƯỢC về GitHub — vô hiệu hoá
+    # bản dự phòng đúng lúc cần nhất (bug phát hiện 2026-07-20, Tim test tay
+    # thấy link B tự nhảy về github.io).
+    app_url_rel = f"index.html?plan_file={w_lower}-{slug}&w={worker}"
+    app_url     = f"{BASE_URL}?plan_file={w_lower}-{slug}&w={worker}"  # chỉ dùng để in bảng link A
     html_file = f"kehoach-{w_lower}-{slug}.html"
     html_path = REPO_DIR / html_file
     html = f"""<!DOCTYPE html>
 <html lang="vi"><head><meta charset="UTF-8">
-<meta http-equiv="refresh" content="0;url={app_url}">
+<meta http-equiv="refresh" content="0;url={app_url_rel}">
 <title>HGC Kế Hoạch {worker} — {date_str}</title>
 </head><body>
-<p>Đang chuyển hướng... <a href="{app_url}">Bấm đây nếu không tự chuyển</a></p>
-<script>window.location.replace("{app_url}");</script>
+<p>Đang chuyển hướng... <a href="{app_url_rel}">Bấm đây nếu không tự chuyển</a></p>
+<script>window.location.replace("{app_url_rel}");</script>
 </body></html>"""
     html_path.write_text(html, encoding='utf-8')
     return plan_file, html_file, app_url
