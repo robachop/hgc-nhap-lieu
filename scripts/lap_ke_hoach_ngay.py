@@ -28,7 +28,7 @@ Ví dụ tối thiểu (chỉ đối chiếu + verify, không có file Dãy kéo
     python3 scripts/lap_ke_hoach_ngay.py --ketqua ketqua.xlsx \\
         --ngay-actual 2026-07-11 --ngay-ke-hoach 2026-07-12
 """
-import sys, subprocess, argparse, time, datetime
+import os, sys, subprocess, argparse, time, datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -36,6 +36,7 @@ import doi_chieu
 
 REPO_DIR = Path(__file__).parent.parent
 BASE_URL = "https://robachop.github.io/hgc-nhap-lieu/"
+CF_BASE_URL = "https://hgc-nhap-lieu.pages.dev/"
 WORKERS = ["phong", "ha", "mien", "hao"]
 
 
@@ -66,6 +67,26 @@ def nudge_pages():
         shell=True, capture_output=True, text=True,
     )
     return result.returncode == 0
+
+
+def deploy_cloudflare():
+    """Deploy song song lên Cloudflare Pages (Phương án B — dự phòng khi GitHub
+    Actions/Pages outage, xem _Giao Bang.md 2026-07-20). Cần CLOUDFLARE_API_TOKEN
+    + CLOUDFLARE_ACCOUNT_ID trong biến môi trường — KHÔNG hardcode token vào đây
+    vì repo này PUBLIC. Nếu thiếu biến môi trường, bỏ qua (không chặn Phương án A)."""
+    if not os.environ.get("CLOUDFLARE_API_TOKEN") or not os.environ.get("CLOUDFLARE_ACCOUNT_ID"):
+        print("   ⏸  Thiếu CLOUDFLARE_API_TOKEN/CLOUDFLARE_ACCOUNT_ID trong env — bỏ qua Phương án B "
+              "(xem lệnh export trong 'Tài Khoản & Token — Hạ Tầng.md')")
+        return False
+    result = subprocess.run(
+        ["npx", "--yes", "wrangler@latest", "pages", "deploy", ".",
+         "--project-name", "hgc-nhap-lieu", "--branch", "main", "--commit-dirty=true"],
+        cwd=REPO_DIR, capture_output=True, text=True, timeout=180,
+    )
+    ok = result.returncode == 0
+    if not ok:
+        print(f"   ⚠️  Deploy Cloudflare lỗi: {(result.stdout + result.stderr).strip()[-500:]}")
+    return ok
 
 
 def main():
@@ -121,8 +142,8 @@ def main():
     else:
         print(f"   ⚠️  {out}")
 
-    # ── Bước 4: Verify 4 link, tự nudge nếu cần ─────────────────
-    print("\n④ Verify 4 link (đợi build GitHub Pages)...")
+    # ── Bước 4: Verify 4 link Phương án A (GitHub Pages), tự nudge nếu cần ──
+    print("\n④ Verify 4 link — Phương án A (GitHub Pages)...")
     time.sleep(20)
     links = {w: f"{BASE_URL}kehoach-{w}-{slug}.html" for w in WORKERS}
     status = {w: curl_status(u) for w, u in links.items()}
@@ -142,6 +163,18 @@ def main():
     if not_live:
         print(f"\n   ⚠️  Vẫn chưa live: {not_live} — kiểm tra build: gh api repos/robachop/hgc-nhap-lieu/pages/builds/latest")
 
+    # ── Bước 4b: Deploy + verify Phương án B (Cloudflare Pages, dự phòng) ──
+    print("\n④b Deploy — Phương án B (Cloudflare Pages, dự phòng)...")
+    cf_ok = deploy_cloudflare()
+    cf_links = {w: f"{CF_BASE_URL}kehoach-{w}-{slug}.html" for w in WORKERS}
+    if cf_ok:
+        cf_status = {w: curl_status(u) for w, u in cf_links.items()}
+        for w, u in cf_links.items():
+            icon = "✅" if cf_status[w] in ("200", "308") else "❌"
+            print(f"   {icon} {w:6}: {cf_status[w]}  {u}")
+    else:
+        cf_status = {w: "SKIP" for w in WORKERS}
+
     # ── Bước 5: Bảng tổng kết dán vào _Giao Bang.md ─────────────
     print(f"\n{'═'*60}")
     print("  BẢNG DÁN VÀO _Giao Bang.md MỤC C:")
@@ -150,6 +183,10 @@ def main():
     for w, u in links.items():
         trang_thai = "✅ Live — sẵn sàng duyệt" if status[w] == "200" else "❌ Chưa live, kiểm tra lại"
         print(f"| {date_display} | {w.capitalize()} | {u} | {trang_thai} |")
+    print(f"\n  Phương án B (Cloudflare, dùng khi A lỗi):")
+    for w, u in cf_links.items():
+        trang_thai = "✅ Live" if cf_status[w] in ("200", "308") else ("⏸ Chưa deploy" if cf_status[w] == "SKIP" else "❌ Lỗi")
+        print(f"  | {w.capitalize()} | {u} | {trang_thai} |")
     print(f"{'═'*60}\n")
 
 
