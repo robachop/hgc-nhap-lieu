@@ -1,0 +1,29 @@
+{
+  "date": "2026-07-20",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Hao",
+      "lsx": "PP20",
+      "mo_ta": "P-Xuất TP 07NM00010 (Đạm 36.56) Lô 160726-S072 — Nam Ngư — đi MSI — Tải 11 khối",
+      "be_cap": "L114",
+      "be_nhan": "XT00",
+      "luong_dk": 11080,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Hao",
+      "lsx": "PP40",
+      "mo_ta": "P-Xuất TP 07NM027 (Đạm 27.16) Lô 160726-S075 — Nam Ngư — đi MBA — Bồn 12 khối",
+      "be_cap": "L134",
+      "be_nhan": "XB00",
+      "luong_dk": 12080,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    }
+  ]
+}
