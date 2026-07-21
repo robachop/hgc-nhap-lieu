@@ -41,7 +41,11 @@ RE_LSX_DAO_TRON = re.compile(r"^S([1-7])(\d\d)$")
 # này thiếu check này, đề xuất nhầm 2 bể đã hết chu kỳ khi chạy thật lần đầu
 # (bể 31 CK3 ngày 5→6, bể 191 CK5 ngày 5→6, cả hai vượt max=5) — xử lý tay
 # lúc đó, vá thẳng vào đây để lần sau không lặp lại.
-CYCLE_MAX = {1: 15, 2: 5, 3: 5, 4: 5, 5: 5, 6: 5, 7: 5}
+# Sửa 2026-07-21: vòng 1 đúng ra là 15→17 (S100-S117, 18 ngày con 0-17), không
+# phải 15 — theo quy_trình vòng quay chượp chuẩn (xem
+# 00 Context/Quy Trình Vòng Quay Chượp — Đảo Trộn Miên.md), Tim xác nhận trực
+# tiếp. Vòng 2-7 vẫn đúng max=5 (S_00-S_05, 6 ngày con 0-5) như cũ.
+CYCLE_MAX = {1: 17, 2: 5, 3: 5, 4: 5, 5: 5, 6: 5, 7: 5}
 
 
 def doc_actual(ketqua_path, sheet_name="KetQua"):
