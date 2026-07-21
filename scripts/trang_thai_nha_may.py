@@ -6,10 +6,13 @@ gộp 3 kiểu view khác nhau vì bản chất công việc khác nhau (xem
 
   1. Miên (đảo trộn S___): DỰ BÁO +N ngày — tái sử dụng tinh_du_bao() từ
      du_bao_mien.py, vì mã có "ngày con" đếm được rõ ràng (+1 mỗi ngày).
-  2. Phong/Ha (kéo rút C___, 9 dãy): CHỈ SNAPSHOT vị trí hiện tại — KHÔNG dự
+  2. Phong (kéo rút C___, 9 dãy): CHỈ SNAPSHOT vị trí hiện tại — KHÔNG dự
      báo ngày mai, vì 1 lần làm đẩy nước qua nhiều vòng cùng lúc, không theo
      lịch +1 ngày/vòng (đã xác nhận qua dữ liệu thật 20/07: Phong ghi liền
      C610→C510→C410→C310→C210→C110 cùng 1 ngày cho dãy 1).
+  2b. Ha (Đấu thành phẩm P1xx-P6xx, 9 dãy): CHỈ SNAPSHOT — sửa 2026-07-21,
+     bản đầu nhầm gán Ha vào kéo rút (C___) nhưng Ha thực tế có 0 dòng C___,
+     219 dòng P___ (Đấu TP) mới là việc chính — tra thật xác nhận qua KetQua.
   3. Hao (xuất TP PT/PP): lịch giao hàng sắp tới, đọc từ
      10 Tài nguyên/Lịch Xuất Thành Phẩm — Nam Ngư.md (dữ liệu đã có sẵn).
 
@@ -35,6 +38,8 @@ COT_LSX = "Lệnh sản xuất"
 COT_BE = "Bể / xe"
 
 RE_C = re.compile(r'^C([1-9])([0-9])0$')  # C<vong><day>0 — bỏ CX00/CY00/CZ00 (vòng 10-12, hiếm)
+RE_P_DAU = re.compile(r'^P([1-6])([0-9])0$')  # P<be_tp><day>0 — đấu thành phẩm, khác PT__/PP__
+BE_TP = {1: "L113", 2: "L114", 3: "L133", 4: "L134", 5: "L138", 6: "L213"}
 
 
 def doc_actual(ketqua_path):
@@ -64,6 +69,36 @@ def snapshot_keo_rut(df, worker, hom_nay):
             "day": int(day),
             "vong": int(best["_vong"]),
             "be": best[COT_BE],
+            "ngay": latest_date.date(),
+            "so_ngay_truoc": so_ngay_truoc,
+        })
+    ket_qua.sort(key=lambda x: x["day"])
+    return ket_qua
+
+
+def snapshot_dau_thanh_pham(df, worker, hom_nay):
+    """Với mỗi dãy (1-9), tìm lần Đấu thành phẩm (P<be_tp><day>0) gần nhất —
+    bể TP nào vừa nhận, cách đây bao lâu. Tương tự snapshot_keo_rut nhưng
+    không có khái niệm 'vòng' (chỉ 1 lần đấu/dãy/lần), lấy thẳng dòng mới
+    nhất mỗi dãy."""
+    rows = df[df[COT_NGUOI] == worker].copy()
+    rows = rows[rows[COT_LSX].astype(str).str.match(RE_P_DAU)]
+    if rows.empty:
+        return []
+
+    ext = rows[COT_LSX].astype(str).str.extract(RE_P_DAU)
+    rows["_be_tp_idx"] = ext[0].astype(int)
+    rows["_day"] = ext[1].astype(int)
+    rows = rows[rows["_day"] != 0]  # bỏ P_00 (mã chung, không thuộc dãy cụ thể)
+
+    ket_qua = []
+    for day, grp in rows.groupby("_day"):
+        latest_date = grp[COT_NGAY].max()
+        best = grp[grp[COT_NGAY] == latest_date].iloc[0]
+        so_ngay_truoc = (hom_nay - latest_date.date()).days
+        ket_qua.append({
+            "day": int(day),
+            "be_tp": BE_TP.get(int(best["_be_tp_idx"]), f"TP{best['_be_tp_idx']}"),
             "ngay": latest_date.date(),
             "so_ngay_truoc": so_ngay_truoc,
         })
@@ -126,6 +161,20 @@ def xuat_html(mien_kq, so_ngay_mien, phong_kq, ha_kq, hao_kq, tu_ngay, so_ngay, 
           <thead><tr><th>Dãy</th><th>Vòng hiện tại</th><th>Bể</th><th>Cập nhật gần nhất</th><th>Cách đây</th></tr></thead>
           <tbody>{rows}</tbody></table></div>"""
 
+    def dau_tp_table(kq):
+        if not kq:
+            return "<p class='empty'>Không có dữ liệu Đấu thành phẩm gần đây.</p>"
+        rows = ""
+        for r in kq:
+            canh_bao = ' class="c-canhbao"' if r["so_ngay_truoc"] > 7 else ""
+            rows += (f'<tr><td class="be-col">Dãy {r["day"]}</td>'
+                     f'<td>{r["be_tp"]}</td>'
+                     f'<td>{r["ngay"].strftime("%d/%m/%Y")}</td>'
+                     f'<td{canh_bao}>{r["so_ngay_truoc"]} ngày trước</td></tr>\n')
+        return f"""<div class="table-wrap"><table>
+          <thead><tr><th>Dãy</th><th>Đấu vào bể TP</th><th>Cập nhật gần nhất</th><th>Cách đây</th></tr></thead>
+          <tbody>{rows}</tbody></table></div>"""
+
     def lich_xuat_table(kq):
         if not kq:
             return "<p class='empty'>Không có chuyến giao hàng nào trong khoảng thời gian này.</p>"
@@ -178,9 +227,9 @@ def xuat_html(mien_kq, so_ngay_mien, phong_kq, ha_kq, hao_kq, tu_ngay, so_ngay, 
     <div class="h-sub">Nhà máy Hương Giang · Report-only, không phải kế hoạch thật</div>
   </header>
   <div class="note">
-    ⚠️ 3 phần dưới đây KHÁC KIỂU nhau vì bản chất công việc khác nhau: Miên có
-    <b>dự báo ngày cụ thể</b> (đảo trộn đếm ngày rõ ràng); Phong/Ha chỉ có
-    <b>ảnh chụp vị trí hiện tại</b> (kéo rút không theo lịch ngày cố định);
+    ⚠️ 4 phần dưới đây KHÁC KIỂU nhau vì bản chất công việc khác nhau: Miên có
+    <b>dự báo ngày cụ thể</b> (đảo trộn đếm ngày rõ ràng); Phong &amp; Ha chỉ có
+    <b>ảnh chụp vị trí hiện tại</b> (kéo rút/đấu TP không theo lịch ngày cố định);
     Hao là <b>lịch giao hàng đã biết trước</b> (không phải chu kỳ).
   </div>
 
@@ -199,9 +248,9 @@ def xuat_html(mien_kq, so_ngay_mien, phong_kq, ha_kq, hao_kq, tu_ngay, so_ngay, 
   </div>
 
   <div class="section">
-    <div class="sec-title">🔄 Ha — Vị trí hiện tại trong 9 dãy kéo rút</div>
-    <div class="sec-sub">Snapshot mới nhất, không dự báo ngày mai · Đỏ = quá 7 ngày không cập nhật</div>
-    {keo_rut_table(ha_kq, "Ha")}
+    <div class="sec-title">🥣 Ha — Đấu thành phẩm (9 dãy)</div>
+    <div class="sec-sub">Dãy nào vừa đấu vào bể TP nào gần nhất · Đỏ = quá 7 ngày không cập nhật</div>
+    {dau_tp_table(ha_kq)}
   </div>
 
   <div class="section">
@@ -232,13 +281,13 @@ def main():
     df = doc_actual(args.ketqua)
     mien_kq = tinh_du_bao(args.plan_mien, tu_ngay, args.so_ngay)
     phong_kq = snapshot_keo_rut(df, "Phong", hom_nay)
-    ha_kq = snapshot_keo_rut(df, "Ha", hom_nay)
+    ha_kq = snapshot_dau_thanh_pham(df, "Ha", hom_nay)
     hao_kq = doc_lich_xuat_hao(args.lich_xuat, tu_ngay, args.so_ngay)
 
     xuat_html(mien_kq, args.so_ngay, phong_kq, ha_kq, hao_kq, tu_ngay, args.so_ngay, args.html)
 
     print(f"✅ Đã xuất: {args.html}")
-    print(f"   Miên: {mien_kq['so_be']} bể | Phong: {len(phong_kq)} dãy | Ha: {len(ha_kq)} dãy | Hao: {len(hao_kq)} chuyến")
+    print(f"   Miên: {mien_kq['so_be']} bể | Phong: {len(phong_kq)} dãy | Ha (đấu TP): {len(ha_kq)} dãy | Hao: {len(hao_kq)} chuyến")
 
 
 if __name__ == "__main__":
