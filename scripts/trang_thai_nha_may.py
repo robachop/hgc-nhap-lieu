@@ -118,6 +118,55 @@ def snapshot_theo_day(df, re_pattern, hom_nay, nhom_idx=1, vi_tri_idx=0, dao_ngu
     return ket_qua
 
 
+def snapshot_ca_day(df, hom_nay):
+    """Gộp Kéo rút (C910...C110) + Đấu thành phẩm (P1y0...P6y0) thành 1 chuỗi
+    liên tục theo dãy (Tim chỉnh 2026-07-21: 'Cx10 là dãy 1 cho tới Px10 là
+    thành phẩm' — cùng 1 dãy, không phải 2 việc tách rời). Vị trí dùng để so
+    sánh 'tiến xa nhất': vòng kéo rút 9→1 (số nhỏ = tiến xa hơn), rồi P
+    (đấu xong) tiến xa hơn mọi vòng C → gán vị trí 0 để luôn thắng khi so sánh
+    cùng ngày."""
+    c_rows = df[df[COT_LSX].astype(str).str.match(RE_C_KEO_RUT)].copy()
+    if not c_rows.empty:
+        ext = c_rows[COT_LSX].astype(str).str.extract(RE_C_KEO_RUT)
+        c_rows["_day"] = ext[1].astype(int)
+        c_rows["_vt"] = ext[0].astype(int)
+        c_rows["_giai_doan"] = "keo_rut"
+
+    p_rows = df[df[COT_LSX].astype(str).str.match(RE_P_DAU)].copy()
+    if not p_rows.empty:
+        ext = p_rows[COT_LSX].astype(str).str.extract(RE_P_DAU)
+        p_rows["_day"] = ext[1].astype(int)
+        p_rows["_be_tp_idx"] = ext[0].astype(int)
+        p_rows["_vt"] = 0  # đấu xong luôn "tiến xa" hơn mọi vòng kéo rút (1-9)
+        p_rows["_giai_doan"] = "dau_tp"
+
+    frames = [x for x in (c_rows, p_rows) if not x.empty]
+    if not frames:
+        return []
+    rows = pd.concat(frames, ignore_index=True)
+    rows = rows[rows["_day"] != 0]
+
+    ket_qua = []
+    for day, grp in rows.groupby("_day"):
+        latest_date = grp[COT_NGAY].max()
+        rows_latest = grp[grp[COT_NGAY] == latest_date]
+        best = rows_latest.loc[rows_latest["_vt"].idxmin()]
+        if best["_giai_doan"] == "dau_tp":
+            trang_thai = f"Đã đấu → {BE_TP.get(int(best['_be_tp_idx']), '?')}"
+        else:
+            trang_thai = f"Kéo rút, vòng {int(best['_vt'])}"
+        ket_qua.append({
+            "day": int(day),
+            "trang_thai": trang_thai,
+            "be": best[COT_BE],
+            "nguoi": best[COT_NGUOI],
+            "ngay": latest_date.date(),
+            "so_ngay_truoc": (hom_nay - latest_date.date()).days,
+        })
+    ket_qua.sort(key=lambda x: x["day"])
+    return ket_qua
+
+
 def doc_lich_xuat_hao(md_path, tu_ngay, so_ngay):
     text = Path(md_path).read_text(encoding="utf-8")
     ket_thuc = tu_ngay + datetime.timedelta(days=so_ngay)
@@ -151,8 +200,8 @@ def nguoi_str(nguoi_list):
     return ", ".join(f"{n} ({c})" for n, c in nguoi_list)
 
 
-def xuat_html(mien_kq, so_ngay_mien, nguoi_dao_tron, keo_rut_kq, nguoi_keo_rut, dau_tp_kq,
-              nguoi_dau_tp, phaxac_nguoi, hao_kq, tu_ngay, so_ngay, out_path):
+def xuat_html(mien_kq, so_ngay_mien, nguoi_dao_tron, chuoi_day_kq, nguoi_chuoi_day,
+              phaxac_nguoi, hao_kq, tu_ngay, so_ngay, out_path):
 
     def date_headers(dates):
         return "".join(f"<th>{d.strftime('%d/%m')}<br><span class=\"dow\">{['T2','T3','T4','T5','T6','T7','CN'][d.weekday()]}</span></th>" for d in dates)
@@ -165,19 +214,19 @@ def xuat_html(mien_kq, so_ngay_mien, nguoi_dao_tron, keo_rut_kq, nguoi_keo_rut, 
             cells += f'<td class="{cls}">{c["text"]}</td>'
         mien_rows_html += f'<tr><td class="be-col">{row["be"]}</td>{cells}</tr>\n'
 
-    def snapshot_table(kq, cot_vi_tri_ten, tien_to_vi_tri=""):
+    def chuoi_day_table(kq):
         if not kq:
             return "<p class='empty'>Không có dữ liệu gần đây.</p>"
         rows = ""
         for r in kq:
             canh_bao = ' class="c-canhbao"' if r["so_ngay_truoc"] > 7 else ""
             rows += (f'<tr><td class="be-col">Dãy {r["day"]}</td>'
-                     f'<td{canh_bao}>{tien_to_vi_tri}{r["vi_tri"]}</td>'
+                     f'<td{canh_bao}>{r["trang_thai"]}</td>'
                      f'<td>{r["be"]}</td><td>{r["nguoi"]}</td>'
                      f'<td>{r["ngay"].strftime("%d/%m/%Y")}</td>'
                      f'<td{canh_bao}>{r["so_ngay_truoc"]} ngày trước</td></tr>\n')
         return f"""<div class="table-wrap"><table>
-          <thead><tr><th>Dãy</th><th>{cot_vi_tri_ten}</th><th>Bể</th><th>Người làm gần nhất</th><th>Cập nhật</th><th>Cách đây</th></tr></thead>
+          <thead><tr><th>Dãy</th><th>Trạng thái hiện tại</th><th>Bể</th><th>Người làm gần nhất</th><th>Cập nhật</th><th>Cách đây</th></tr></thead>
           <tbody>{rows}</tbody></table></div>"""
 
     def lich_xuat_table(kq):
@@ -192,13 +241,14 @@ def xuat_html(mien_kq, so_ngay_mien, nguoi_dao_tron, keo_rut_kq, nguoi_keo_rut, 
           <thead><tr><th>Ngày</th><th>ITEM</th><th>Lô</th><th>SL</th><th>Nơi đến</th><th>Loại xe</th><th>Bể nguồn</th></tr></thead>
           <tbody>{rows}</tbody></table></div>"""
 
-    # Kéo rút: 1 bảng duy nhất, mỗi dãy 1 dòng (dãy nối tiếp nhau, vòng chỉ có
-    # ý nghĩa trong chính dãy đó — không tách theo loại nước long 1/2/3...)
-    keo_rut_html = f"""
+    # Dãy kéo rút → thành phẩm: 1 chuỗi liên tục (Tim 2026-07-21: "Cx10 là dãy 1
+    # cho tới Px10 là thành phẩm") — gộp kéo rút (C) + đấu TP (P) làm 1 bảng,
+    # mỗi dãy 1 dòng, không tách theo loại nước long hay tách riêng đấu TP.
+    chuoi_day_html = f"""
   <div class="section">
-    <div class="sec-title">💧 Kéo rút nước long — 9 dãy</div>
-    <div class="sec-sub">Đang làm: {nguoi_str(nguoi_keo_rut)} · Mỗi dãy đang ở vòng nào (V1=cuối dãy/đậm nhất) · Snapshot mới nhất, không dự báo ngày mai</div>
-    {snapshot_table(keo_rut_kq, "Vòng hiện tại", "V")}
+    <div class="sec-title">💧 Dãy kéo rút → thành phẩm — 9 dãy</div>
+    <div class="sec-sub">Đang làm: {nguoi_str(nguoi_chuoi_day)} · Mỗi dãy 1 chuỗi liên tục: kéo rút (vòng 9→1) rồi đấu vào bể TP · Snapshot mới nhất, không dự báo ngày mai</div>
+    {chuoi_day_table(chuoi_day_kq)}
   </div>"""
 
     html = f"""<!DOCTYPE html>
@@ -253,12 +303,7 @@ def xuat_html(mien_kq, so_ngay_mien, nguoi_dao_tron, keo_rut_kq, nguoi_keo_rut, 
       <thead><tr><th>Bể</th>{date_headers(mien_kq['dates'])}</tr></thead>
       <tbody>{mien_rows_html}</tbody></table></div>
   </div>
-{keo_rut_html}
-  <div class="section">
-    <div class="sec-title">🥣 Đấu thành phẩm — 9 dãy</div>
-    <div class="sec-sub">Đang làm: {nguoi_str(nguoi_dau_tp)} · Dãy nào vừa đấu vào bể TP nào gần nhất</div>
-    {snapshot_table(dau_tp_kq, "Bể TP", "")}
-  </div>
+{chuoi_day_html}
 
   <div class="section">
     <div class="sec-title">🧹 Phá xác / Pha muối</div>
@@ -296,31 +341,25 @@ def main():
     mask_dao_tron = df[COT_LSX].astype(str).str.match(r'^S[1-7]\d{2}$')
     nguoi_dao_tron = nguoi_phu_trach(df, mask_dao_tron)
 
-    # Kéo rút: 1 bảng DUY NHẤT, mỗi dãy 1 dòng — vòng chỉ có ý nghĩa TRONG dãy
-    # của chính nó (dãy nối tiếp nhau, ảnh hưởng nhau), KHÔNG tách theo loại
-    # nước long 1/2/3... (Tim chỉnh 2026-07-21, bản trước tách nhầm 7 bảng).
-    keo_rut_kq = snapshot_theo_day(df, RE_C_KEO_RUT, hom_nay, nhom_idx=1, vi_tri_idx=0)
-    mask_keo_rut = df[COT_LSX].astype(str).str.match(RE_C_KEO_RUT)
-    nguoi_keo_rut = nguoi_phu_trach(df, mask_keo_rut)
-
-    dau_tp_kq_raw = snapshot_theo_day(df, RE_P_DAU, hom_nay, nhom_idx=1, vi_tri_idx=0)
-    for r in dau_tp_kq_raw:
-        r["vi_tri"] = BE_TP.get(r["vi_tri"], str(r["vi_tri"]))
-    mask_dau_tp = df[COT_LSX].astype(str).str.match(RE_P_DAU)
-    nguoi_dau_tp = nguoi_phu_trach(df, mask_dau_tp)
+    # Dãy kéo rút → thành phẩm: 1 bảng DUY NHẤT, mỗi dãy 1 dòng, gộp cả kéo
+    # rút (C) lẫn đấu TP (P) — cùng 1 chuỗi liên tục theo dãy (Tim 2026-07-21:
+    # "Cx10 là dãy 1 cho tới Px10 là thành phẩm"), KHÔNG tách theo loại nước
+    # long hay tách riêng đấu TP như 2 bản trước.
+    chuoi_day_kq = snapshot_ca_day(df, hom_nay)
+    mask_chuoi_day = df[COT_LSX].astype(str).str.match(RE_C_KEO_RUT) | df[COT_LSX].astype(str).str.match(RE_P_DAU)
+    nguoi_chuoi_day = nguoi_phu_trach(df, mask_chuoi_day)
 
     mask_phaxac = df[COT_LSX].astype(str).isin(["PM00", "MP00", "MP01", "PX00"])
     phaxac_nguoi = nguoi_phu_trach(df, mask_phaxac)
 
     hao_kq = doc_lich_xuat_hao(args.lich_xuat, tu_ngay, args.so_ngay)
 
-    xuat_html(mien_kq, args.so_ngay, nguoi_dao_tron, keo_rut_kq, nguoi_keo_rut, dau_tp_kq_raw,
-              nguoi_dau_tp, phaxac_nguoi, hao_kq, tu_ngay, args.so_ngay, args.html)
+    xuat_html(mien_kq, args.so_ngay, nguoi_dao_tron, chuoi_day_kq, nguoi_chuoi_day,
+              phaxac_nguoi, hao_kq, tu_ngay, args.so_ngay, args.html)
 
     print(f"✅ Đã xuất: {args.html}")
     print(f"   Đảo trộn: {mien_kq['so_be']} bể ({nguoi_str(nguoi_dao_tron)})")
-    print(f"   Kéo rút: {len(keo_rut_kq)} dãy ({nguoi_str(nguoi_keo_rut)})")
-    print(f"   Đấu TP: {len(dau_tp_kq_raw)} dãy ({nguoi_str(nguoi_dau_tp)})")
+    print(f"   Dãy kéo rút→thành phẩm: {len(chuoi_day_kq)} dãy ({nguoi_str(nguoi_chuoi_day)})")
     print(f"   Phá xác: ({nguoi_str(phaxac_nguoi)})")
     print(f"   Xuất TP sắp tới: {len(hao_kq)} chuyến")
 
