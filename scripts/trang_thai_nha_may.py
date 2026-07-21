@@ -151,7 +151,7 @@ def nguoi_str(nguoi_list):
     return ", ".join(f"{n} ({c})" for n, c in nguoi_list)
 
 
-def xuat_html(mien_kq, so_ngay_mien, nguoi_dao_tron, nuoc_long_groups, dau_tp_kq,
+def xuat_html(mien_kq, so_ngay_mien, nguoi_dao_tron, keo_rut_kq, nguoi_keo_rut, dau_tp_kq,
               nguoi_dau_tp, phaxac_nguoi, hao_kq, tu_ngay, so_ngay, out_path):
 
     def date_headers(dates):
@@ -192,15 +192,13 @@ def xuat_html(mien_kq, so_ngay_mien, nguoi_dao_tron, nuoc_long_groups, dau_tp_kq
           <thead><tr><th>Ngày</th><th>ITEM</th><th>Lô</th><th>SL</th><th>Nơi đến</th><th>Loại xe</th><th>Bể nguồn</th></tr></thead>
           <tbody>{rows}</tbody></table></div>"""
 
-    nuoc_long_html = ""
-    for vong, (kq, nguoi) in nuoc_long_groups.items():
-        if not kq:
-            continue
-        nuoc_long_html += f"""
+    # Kéo rút: 1 bảng duy nhất, mỗi dãy 1 dòng (dãy nối tiếp nhau, vòng chỉ có
+    # ý nghĩa trong chính dãy đó — không tách theo loại nước long 1/2/3...)
+    keo_rut_html = f"""
   <div class="section">
-    <div class="sec-title">💧 Nước long {vong} — 9 dãy</div>
-    <div class="sec-sub">Đang làm: {nguoi_str(nguoi)} · Snapshot mới nhất, không dự báo ngày mai</div>
-    {snapshot_table(kq, "Vòng", "V")}
+    <div class="sec-title">💧 Kéo rút nước long — 9 dãy</div>
+    <div class="sec-sub">Đang làm: {nguoi_str(nguoi_keo_rut)} · Mỗi dãy đang ở vòng nào (V1=cuối dãy/đậm nhất) · Snapshot mới nhất, không dự báo ngày mai</div>
+    {snapshot_table(keo_rut_kq, "Vòng hiện tại", "V")}
   </div>"""
 
     html = f"""<!DOCTYPE html>
@@ -255,7 +253,7 @@ def xuat_html(mien_kq, so_ngay_mien, nguoi_dao_tron, nuoc_long_groups, dau_tp_kq
       <thead><tr><th>Bể</th>{date_headers(mien_kq['dates'])}</tr></thead>
       <tbody>{mien_rows_html}</tbody></table></div>
   </div>
-{nuoc_long_html}
+{keo_rut_html}
   <div class="section">
     <div class="sec-title">🥣 Đấu thành phẩm — 9 dãy</div>
     <div class="sec-sub">Đang làm: {nguoi_str(nguoi_dau_tp)} · Dãy nào vừa đấu vào bể TP nào gần nhất</div>
@@ -298,27 +296,12 @@ def main():
     mask_dao_tron = df[COT_LSX].astype(str).str.match(r'^S[1-7]\d{2}$')
     nguoi_dao_tron = nguoi_phu_trach(df, mask_dao_tron)
 
-    nuoc_long_groups = {}
-    for vong in range(1, 8):
-        pat = re.compile(rf'^C{vong}([0-9])0$')
-        # với nước long: nhóm theo DÃY (số sau vòng), vị trí hiển thị = chính vòng đó (cố định)
-        rows = df[df[COT_LSX].astype(str).str.match(pat)].copy()
-        if rows.empty:
-            nuoc_long_groups[vong] = ([], [])
-            continue
-        rows["_day"] = rows[COT_LSX].astype(str).str.extract(pat)[0].astype(int)
-        rows = rows[rows["_day"] != 0]
-        kq = []
-        for day, grp in rows.groupby("_day"):
-            latest_date = grp[COT_NGAY].max()
-            best = grp[grp[COT_NGAY] == latest_date].iloc[0]
-            kq.append({
-                "day": int(day), "vi_tri": vong, "be": best[COT_BE], "nguoi": best[COT_NGUOI],
-                "ngay": latest_date.date(), "so_ngay_truoc": (hom_nay - latest_date.date()).days,
-            })
-        kq.sort(key=lambda x: x["day"])
-        nguoi = nguoi_phu_trach(df, df[COT_LSX].astype(str).str.match(pat))
-        nuoc_long_groups[vong] = (kq, nguoi)
+    # Kéo rút: 1 bảng DUY NHẤT, mỗi dãy 1 dòng — vòng chỉ có ý nghĩa TRONG dãy
+    # của chính nó (dãy nối tiếp nhau, ảnh hưởng nhau), KHÔNG tách theo loại
+    # nước long 1/2/3... (Tim chỉnh 2026-07-21, bản trước tách nhầm 7 bảng).
+    keo_rut_kq = snapshot_theo_day(df, RE_C_KEO_RUT, hom_nay, nhom_idx=1, vi_tri_idx=0)
+    mask_keo_rut = df[COT_LSX].astype(str).str.match(RE_C_KEO_RUT)
+    nguoi_keo_rut = nguoi_phu_trach(df, mask_keo_rut)
 
     dau_tp_kq_raw = snapshot_theo_day(df, RE_P_DAU, hom_nay, nhom_idx=1, vi_tri_idx=0)
     for r in dau_tp_kq_raw:
@@ -331,13 +314,12 @@ def main():
 
     hao_kq = doc_lich_xuat_hao(args.lich_xuat, tu_ngay, args.so_ngay)
 
-    xuat_html(mien_kq, args.so_ngay, nguoi_dao_tron, nuoc_long_groups, dau_tp_kq_raw,
+    xuat_html(mien_kq, args.so_ngay, nguoi_dao_tron, keo_rut_kq, nguoi_keo_rut, dau_tp_kq_raw,
               nguoi_dau_tp, phaxac_nguoi, hao_kq, tu_ngay, args.so_ngay, args.html)
 
     print(f"✅ Đã xuất: {args.html}")
     print(f"   Đảo trộn: {mien_kq['so_be']} bể ({nguoi_str(nguoi_dao_tron)})")
-    for vong, (kq, nguoi) in nuoc_long_groups.items():
-        print(f"   Nước long {vong}: {len(kq)} dãy ({nguoi_str(nguoi)})")
+    print(f"   Kéo rút: {len(keo_rut_kq)} dãy ({nguoi_str(nguoi_keo_rut)})")
     print(f"   Đấu TP: {len(dau_tp_kq_raw)} dãy ({nguoi_str(nguoi_dau_tp)})")
     print(f"   Phá xác: ({nguoi_str(phaxac_nguoi)})")
     print(f"   Xuất TP sắp tới: {len(hao_kq)} chuyến")
