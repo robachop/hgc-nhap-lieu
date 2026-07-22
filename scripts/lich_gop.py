@@ -18,7 +18,7 @@ Tuỳ chọn:
     --html <đường dẫn>  (mặc định lich_gop.html cùng thư mục chạy)
 """
 import argparse, re, sys, datetime
-from collections import defaultdict
+from collections import defaultdict, Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -32,6 +32,7 @@ COT_LSX = "Lệnh sản xuất"
 COT_BE = "Bể / xe"
 COT_BE_CAP = "Bể / xe cấp"
 COT_LUONG = "Lượng thực tế"
+COT_LO = "Lô"
 
 REPO_DIR = Path(__file__).parent.parent
 PLAN_DIR = REPO_DIR / "plans"
@@ -117,6 +118,67 @@ THU_TU_QUY_TRINH = [
 ]
 
 
+def xay_ban_do_be_lsx_xuat(df):
+    """Xây map bể cấp (Lxxx) → mã LSX xuất TP (PPx0), quét TOÀN BỘ actual
+    (không giới hạn khung ngày hiện). Xác nhận 2026-07-22: mỗi bể luôn gắn
+    1 mã PP cố định trong suốt lịch sử (L113→PP10, L114→PP20, L133→PP30,
+    L134→PP40... không đổi theo ngày/lô) — nên suy luận được LSX cho lô
+    tương lai chỉ từ bể nguồn trong Lịch Xuất Thành Phẩm, không cần đợi
+    actual của chính lô đó."""
+    dem = defaultdict(Counter)
+    for _, row in df.iterrows():
+        lsx = row[COT_LSX]
+        be_cap = row[COT_BE_CAP]
+        if pd.isna(lsx) or pd.isna(be_cap):
+            continue
+        lsx, be_cap = str(lsx), str(be_cap)
+        if re.match(r'^PP[1-9]0$', lsx) and be_cap.startswith("L"):
+            dem[be_cap][lsx] += 1
+    return {be: c.most_common(1)[0][0] for be, c in dem.items()}
+
+
+def xac_nhan_be_theo_lo(df):
+    """Kiểm chứng bể thành phẩm thật của mỗi lô S0xx — quét TOÀN BỘ actual các
+    lệnh Đấu TP (P\\d{3}) + Tồn TP (PT\\d{2}), đây là nơi Lô + Bể/xe (bể nhận)
+    được công nhân ghi trực tiếp khi đấu/tồn, đáng tin hơn ảnh chụp Lịch Xuất
+    Thành Phẩm (Tim gõ tay, dễ đảo nhầm số bể — xem _Giao Bang.md 2026-07-22,
+    phát hiện đảo S077/S078). Trả về {lô: Counter(bể)}."""
+    dem = defaultdict(Counter)
+    for _, row in df.iterrows():
+        lsx = row[COT_LSX]
+        lo = row[COT_LO]
+        be = row[COT_BE]
+        if pd.isna(lsx) or pd.isna(lo) or pd.isna(be):
+            continue
+        lsx, lo, be = str(lsx), str(lo), str(be)
+        if re.match(r'^P\d{3}$', lsx) or re.match(r'^PT\d{2}$', lsx):
+            dem[lo][be] += 1
+    return dem
+
+
+def kiem_chung_lich_xuat(hao_kq, be_thuc_te_theo_lo):
+    """Đối chiếu bể nguồn ghi trong Lịch Xuất Thành Phẩm (hao_kq, do Tim gõ
+    tay từ ảnh) với bể thực tế theo actual Đấu TP/Tồn TP. Trả về list cảnh
+    báo — chỉ báo khi CÓ actual mà KHÔNG khớp (lô chưa tới giai đoạn đấu thì
+    bỏ qua, không đoán/không báo động nhầm)."""
+    da_xet = set()
+    canh_bao = []
+    for r in hao_kq:
+        lo, be_khai = r["lo"], r["be_nguon"]
+        if not lo or not be_khai or lo in da_xet:
+            continue
+        da_xet.add(lo)
+        dem = be_thuc_te_theo_lo.get(lo)
+        if not dem:
+            continue  # lô chưa có Đấu TP/Tồn TP nào — chưa kiểm chứng được
+        be_thuc_te, so_dong = dem.most_common(1)[0]
+        if be_thuc_te != be_khai:
+            canh_bao.append({
+                "lo": lo, "be_khai": be_khai, "be_thuc_te": be_thuc_te, "so_dong": so_dong,
+            })
+    return canh_bao
+
+
 def doc_actual_theo_nhom(df, tu_ngay, den_ngay):
     """Gộp actual KetQua theo nhóm + ngày, cho khung [tu_ngay, den_ngay]."""
     data = defaultdict(lambda: defaultdict(list))
@@ -183,6 +245,21 @@ def cell_actual(actual_data, nhom, d):
     return f"<details><summary>{tom_tat}</summary>{chi_tiet_actual(rows)}</details>", False
 
 
+def cell_lap_lai_tu_actual(actual_data, nhom, d_nguon, nhan):
+    """Lặp lại actual của d_nguon (thường = hôm nay) cho ngày tương lai —
+    dùng cho nhóm không có trong plan JSON (vd Rút kiệt đảo trong: Phong
+    làm đều hàng ngày trên cùng bể nhưng việc này chưa được đưa vào WO
+    chính thức, xem _Giao Bang.md 2026-07-22)."""
+    rows = actual_data.get(nhom, {}).get(d_nguon, [])
+    if not rows:
+        return "—", True
+    nguoi_count = defaultdict(int)
+    for r in rows:
+        nguoi_count[r["nguoi"]] += 1
+    tom_tat = ", ".join(f"{n}({c}) {nhan}" for n, c in nguoi_count.items())
+    return f"<details><summary>{tom_tat}</summary>{chi_tiet_actual(rows)}</details>", False
+
+
 def cell_ke_hoach_hom_nay(ke_hoach_hom_nay, nhom, nhan="[kế hoạch]"):
     items = ke_hoach_hom_nay.get(nhom, [])
     if not items:
@@ -212,16 +289,32 @@ def cell_ke_hoach_dao_tron(dao_tron_ke_hoach, d):
             f"<tbody>{detail}</tbody></table></details>", False)
 
 
-def cell_ke_hoach_xuat_tp(hao_ke_hoach, d):
+def ma_phuong_tien(loai_xe):
+    """Loại xe (chữ, đọc từ Lịch Xuất Thành Phẩm) → mã phương tiện nhận
+    XT00/XB00 — khớp đúng cách actual ghi trong KetQua (Bể nhận = XT00/XB00,
+    Bể cấp = Lxxx). Tim chốt 2026-07-22: kế hoạch phải ghi cùng khuôn với
+    actual, không dùng chữ mô tả xe."""
+    loai_xe = (loai_xe or "").strip()
+    if "Bồn" in loai_xe:
+        return "XB00"
+    if "Tải" in loai_xe:
+        return "XT00"
+    return loai_xe or "—"
+
+
+def cell_ke_hoach_xuat_tp(hao_ke_hoach, d, be_to_lsx):
     items = hao_ke_hoach.get(d, [])
     if not items:
         return "—", True
     tom_tat = f"{len(items)} chuyến"
     detail = "".join(
-        f"<tr><td>{r['item']}</td><td>{r['lo']}</td><td>{r['sl']} lít</td><td>{r['noi_den']}</td><td>{r['loai_xe']}</td></tr>"
+        f"<tr><td>{be_to_lsx.get(r['be_nguon'], '?')}</td><td>{r['item']}</td><td>{r['lo']}</td>"
+        f"<td>{r['be_nguon'] or '—'}</td><td>{ma_phuong_tien(r['loai_xe'])}</td>"
+        f"<td>{r['sl']} lít</td><td>{r['noi_den']}</td></tr>"
         for r in items)
     return (f"<details><summary>{tom_tat}</summary>"
-            f"<table class='chitiet'><thead><tr><th>ITEM</th><th>Lô</th><th>SL</th><th>Nơi đến</th><th>Loại xe</th></tr></thead>"
+            f"<table class='chitiet'><thead><tr><th>LSX (suy luận)</th><th>ITEM</th><th>Lô</th><th>Bể cấp</th>"
+            f"<th>Phương tiện nhận</th><th>SL</th><th>Nơi đến</th></tr></thead>"
             f"<tbody>{detail}</tbody></table></details>", False)
 
 
@@ -249,6 +342,16 @@ def main():
     mien_kq = tinh_du_bao(str(mien_plan_path), ngay_mai, args.so_ngay_toi) if mien_plan_path.exists() else None
     chuoi_day_kq = snapshot_ca_day(df, hom_nay)
     hao_kq = doc_lich_xuat_hao(args.lich_xuat, ngay_mai, args.so_ngay_toi)
+    be_to_lsx_xuat = xay_ban_do_be_lsx_xuat(df)
+    be_thuc_te_theo_lo = xac_nhan_be_theo_lo(df)
+    canh_bao_be_lo = kiem_chung_lich_xuat(hao_kq, be_thuc_te_theo_lo)
+    if canh_bao_be_lo:
+        print(f"\n⚠️  {len(canh_bao_be_lo)} lô LỆCH bể giữa Lịch Xuất Thành Phẩm và actual Đấu TP/Tồn TP:")
+        for c in canh_bao_be_lo:
+            print(f"   Lô {c['lo']}: lịch ghi {c['be_khai']}, actual thật là {c['be_thuc_te']} "
+                  f"({c['so_dong']} dòng Đấu TP/Tồn TP) — SỬA LẠI Lịch Xuất Thành Phẩm trước khi ra WO!")
+    else:
+        print("\n✅ Đối chiếu bể theo lô: không phát hiện lệch (hoặc lô còn quá mới, chưa có Đấu TP).")
 
     dao_tron_ke_hoach = defaultdict(list)
     if mien_kq:
@@ -295,14 +398,28 @@ def main():
                 elif nhom == "C-Kéo rút nước long":
                     noi_dung, trong = cell_ke_hoach_hom_nay(
                         ke_hoach_hom_nay, "C-Kéo rút nước long", f"[lặp lại {hom_nay.strftime('%d/%m')}]")
+                elif nhom == "C-Rút kiệt đảo trong":
+                    noi_dung, trong = cell_lap_lai_tu_actual(
+                        actual_data, "C-Rút kiệt đảo trong", hom_nay, f"[lặp lại {hom_nay.strftime('%d/%m')}]")
                 elif nhom == "P-Xuất thành phẩm":
-                    noi_dung, trong = cell_ke_hoach_xuat_tp(hao_ke_hoach, d)
+                    noi_dung, trong = cell_ke_hoach_xuat_tp(hao_ke_hoach, d, be_to_lsx_xuat)
                 else:
                     noi_dung, trong = "—", True
             td_cls = f"{col_cls}{' trong' if trong else ''}"
             cells += f"<td class='{td_cls}'>{noi_dung}</td>"
         rows_html += (f'<tr><td class="nhom-col" style="background:{mau};color:{mau_chu}">'
                       f'<b>{nhom}</b><br><span class="tag">{nhan}</span></td>{cells}</tr>\n')
+
+    canh_bao_html = ""
+    if canh_bao_be_lo:
+        dong = "".join(
+            f"<li>Lô <b>{c['lo']}</b>: Lịch Xuất Thành Phẩm ghi <b>{c['be_khai']}</b>, "
+            f"nhưng actual Đấu TP/Tồn TP thật là <b>{c['be_thuc_te']}</b> "
+            f"({c['so_dong']} dòng) — cần sửa lại Lịch Xuất Thành Phẩm trước khi ra WO!</li>"
+            for c in canh_bao_be_lo)
+        canh_bao_html = (f'<div class="canh-bao">🚨 <b>PHÁT HIỆN LỆCH BỂ GIỮA LỊCH XUẤT THÀNH PHẨM VÀ ACTUAL '
+                          f'(Đấu TP/Tồn TP)</b> — kiểm tra trước khi ra WO xuất thành phẩm:'
+                          f'<ul>{dong}</ul></div>')
 
     html = f"""<!DOCTYPE html>
 <html lang="vi"><head>
@@ -319,6 +436,9 @@ def main():
   .h-sub {{ color:#94a3b8; font-size:13px; margin-top:4px; }}
   .note {{ background:#fef3c7; border:1px solid #fcd34d; color:#78350f; border-radius:10px;
           padding:10px 14px; font-size:13px; margin-bottom:14px; line-height:1.6; }}
+  .canh-bao {{ background:#fee2e2; border:1px solid #fca5a5; color:#7f1d1d; border-radius:10px;
+          padding:10px 14px; font-size:13px; margin-bottom:14px; line-height:1.7; }}
+  .canh-bao b {{ color:#991b1b; }}
   .legend {{ display:flex; gap:14px; margin-bottom:14px; flex-wrap:wrap; font-size:12.5px; }}
   .legend span {{ padding:4px 10px; border-radius:8px; }}
   .table-wrap {{ overflow-x:auto; background:#fff; border:1px solid #e2e8f0; border-radius:14px; }}
@@ -351,6 +471,7 @@ def main():
     LSX/bể/lượng (đã thực hiện) hoặc bể/LSX dự kiến (kế hoạch). Nhóm đỏ bên phải để trống vì không
     đoán trước được.
   </div>
+  {canh_bao_html}
   <div class="legend">
     <span style="background:#dcfce7;color:#166534">🟢 Có quy luật rõ</span>
     <span style="background:#fef9c3;color:#854d0e">🟡 Có xu hướng, chưa rõ</span>
