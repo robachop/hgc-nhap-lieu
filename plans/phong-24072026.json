@@ -696,6 +696,30 @@
       "dvt": "lít",
       "cong": 5,
       "group": "C_keo_rut"
+    },
+    {
+      "id": "t59",
+      "nguoi": "Phong",
+      "lsx": "PX00",
+      "mo_ta": "PX00",
+      "be_cap": "",
+      "be_nhan": "L032",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "other"
+    },
+    {
+      "id": "t60",
+      "nguoi": "Phong",
+      "lsx": "PX00",
+      "mo_ta": "PX00",
+      "be_cap": "",
+      "be_nhan": "L001",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "other"
     }
   ]
 }

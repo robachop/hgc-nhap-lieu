@@ -24,6 +24,30 @@
       "dvt": "lít",
       "cong": 5,
       "group": "P_xuat_tp"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Hao",
+      "lsx": "PT20",
+      "mo_ta": "P-Thành phẩm tồn L114",
+      "be_cap": "",
+      "be_nhan": "L114",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Hao",
+      "lsx": "PT10",
+      "mo_ta": "P-Thành phẩm tồn L113",
+      "be_cap": "",
+      "be_nhan": "L113",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
     }
   ]
 }
