@@ -117,6 +117,25 @@ THU_TU_QUY_TRINH = [
     "Phá xác",  # LUÔN CUỐI CÙNG
 ]
 
+# ── Dự đoán THỬ NGHIỆM "bước kế tiếp" — thêm 2026-07-23, Tim yêu cầu phát
+# triển thêm khả năng tiên đoán, gợi ý bằng ví dụ S020 (S-Bể trống) hàng loạt
+# trong ngày. Ý tưởng: nếu 1 bể làm xong bước X hôm nay → đoán bể đó làm
+# bước KẾ TIẾP trong quy trình vào NGÀY MAI (chỉ 1 ngày, không đoán xa hơn).
+# CHỈ áp dụng đoạn chuẩn bị đầu chuỗi (trước Đảo trộn) — đây là chuỗi thao
+# tác liên tiếp nhau trong ít ngày mỗi khi có mẻ cá mới, ít bị gián đoạn.
+# KHÔNG áp dụng cho: S-Gài nén→Đảo trộn (Đảo trộn đã có model chu kỳ riêng,
+# chính xác hơn), S-Nước bổi (tài liệu Quy Trình mục 2 ghi rõ "KHÔNG áp dụng
+# +1 ngày"), S-Trống→Cá chín và Tách cốt→Cốt nhỉ (khoảng cách thời gian
+# không cố định, có thể vài ngày tới vài tuần, không phải next-day).
+# Đây là GIẢ ĐỊNH BAN ĐẦU — Tim xác nhận/sửa dần từng bước cho sát hơn.
+NHOM_KE_TIEP = {
+    "S-Bể trống": "S-Nhập cá",
+    "S-Nhập cá": "S-Phân bổ cá",
+    "S-Phân bổ cá": "S-Bổ sung muối",
+    "S-Bổ sung muối": "S-Rút kiệt gài nén",
+    "S-Rút kiệt gài nén": "S-Gài nén",
+}
+
 
 def xay_ban_do_be_lsx_xuat(df):
     """Xây map bể cấp (Lxxx) → mã LSX xuất TP (PPx0), quét TOÀN BỘ actual
@@ -302,6 +321,39 @@ def ma_phuong_tien(loai_xe):
     return loai_xe or "—"
 
 
+def du_doan_buoc_ke_tiep(actual_data, hom_nay):
+    """Dự đoán THỬ NGHIỆM: với mỗi bể có actual HÔM NAY ở 1 nhóm nằm trong
+    NHOM_KE_TIEP, đoán bể đó chuyển sang bước KẾ TIẾP vào NGÀY MAI. Trả về
+    {nhóm_kế_tiếp: [{"be", "tu_nhom", "nguoi_hom_nay"}]}."""
+    ket_qua = defaultdict(list)
+    for nhom_hien_tai, nhom_ke_tiep in NHOM_KE_TIEP.items():
+        for r in actual_data.get(nhom_hien_tai, {}).get(hom_nay, []):
+            be = r["be"]
+            if not be or pd_isna(be):
+                continue
+            ket_qua[nhom_ke_tiep].append(
+                {"be": be, "tu_nhom": nhom_hien_tai, "nguoi_hom_nay": r["nguoi"]})
+    return ket_qua
+
+
+def cell_du_doan(du_doan, nhom, hom_nay_str):
+    items = du_doan.get(nhom, [])
+    if not items:
+        return "—", True
+    tu_nhom = items[0]["tu_nhom"]
+    tom_tat = f"🔮 {len(items)} bể (dự đoán)"
+    detail = "".join(
+        f"<tr><td>{x['be']}</td><td>{x['tu_nhom']}</td><td>{x['nguoi_hom_nay']}</td></tr>"
+        for x in items)
+    return (f"<details><summary>{tom_tat}</summary>"
+            f"<div class='du-doan-note'>🔮 <b>Dự đoán thử nghiệm</b> — bể này làm "
+            f"<b>{tu_nhom}</b> hôm nay ({hom_nay_str}) → suy theo đúng thứ tự quy trình, "
+            f"đoán bước kế tiếp là <b>{nhom}</b> vào ngày mai. CHƯA xác nhận, Tim kiểm tra "
+            f"và sửa nếu sai.</div>"
+            f"<table class='chitiet'><thead><tr><th>Bể</th><th>Từ nhóm (hôm nay)</th>"
+            f"<th>Người làm hôm nay</th></tr></thead><tbody>{detail}</tbody></table></details>", False)
+
+
 def cell_ke_hoach_xuat_tp(hao_ke_hoach, d, be_to_lsx):
     items = hao_ke_hoach.get(d, [])
     if not items:
@@ -367,8 +419,15 @@ def main():
     for r in hao_kq:
         hao_ke_hoach[r["ngay"]].append(r)
 
+    du_doan = du_doan_buoc_ke_tiep(actual_data, hom_nay)
+    if du_doan:
+        print(f"\n🔮 Dự đoán thử nghiệm bước kế tiếp cho {ngay_mai.strftime('%d/%m')}:")
+        for nhom, items in du_doan.items():
+            print(f"   {nhom}: {len(items)} bể ({', '.join(x['be'] for x in items)}) "
+                  f"— vì hôm nay làm {items[0]['tu_nhom']}")
+
     _tat_ca = set(actual_data.keys()) | set(ke_hoach_hom_nay.keys()) | \
-        {"S-Đảo trộn", "C-Kéo rút nước long", "P-Xuất thành phẩm"}
+        {"S-Đảo trộn", "C-Kéo rút nước long", "P-Xuất thành phẩm"} | set(du_doan.keys())
     _giua = [g for g in THU_TU_QUY_TRINH if g in _tat_ca and g != "Phá xác"]
     _con_lai = sorted(_tat_ca - set(THU_TU_QUY_TRINH))
     tat_ca_nhom = _giua + _con_lai + (["Phá xác"] if "Phá xác" in _tat_ca else [])
@@ -403,6 +462,8 @@ def main():
                         actual_data, "C-Rút kiệt đảo trong", hom_nay, f"[lặp lại {hom_nay.strftime('%d/%m')}]")
                 elif nhom == "P-Xuất thành phẩm":
                     noi_dung, trong = cell_ke_hoach_xuat_tp(hao_ke_hoach, d, be_to_lsx_xuat)
+                elif d == ngay_mai and nhom in du_doan:
+                    noi_dung, trong = cell_du_doan(du_doan, nhom, hom_nay.strftime('%d/%m'))
                 else:
                     noi_dung, trong = "—", True
             td_cls = f"{col_cls}{' trong' if trong else ''}"
@@ -458,6 +519,8 @@ def main():
   details summary:hover {{ text-decoration:underline; }}
   table.chitiet {{ margin-top:6px; font-size:10.5px; white-space:normal; }}
   table.chitiet th, table.chitiet td {{ padding:3px 6px; }}
+  .du-doan-note {{ background:#f5f3ff; border:1px dashed #a78bfa; color:#5b21b6; border-radius:8px;
+          padding:6px 8px; margin-top:6px; font-size:10.5px; white-space:normal; text-align:left; }}
   footer {{ text-align:center; color:#94a3b8; font-size:12px; margin-top:18px; }}
 </style>
 </head><body>
@@ -469,7 +532,7 @@ def main():
   <div class="note">
     ⚠️ Xem bảng này trước khi ra WO cho nhân viên (Tim chốt 2026-07-21). Bấm vào ô để xem chi tiết
     LSX/bể/lượng (đã thực hiện) hoặc bể/LSX dự kiến (kế hoạch). Nhóm đỏ bên phải để trống vì không
-    đoán trước được.
+    đoán trước được — trừ ô có nhãn 🔮 (dự đoán thử nghiệm bước kế tiếp, xem legend).
   </div>
   {canh_bao_html}
   <div class="legend">
@@ -477,6 +540,7 @@ def main():
     <span style="background:#fef9c3;color:#854d0e">🟡 Có xu hướng, chưa rõ</span>
     <span style="background:#fee2e2;color:#991b1b">🔴 Không quy luật</span>
     <span style="background:#dbeafe;color:#1e40af">📍 Cột hôm nay</span>
+    <span style="background:#f5f3ff;color:#5b21b6;border:1px dashed #a78bfa">🔮 Dự đoán thử nghiệm (chỉ ngày mai, cần Tim xác nhận)</span>
   </div>
   <div class="table-wrap">
     <table>
