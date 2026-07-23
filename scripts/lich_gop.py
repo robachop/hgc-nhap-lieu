@@ -17,13 +17,13 @@ Tuỳ chọn:
                                       nay, mặc định = --hom-nay)
     --html <đường dẫn>  (mặc định lich_gop.html cùng thư mục chạy)
 """
-import argparse, re, sys, datetime
+import argparse, json, re, sys, datetime
 from collections import defaultdict, Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import pandas as pd
-from du_bao_mien import tinh_du_bao
+from du_bao_mien import tinh_du_bao, parse_lsx
 from trang_thai_nha_may import doc_actual, snapshot_ca_day, doc_lich_xuat_hao
 
 COT_NGUOI = "Người thực hiện1"
@@ -414,8 +414,31 @@ def main():
     actual_data = doc_actual_theo_nhom(df, tu_ngay_qua, hom_nay)
     ke_hoach_hom_nay = doc_ke_hoach_hom_nay(hom_nay_slug)
 
-    mien_plan_path = PLAN_DIR / f"mien-{hom_nay_slug}.json"
-    mien_kq = tinh_du_bao(str(mien_plan_path), ngay_mai, args.so_ngay_toi) if mien_plan_path.exists() else None
+    # Đảo trộn: ƯU TIÊN đọc thẳng WO thật của ngày mai (nếu đã tồn tại, vd
+    # sau khi chạy lap_ke_hoach_ngay.py) làm cột ngày mai — KHÔNG tự tính lại
+    # từ plan hôm nay, tránh lệch với WO thật đã vá theo actual (Tim chốt
+    # 2026-07-23: báo cáo và WO phải đồng nhất, phát hiện thực tế 12/22 bể
+    # lệch do doi_chieu.py từng bỏ sót bể khi đối chiếu). Chỉ dùng
+    # tinh_du_bao() để TIẾP TỤC dự báo các ngày XA HƠN ngày mai (chưa có WO
+    # thật), lấy WO ngày mai làm anchor mới thay vì plan hôm nay.
+    mien_ngay_mai_slug = ngay_mai.strftime("%d%m%Y")
+    mien_ngay_mai_path = PLAN_DIR / f"mien-{mien_ngay_mai_slug}.json"
+    mien_hom_nay_path = PLAN_DIR / f"mien-{hom_nay_slug}.json"
+
+    dao_tron_ngay_mai_that = []
+    if mien_ngay_mai_path.exists():
+        plan_ngay_mai = json.loads(mien_ngay_mai_path.read_text(encoding="utf-8"))
+        for t in plan_ngay_mai["tasks"]:
+            if parse_lsx(t["lsx"]):
+                dao_tron_ngay_mai_that.append({"be": t["be_nhan"], "lsx": t["lsx"]})
+        mien_kq = (tinh_du_bao(str(mien_ngay_mai_path), ngay_mai + datetime.timedelta(days=1),
+                                args.so_ngay_toi - 1)
+                   if args.so_ngay_toi > 1 else None)
+        mien_kq_offset = 1  # cột đầu (ngay_mai) đã lấy từ WO thật ở trên, mien_kq bắt đầu từ ngay_mai+1
+    else:
+        mien_kq = tinh_du_bao(str(mien_hom_nay_path), ngay_mai, args.so_ngay_toi) \
+            if mien_hom_nay_path.exists() else None
+        mien_kq_offset = 0
     chuoi_day_kq = snapshot_ca_day(df, hom_nay)
     hao_kq = doc_lich_xuat_hao(args.lich_xuat, ngay_mai, args.so_ngay_toi)
     be_to_lsx_xuat = xay_ban_do_be_lsx_xuat(df)
@@ -430,10 +453,12 @@ def main():
         print("\n✅ Đối chiếu bể theo lô: không phát hiện lệch (hoặc lô còn quá mới, chưa có Đấu TP).")
 
     dao_tron_ke_hoach = defaultdict(list)
+    for item in dao_tron_ngay_mai_that:
+        dao_tron_ke_hoach[ngay_mai].append(item)
     if mien_kq:
         for row in mien_kq["rows"]:
             for i, c in enumerate(row["cells"]):
-                d = ngay_mai + datetime.timedelta(days=i)
+                d = ngay_mai + datetime.timedelta(days=i + mien_kq_offset)
                 if c["loai"] == "binh_thuong":
                     dao_tron_ke_hoach[d].append({"be": row["be"], "lsx": c["text"]})
                 elif c["loai"] == "het_ck":
