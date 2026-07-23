@@ -297,15 +297,23 @@ def cell_ke_hoach_hom_nay(ke_hoach_hom_nay, nhom, nhan="[kế hoạch]"):
 
 
 def cell_ke_hoach_dao_tron(dao_tron_ke_hoach, d):
+    """Render Y HỆT khuôn 5 cột dùng cho ô 'hôm nay' (LSX/Bể nhận/Bể cấp/
+    Lượng dự kiến/Người) — Tim chốt 2026-07-23: mọi ô kế hoạch tương lai phải
+    cùng 1 mẫu với ô thực hiện/hôm nay, không tự sáng tạo khuôn 2 cột riêng
+    cho đảo trộn nữa. Bể cấp suy ra từ Bể nhận (Lxxx → Txxx, cùng số — đúng
+    quy ước plan JSON thật của Miên, vd L015↔T015)."""
     items = dao_tron_ke_hoach.get(d, [])
     if not items:
         return "—", True
     het = sum(1 for x in items if x["lsx"] == "HẾT CK")
-    tom_tat = f"{len(items)} bể" + (f" ({het} hết CK)" if het else "")
-    detail = "".join(f"<tr><td>{x['be']}</td><td>{x['lsx']}</td></tr>" for x in items)
+    tom_tat = f"Mien({len(items)}) [kế hoạch]" + (f" ({het} hết CK)" if het else "")
+    detail = "".join(
+        f"<tr><td>{x['lsx']}</td><td>{x['be']}</td><td>{'T' + x['be'][1:] if x['be'].startswith('L') else '—'}</td>"
+        f"<td>—</td><td>Mien</td></tr>"
+        for x in items)
     return (f"<details><summary>{tom_tat}</summary>"
-            f"<table class='chitiet'><thead><tr><th>Bể</th><th>LSX dự kiến</th></tr></thead>"
-            f"<tbody>{detail}</tbody></table></details>", False)
+            f"<table class='chitiet'><thead><tr><th>LSX</th><th>Bể nhận</th><th>Bể cấp</th>"
+            f"<th>Lượng dự kiến</th><th>Người</th></tr></thead><tbody>{detail}</tbody></table></details>", False)
 
 
 def ma_phuong_tien(loai_xe):
