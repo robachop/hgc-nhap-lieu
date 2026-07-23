@@ -336,22 +336,15 @@ def du_doan_buoc_ke_tiep(actual_data, hom_nay):
     return ket_qua
 
 
-def cell_du_doan(du_doan, nhom, hom_nay_str):
+def cell_du_doan(du_doan, nhom):
     items = du_doan.get(nhom, [])
     if not items:
         return "—", True
-    tu_nhom = items[0]["tu_nhom"]
     tom_tat = f"🔮 {len(items)} bể (dự đoán)"
-    detail = "".join(
-        f"<tr><td>{x['be']}</td><td>{x['tu_nhom']}</td><td>{x['nguoi_hom_nay']}</td></tr>"
-        for x in items)
+    detail = "".join(f"<tr><td>{x['be']}</td><td>{nhom}</td></tr>" for x in items)
     return (f"<details><summary>{tom_tat}</summary>"
-            f"<div class='du-doan-note'>🔮 <b>Dự đoán thử nghiệm</b> — bể này làm "
-            f"<b>{tu_nhom}</b> hôm nay ({hom_nay_str}) → suy theo đúng thứ tự quy trình, "
-            f"đoán bước kế tiếp là <b>{nhom}</b> vào ngày mai. CHƯA xác nhận, Tim kiểm tra "
-            f"và sửa nếu sai.</div>"
-            f"<table class='chitiet'><thead><tr><th>Bể</th><th>Từ nhóm (hôm nay)</th>"
-            f"<th>Người làm hôm nay</th></tr></thead><tbody>{detail}</tbody></table></details>", False)
+            f"<table class='chitiet'><thead><tr><th>Bể</th><th>LSX dự kiến</th></tr></thead>"
+            f"<tbody>{detail}</tbody></table></details>", False)
 
 
 def cell_ke_hoach_xuat_tp(hao_ke_hoach, d, be_to_lsx):
@@ -463,7 +456,7 @@ def main():
                 elif nhom == "P-Xuất thành phẩm":
                     noi_dung, trong = cell_ke_hoach_xuat_tp(hao_ke_hoach, d, be_to_lsx_xuat)
                 elif d == ngay_mai and nhom in du_doan:
-                    noi_dung, trong = cell_du_doan(du_doan, nhom, hom_nay.strftime('%d/%m'))
+                    noi_dung, trong = cell_du_doan(du_doan, nhom)
                 else:
                     noi_dung, trong = "—", True
             td_cls = f"{col_cls}{' trong' if trong else ''}"
@@ -519,8 +512,6 @@ def main():
   details summary:hover {{ text-decoration:underline; }}
   table.chitiet {{ margin-top:6px; font-size:10.5px; white-space:normal; }}
   table.chitiet th, table.chitiet td {{ padding:3px 6px; }}
-  .du-doan-note {{ background:#f5f3ff; border:1px dashed #a78bfa; color:#5b21b6; border-radius:8px;
-          padding:6px 8px; margin-top:6px; font-size:10.5px; white-space:normal; text-align:left; }}
   footer {{ text-align:center; color:#94a3b8; font-size:12px; margin-top:18px; }}
 </style>
 </head><body>
