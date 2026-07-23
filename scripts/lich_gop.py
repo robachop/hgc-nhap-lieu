@@ -321,30 +321,53 @@ def ma_phuong_tien(loai_xe):
     return loai_xe or "—"
 
 
+NHOM_LSX_DU_DOAN = {
+    "S-Nhập cá": "S030",
+    "S-Phân bổ cá": "S040",
+    "S-Bổ sung muối": "SM0x",
+    "S-Rút kiệt gài nén": "S050",
+    "S-Gài nén": "S090",
+}
+
+
 def du_doan_buoc_ke_tiep(actual_data, hom_nay):
     """Dự đoán THỬ NGHIỆM: với mỗi bể có actual HÔM NAY ở 1 nhóm nằm trong
     NHOM_KE_TIEP, đoán bể đó chuyển sang bước KẾ TIẾP vào NGÀY MAI. Trả về
-    {nhóm_kế_tiếp: [{"be", "tu_nhom", "nguoi_hom_nay"}]}."""
+    {nhóm_kế_tiếp: [{"be", "tu_nhom", "nguoi_hom_nay", "luong"}]}."""
     ket_qua = defaultdict(list)
     for nhom_hien_tai, nhom_ke_tiep in NHOM_KE_TIEP.items():
         for r in actual_data.get(nhom_hien_tai, {}).get(hom_nay, []):
             be = r["be"]
             if not be or pd_isna(be):
                 continue
-            ket_qua[nhom_ke_tiep].append(
-                {"be": be, "tu_nhom": nhom_hien_tai, "nguoi_hom_nay": r["nguoi"]})
+            ket_qua[nhom_ke_tiep].append({
+                "be": be, "tu_nhom": nhom_hien_tai, "nguoi_hom_nay": r["nguoi"], "luong": r["luong"],
+            })
     return ket_qua
 
 
 def cell_du_doan(du_doan, nhom):
+    """Render Y HỆT khuôn 5 cột dùng cho ô 'hôm nay' (LSX/Bể nhận/Bể cấp/
+    Lượng dự kiến/Người) — Tim chốt 2026-07-23: kế hoạch (dự đoán) và thực
+    hiện phải cùng 1 mẫu, chỉ khác nhãn. CHỈ đổi hiển thị báo cáo, KHÔNG đưa
+    vào file kế hoạch/WO thật (Tim xác nhận đây vẫn là báo cáo report-only,
+    chờ Tim duyệt trước khi giao việc thật)."""
     items = du_doan.get(nhom, [])
     if not items:
         return "—", True
-    tom_tat = f"🔮 {len(items)} bể (dự đoán)"
-    detail = "".join(f"<tr><td>{x['be']}</td><td>{nhom}</td></tr>" for x in items)
+    lsx = NHOM_LSX_DU_DOAN.get(nhom, "?")
+    nguoi_count = defaultdict(int)
+    for it in items:
+        nguoi_count[it["nguoi_hom_nay"]] += 1
+    tom_tat = ", ".join(f"{n}({c}) [dự đoán]" for n, c in nguoi_count.items())
+    detail = "".join(
+        f"<tr><td>{lsx}</td><td>{x['be']}</td><td>—</td>"
+        f"<td>{x['luong'] if x['luong'] is not None and not pd_isna(x['luong']) else '—'}</td>"
+        f"<td>{x['nguoi_hom_nay']}</td></tr>"
+        for x in items)
     return (f"<details><summary>{tom_tat}</summary>"
-            f"<table class='chitiet'><thead><tr><th>Bể</th><th>LSX dự kiến</th></tr></thead>"
-            f"<tbody>{detail}</tbody></table></details>", False)
+            f"<table class='chitiet'><thead><tr><th>LSX</th><th>Bể nhận</th><th>Bể cấp</th>"
+            f"<th>Lượng dự kiến</th><th>Người</th></tr></thead><tbody>{detail}</tbody></table></details>", False)
 
 
 def cell_ke_hoach_xuat_tp(hao_ke_hoach, d, be_to_lsx):
