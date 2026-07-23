@@ -26,18 +26,6 @@
       "group": "PX_rut_kiet"
     },
     {
-      "id": "t3",
-      "nguoi": "Ha",
-      "lsx": "PX00",
-      "mo_ta": "PX00",
-      "be_cap": "",
-      "be_nhan": "L047",
-      "luong_dk": 0,
-      "dvt": "lít",
-      "cong": 5,
-      "group": "other"
-    },
-    {
       "id": "t4",
       "nguoi": "Ha",
       "lsx": "Px20",
