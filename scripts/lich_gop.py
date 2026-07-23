@@ -68,6 +68,7 @@ def phan_loai(lsx):
     if lsx in ("CX00", "CY00", "CZ00"): return "C-Kéo rút nước long"
     if lsx in ("PM00", "MP00", "MP01"): return "Pha muối"
     if lsx == "PX00": return "Phá xác"
+    if re.match(r'^Px[1-9]0$', lsx): return "P-Đấu thành phẩm"  # mã tạm, be_nhan="Bể TP" chưa chốt
     if re.match(r'^P\d{3}$', lsx): return "P-Đấu thành phẩm"
     if re.match(r'^PT\d{2}$', lsx): return "P-Tồn thành phẩm"
     if re.match(r'^PP\d{2}$', lsx): return "P-Xuất thành phẩm"
@@ -378,54 +379,6 @@ def cell_du_doan(du_doan, nhom):
             f"<th>Lượng dự kiến</th><th>Người</th></tr></thead><tbody>{detail}</tbody></table></details>", False)
 
 
-RE_DAU_TP = re.compile(r'^P(\d)(\d)0$')
-
-
-def du_doan_dau_tp(actual_data, hom_nay):
-    """Dự đoán THỬ NGHIỆM cho 'P-Đấu thành phẩm' — thêm 2026-07-23, gợi ý
-    của Tim ("giờ đến lệnh Đấu thành phẩm"). Cơ sở: mã Pxy0 có x=bể TP CỐ
-    ĐỊNH (1→L113, 2→L114, 3→L133, 4→L134, 5→L138, 6→L213 — bảng tĩnh mục 5
-    Quy Trình Vòng Quay Chượp...md) và y=số dãy (1-9). Với LÔ đang đấu hôm
-    nay, nếu CHƯA đủ cả 9 dãy → đoán các dãy CÒN THIẾU sẽ đấu vào NGÀY MAI,
-    cùng bể/lô/x như hôm nay (khớp đúng dữ liệu thật: cùng 1 lô luôn dùng
-    chung 1 bể TP trong suốt quá trình đấu). Không đoán bể cấp (nguồn T-xxx
-    riêng từng dãy, chưa đủ cơ sở suy) — để '—'. Nếu ĐÃ đủ 9/9 dãy hôm nay
-    (lô coi như xong) → không đoán gì (không biết lô kế tiếp dùng bể nào)."""
-    rows = actual_data.get("P-Đấu thành phẩm", {}).get(hom_nay, [])
-    if not rows:
-        return []
-    theo_lo = defaultdict(list)
-    for r in rows:
-        m = RE_DAU_TP.match(r["lsx"])
-        if not m or pd_isna(r.get("lo")):
-            continue
-        theo_lo[str(r["lo"])].append((int(m.group(1)), int(m.group(2)), r["be"], r["nguoi"]))
-
-    ket_qua = []
-    for lo, items in theo_lo.items():
-        x = Counter(x for x, y, be, nguoi in items).most_common(1)[0][0]
-        be = Counter(be for x, y, be, nguoi in items).most_common(1)[0][0]
-        nguoi = Counter(nguoi for x, y, be, nguoi in items).most_common(1)[0][0]
-        day_da_lam = {y for x, y, be, nguoi in items}
-        day_con_thieu = sorted(set(range(1, 10)) - day_da_lam)
-        for y in day_con_thieu:
-            ket_qua.append({"lsx": f"P{x}{y}0", "be": be, "lo": lo, "nguoi": nguoi})
-    return ket_qua
-
-
-def cell_du_doan_dau_tp(items):
-    if not items:
-        return "—", True
-    nguoi_count = defaultdict(int)
-    for it in items:
-        nguoi_count[it["nguoi"]] += 1
-    tom_tat = ", ".join(f"{n}({c}) [dự đoán]" for n, c in nguoi_count.items())
-    detail = "".join(
-        f"<tr><td>{x['lsx']}</td><td>{x['be']}</td><td>—</td><td>—</td><td>{x['nguoi']}</td></tr>"
-        for x in items)
-    return (f"<details><summary>{tom_tat}</summary>"
-            f"<table class='chitiet'><thead><tr><th>LSX</th><th>Bể nhận</th><th>Bể cấp</th>"
-            f"<th>Lượng dự kiến</th><th>Người</th></tr></thead><tbody>{detail}</tbody></table></details>", False)
 
 
 def cell_ke_hoach_xuat_tp(hao_ke_hoach, d, be_to_lsx):
@@ -525,14 +478,8 @@ def main():
             print(f"   {nhom}: {len(items)} bể ({', '.join(x['be'] for x in items)}) "
                   f"— vì hôm nay làm {items[0]['tu_nhom']}")
 
-    du_doan_dau_tp_items = du_doan_dau_tp(actual_data, hom_nay)
-    if du_doan_dau_tp_items:
-        print(f"🔮 P-Đấu thành phẩm: {len(du_doan_dau_tp_items)} dãy còn thiếu "
-              f"({', '.join(x['lsx'] for x in du_doan_dau_tp_items)}) cho lô "
-              f"{du_doan_dau_tp_items[0]['lo']} — dự đoán đấu nốt vào {ngay_mai.strftime('%d/%m')}")
-
     _tat_ca = set(actual_data.keys()) | set(ke_hoach_hom_nay.keys()) | \
-        {"S-Đảo trộn", "C-Kéo rút nước long", "P-Xuất thành phẩm"} | set(du_doan.keys())
+        {"S-Đảo trộn", "C-Kéo rút nước long", "P-Đấu thành phẩm", "P-Xuất thành phẩm"} | set(du_doan.keys())
     _giua = [g for g in THU_TU_QUY_TRINH if g in _tat_ca and g != "Phá xác"]
     _con_lai = sorted(_tat_ca - set(THU_TU_QUY_TRINH))
     tat_ca_nhom = _giua + _con_lai + (["Phá xác"] if "Phá xác" in _tat_ca else [])
@@ -567,8 +514,13 @@ def main():
                         actual_data, "C-Rút kiệt đảo trong", hom_nay, f"[lặp lại {hom_nay.strftime('%d/%m')}]")
                 elif nhom == "P-Xuất thành phẩm":
                     noi_dung, trong = cell_ke_hoach_xuat_tp(hao_ke_hoach, d, be_to_lsx_xuat)
-                elif nhom == "P-Đấu thành phẩm" and d == ngay_mai:
-                    noi_dung, trong = cell_du_doan_dau_tp(du_doan_dau_tp_items)
+                elif nhom == "P-Đấu thành phẩm":
+                    # Tim chốt 2026-07-23: để TRỐNG bể (Bể TP/mã Px_0 chưa
+                    # chốt) giống hệt WO thật — KHÔNG tự đoán bể cụ thể (x)
+                    # tới khi Tim hướng dẫn cách suy x đúng. Lặp lại nguyên
+                    # kế hoạch Px10-Px90 hôm nay, giống cách làm Kéo rút.
+                    noi_dung, trong = cell_ke_hoach_hom_nay(
+                        ke_hoach_hom_nay, "P-Đấu thành phẩm", f"[lặp lại {hom_nay.strftime('%d/%m')}]")
                 elif d == ngay_mai and nhom in du_doan:
                     noi_dung, trong = cell_du_doan(du_doan, nhom)
                 else:
