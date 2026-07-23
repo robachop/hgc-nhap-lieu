@@ -535,6 +535,14 @@ def main():
                     else:
                         noi_dung, trong = cell_ke_hoach_hom_nay(
                             ke_hoach_hom_nay, "P-Đấu thành phẩm", f"[lặp lại {hom_nay.strftime('%d/%m')}]")
+                elif nhom == "P-Tồn thành phẩm" and d == ngay_mai and ke_hoach_ngay_mai.get(nhom):
+                    # Tim chốt 2026-07-23: WO thật ngày mai có thể đã thêm
+                    # PTxx cụ thể (Ha/Hao) — trước đây nhóm này KHÔNG có
+                    # nhánh hiển thị nào cho tương lai (luôn "—" dù WO đã có
+                    # task), khiến báo cáo lệch WO. Hiện trực tiếp từ WO
+                    # thật, không có mẫu "lặp lại" vì nhóm này không đều đặn
+                    # hàng ngày (đỏ — không cố định 1 người/1 khuôn).
+                    noi_dung, trong = cell_ke_hoach_hom_nay(ke_hoach_ngay_mai, nhom, "[kế hoạch]")
                 elif d == ngay_mai and nhom in du_doan:
                     noi_dung, trong = cell_du_doan(du_doan, nhom)
                 else:
