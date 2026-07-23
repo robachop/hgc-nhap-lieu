@@ -30,9 +30,16 @@ except ImportError:
 COT_NGUOI = "Người thực hiện1"
 COT_NGAY = "Ngày thực hiện"
 COT_LSX = "Lệnh sản xuất"
-COT_DIENGIAI = "Diễn giải"
+COT_BE = "Bể / xe"
 
-RE_BE_DAO_TRON = re.compile(r"bể\s+(\d+)", re.IGNORECASE)
+# ⚠️ Sửa 2026-07-23: TRƯỚC ĐÂY suy bể từ regex trên "Diễn giải" (chỉ khớp
+# mẫu cũ "Đảo trộn bể NNN (CKx)") — mẫu Diễn giải đã đổi thành "S-Đảo trộn
+# {ck} ngày {ngày}" (không còn chữ "bể NNN"), khiến regex ÂM THẦM bỏ qua
+# phần lớn bể (phát hiện thật: 16/22 bể hôm 23/07 không parse được, khiến
+# WO 24/07 của Miên bị "đứng yên" ở nhiều bể thay vì +1 ngày — xem
+# _Giao Bang.md 2026-07-23). Đọc thẳng cột "Bể / xe" (COT_BE, đã có sẵn
+# trong sheet, đáng tin hơn text mô tả tự do) thay vì suy từ Diễn giải.
+RE_BE_COT = re.compile(r"^[LT](\d+)$")
 RE_LSX_DAO_TRON = re.compile(r"^S([1-7])(\d\d)$")
 
 # Số ngày tối đa mỗi chu kỳ đảo trộn (giống tao_ke_hoach.py). Bể vượt quá
@@ -74,8 +81,10 @@ def doi_chieu_dao_tron(df, worker, ngay_actual):
 
     ket_qua = {}
     for _, row in rows.iterrows():
-        dien_giai = str(row.get(COT_DIENGIAI, ""))
-        m_be = RE_BE_DAO_TRON.search(dien_giai)
+        be_col = row.get(COT_BE)
+        if pd.isna(be_col):
+            continue
+        m_be = RE_BE_COT.match(str(be_col).strip())
         if not m_be:
             continue  # dòng không parse được bể — bỏ qua, không đoán
         be = int(m_be.group(1))
