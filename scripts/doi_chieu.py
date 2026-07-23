@@ -31,6 +31,7 @@ COT_NGUOI = "Người thực hiện1"
 COT_NGAY = "Ngày thực hiện"
 COT_LSX = "Lệnh sản xuất"
 COT_BE = "Bể / xe"
+COT_TRANG_THAI = "Trạng thái báo cáo"
 
 # ⚠️ Sửa 2026-07-23: TRƯỚC ĐÂY suy bể từ regex trên "Diễn giải" (chỉ khớp
 # mẫu cũ "Đảo trộn bể NNN (CKx)") — mẫu Diễn giải đã đổi thành "S-Đảo trộn
@@ -94,6 +95,16 @@ def doi_chieu_dao_tron(df, worker, ngay_actual):
         if not m_lsx:
             continue
         ck, ngay = int(m_lsx.group(1)), int(m_lsx.group(2))
+        # ⚠️ Thêm 2026-07-23: Miên có thể chọn "skip" (bỏ qua, không thật sự
+        # đảo trộn hôm đó) thay vì "done" — cột "Trạng thái báo cáo". Phát
+        # hiện thật: 6 bể (L015,019,029,035,036,037) Miên chọn skip liên
+        # tiếp 22-23/07, nhưng code cũ vẫn coi như "done" và tự +1 đều đặn
+        # → kế hoạch 24/07 sai (Miên KHÔNG hề đảo trộn 2 ngày liền). Nếu
+        # trạng thái mới nhất trong ngày là "skip" → KHÔNG đề xuất +1, đánh
+        # dấu để xoá khỏi plan (giống hệt "hết chu kỳ" — Miên tự thêm lại
+        # qua nút ➕ khi tiếp tục thật).
+        trang_thai = str(row.get(COT_TRANG_THAI, "")).strip().lower()
+        bi_skip = trang_thai == "skip"
 
         # 1 bể có thể có nhiều dòng actual trong ngày — giữ lệnh có ngày lớn nhất
         prev = ket_qua.get(be)
@@ -104,10 +115,16 @@ def doi_chieu_dao_tron(df, worker, ngay_actual):
                 "actual_lsx": lsx,
                 "actual_ck": ck,
                 "actual_day": ngay,
-                "het_chu_ky": het_chu_ky,
-                # None nếu hết chu kỳ — KHÔNG đề xuất, Miên tự thêm qua nút ➕
-                "de_xuat_lsx_ngay_ke": None if het_chu_ky else f"S{ck}{ngay_ke:02d}",
+                "het_chu_ky": het_chu_ky or bi_skip,
+                "bi_skip": bi_skip,
+                # None nếu hết chu kỳ HOẶC bị skip — KHÔNG đề xuất, Miên tự
+                # thêm/tiếp tục qua nút ➕ khi thật sự làm lại
+                "de_xuat_lsx_ngay_ke": None if (het_chu_ky or bi_skip) else f"S{ck}{ngay_ke:02d}",
             }
+    n_skip = sum(1 for v in ket_qua.values() if v.get("bi_skip"))
+    if n_skip:
+        print(f"  ⏭️  {n_skip} bể Miên chọn SKIP hôm nay — không đề xuất +1, đánh dấu xoá khỏi plan: "
+              f"{[be for be, v in ket_qua.items() if v.get('bi_skip')]}")
     n_het = sum(1 for v in ket_qua.values() if v["het_chu_ky"])
     if n_het:
         print(f"  ℹ️  {n_het} bể đã hết chu kỳ (ngày kế > max cho phép) — không đề xuất, Miên tự thêm qua nút ➕: "
