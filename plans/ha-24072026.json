@@ -26,7 +26,7 @@
       "group": "PX_rut_kiet"
     },
     {
-      "id": "t4",
+      "id": "t3",
       "nguoi": "Ha",
       "lsx": "Px20",
       "mo_ta": "Thành phẩm dãy 2",
@@ -38,7 +38,7 @@
       "group": "PX_rut_kiet"
     },
     {
-      "id": "t5",
+      "id": "t4",
       "nguoi": "Ha",
       "lsx": "PM00",
       "mo_ta": "P-Pha muối",
@@ -50,11 +50,11 @@
       "group": "PM_pha_muoi"
     },
     {
-      "id": "t6",
+      "id": "t5",
       "nguoi": "Ha",
       "lsx": "Px30",
       "mo_ta": "Thành phẩm dãy 3",
-      "be_cap": "T106",
+      "be_cap": "T092",
       "be_nhan": "Bể TP",
       "luong_dk": 0,
       "dvt": "lít",
@@ -62,7 +62,7 @@
       "group": "PX_rut_kiet"
     },
     {
-      "id": "t7",
+      "id": "t6",
       "nguoi": "Ha",
       "lsx": "PM00",
       "mo_ta": "P-Pha muối",
@@ -74,7 +74,7 @@
       "group": "PM_pha_muoi"
     },
     {
-      "id": "t8",
+      "id": "t7",
       "nguoi": "Ha",
       "lsx": "Px40",
       "mo_ta": "Thành phẩm dãy 4",
@@ -86,7 +86,7 @@
       "group": "PX_rut_kiet"
     },
     {
-      "id": "t9",
+      "id": "t8",
       "nguoi": "Ha",
       "lsx": "PM00",
       "mo_ta": "P-Pha muối",
@@ -98,11 +98,11 @@
       "group": "PM_pha_muoi"
     },
     {
-      "id": "t10",
+      "id": "t9",
       "nguoi": "Ha",
       "lsx": "Px50",
       "mo_ta": "Thành phẩm dãy 5",
-      "be_cap": "T120",
+      "be_cap": "T076",
       "be_nhan": "Bể TP",
       "luong_dk": 0,
       "dvt": "lít",
@@ -110,7 +110,7 @@
       "group": "PX_rut_kiet"
     },
     {
-      "id": "t11",
+      "id": "t10",
       "nguoi": "Ha",
       "lsx": "Px60",
       "mo_ta": "Thành phẩm dãy 6",
@@ -122,7 +122,7 @@
       "group": "PX_rut_kiet"
     },
     {
-      "id": "t12",
+      "id": "t11",
       "nguoi": "Ha",
       "lsx": "PM00",
       "mo_ta": "P-Pha muối",
@@ -134,7 +134,7 @@
       "group": "PM_pha_muoi"
     },
     {
-      "id": "t13",
+      "id": "t12",
       "nguoi": "Ha",
       "lsx": "Px70",
       "mo_ta": "Thành phẩm dãy 7",
@@ -146,7 +146,7 @@
       "group": "PX_rut_kiet"
     },
     {
-      "id": "t14",
+      "id": "t13",
       "nguoi": "Ha",
       "lsx": "PM00",
       "mo_ta": "P-Pha muối",
@@ -158,7 +158,7 @@
       "group": "PM_pha_muoi"
     },
     {
-      "id": "t15",
+      "id": "t14",
       "nguoi": "Ha",
       "lsx": "Px80",
       "mo_ta": "Thành phẩm dãy 8",
@@ -170,7 +170,7 @@
       "group": "PX_rut_kiet"
     },
     {
-      "id": "t16",
+      "id": "t15",
       "nguoi": "Ha",
       "lsx": "PM00",
       "mo_ta": "P-Pha muối",
@@ -182,7 +182,7 @@
       "group": "PM_pha_muoi"
     },
     {
-      "id": "t17",
+      "id": "t16",
       "nguoi": "Ha",
       "lsx": "Px90",
       "mo_ta": "Thành phẩm dãy 9",
@@ -194,7 +194,7 @@
       "group": "PX_rut_kiet"
     },
     {
-      "id": "t18",
+      "id": "t17",
       "nguoi": "Ha",
       "lsx": "PT00",
       "mo_ta": "P-Thành phẩm tồn — kiểm tra lượng tồn thật tại bể đang làm",
