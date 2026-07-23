@@ -416,6 +416,13 @@ def main():
     df = doc_actual(args.ketqua)
     actual_data = doc_actual_theo_nhom(df, tu_ngay_qua, hom_nay)
     ke_hoach_hom_nay = doc_ke_hoach_hom_nay(hom_nay_slug)
+    # Kéo rút/Đấu TP: ƯU TIÊN đọc thẳng WO thật của Phong/Ha ngày mai nếu đã
+    # tồn tại (vd Tim vừa gửi Dãy kéo rút mới) — cùng nguyên tắc "báo cáo
+    # đồng nhất WO" đã áp dụng cho đảo trộn (2026-07-23). Nếu chưa có file
+    # (bình thường khi chạy trước lap_ke_hoach_ngay.py/regen_phong_ha.py) →
+    # doc_ke_hoach_hom_nay() tự trả về rỗng, code render sẽ fallback lặp lại
+    # hôm nay như cũ.
+    ke_hoach_ngay_mai = doc_ke_hoach_hom_nay(ngay_mai.strftime("%d%m%Y"))
 
     # Đảo trộn: ƯU TIÊN đọc thẳng WO thật của ngày mai (nếu đã tồn tại, vd
     # sau khi chạy lap_ke_hoach_ngay.py) làm cột ngày mai — KHÔNG tự tính lại
@@ -507,8 +514,11 @@ def main():
                 if nhom == "S-Đảo trộn":
                     noi_dung, trong = cell_ke_hoach_dao_tron(dao_tron_ke_hoach, d)
                 elif nhom == "C-Kéo rút nước long":
-                    noi_dung, trong = cell_ke_hoach_hom_nay(
-                        ke_hoach_hom_nay, "C-Kéo rút nước long", f"[lặp lại {hom_nay.strftime('%d/%m')}]")
+                    if d == ngay_mai and ke_hoach_ngay_mai.get(nhom):
+                        noi_dung, trong = cell_ke_hoach_hom_nay(ke_hoach_ngay_mai, nhom, "[kế hoạch]")
+                    else:
+                        noi_dung, trong = cell_ke_hoach_hom_nay(
+                            ke_hoach_hom_nay, "C-Kéo rút nước long", f"[lặp lại {hom_nay.strftime('%d/%m')}]")
                 elif nhom == "C-Rút kiệt đảo trong":
                     noi_dung, trong = cell_lap_lai_tu_actual(
                         actual_data, "C-Rút kiệt đảo trong", hom_nay, f"[lặp lại {hom_nay.strftime('%d/%m')}]")
@@ -517,10 +527,14 @@ def main():
                 elif nhom == "P-Đấu thành phẩm":
                     # Tim chốt 2026-07-23: để TRỐNG bể (Bể TP/mã Px_0 chưa
                     # chốt) giống hệt WO thật — KHÔNG tự đoán bể cụ thể (x)
-                    # tới khi Tim hướng dẫn cách suy x đúng. Lặp lại nguyên
-                    # kế hoạch Px10-Px90 hôm nay, giống cách làm Kéo rút.
-                    noi_dung, trong = cell_ke_hoach_hom_nay(
-                        ke_hoach_hom_nay, "P-Đấu thành phẩm", f"[lặp lại {hom_nay.strftime('%d/%m')}]")
+                    # tới khi Tim hướng dẫn cách suy x đúng. Ưu tiên đọc WO
+                    # thật ngày mai nếu đã có (đồng nhất với WO), fallback
+                    # lặp lại hôm nay nếu chưa có.
+                    if d == ngay_mai and ke_hoach_ngay_mai.get(nhom):
+                        noi_dung, trong = cell_ke_hoach_hom_nay(ke_hoach_ngay_mai, nhom, "[kế hoạch]")
+                    else:
+                        noi_dung, trong = cell_ke_hoach_hom_nay(
+                            ke_hoach_hom_nay, "P-Đấu thành phẩm", f"[lặp lại {hom_nay.strftime('%d/%m')}]")
                 elif d == ngay_mai and nhom in du_doan:
                     noi_dung, trong = cell_du_doan(du_doan, nhom)
                 else:
