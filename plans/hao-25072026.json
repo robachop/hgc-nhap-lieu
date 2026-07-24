@@ -1,0 +1,53 @@
+{
+  "date": "2026-07-25",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Hao",
+      "lsx": "PP10",
+      "mo_ta": "P-Xuất TP Lô S078 — Nam Ngư — đi MBA — Tải 12 khối (chưa có ITEM/Đạm chính thức)",
+      "be_cap": "L113",
+      "be_nhan": "XT00",
+      "luong_dk": 12080,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Hao",
+      "lsx": "PP30",
+      "mo_ta": "P-Xuất TP Lô S079 — Nam Ngư — đi MBA — Bồn 12 khối (chưa có ITEM/Đạm chính thức)",
+      "be_cap": "L133",
+      "be_nhan": "XB00",
+      "luong_dk": 12080,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Hao",
+      "lsx": "PT10",
+      "mo_ta": "P-Thành phẩm tồn L113",
+      "be_cap": "",
+      "be_nhan": "L113",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Hao",
+      "lsx": "PT30",
+      "mo_ta": "P-Thành phẩm tồn L133",
+      "be_cap": "",
+      "be_nhan": "L133",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    }
+  ]
+}
