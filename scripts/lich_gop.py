@@ -77,7 +77,7 @@ def phan_loai(lsx):
 
 # ── Màu/nhãn chữ theo "độ tin cậy dự báo" — CHỐT 2026-07-21, không tự đổi ──
 MAU_CHU = {"xanh": "#166534", "vang": "#854d0e", "do": "#991b1b"}
-NHAN = {"xanh": "🟢 Có quy luật", "vang": "🟡 Xu hướng, chưa rõ", "do": "🔴 Không quy luật"}
+NHAN = {"xanh": "🟢 Có quy luật", "vang": "🟡 Xu hướng, chưa rõ", "do": "🔴 Chưa có quy luật"}
 PHAN_LOAI = {
     "S-Đảo trộn": ("xanh", "Ngày con đếm được rõ, dự báo chính xác từng bể"),
     "C-Kéo rút nước long": ("xanh", "Cấu trúc L/T đáng tin, không đoán được ngày cụ thể tiến triển"),
@@ -619,7 +619,7 @@ def main():
   <div class="legend">
     <span style="background:#dcfce7;color:#166534">🟢 Có quy luật rõ</span>
     <span style="background:#fef9c3;color:#854d0e">🟡 Có xu hướng, chưa rõ</span>
-    <span style="background:#fee2e2;color:#991b1b">🔴 Không quy luật</span>
+    <span style="background:#fee2e2;color:#991b1b">🔴 Chưa có quy luật</span>
     <span style="background:#dbeafe;color:#1e40af">📍 Cột hôm nay</span>
     <span style="background:#f5f3ff;color:#5b21b6;border:1px dashed #a78bfa">🔮 Dự đoán thử nghiệm (chỉ ngày mai, cần Tim xác nhận)</span>
   </div>
