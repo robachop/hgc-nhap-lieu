@@ -32,6 +32,7 @@ COT_LSX = "Lệnh sản xuất"
 COT_BE = "Bể / xe"
 COT_BE_CAP = "Bể / xe cấp"
 COT_LUONG = "Lượng thực tế"
+COT_TRANG_THAI = "Trạng thái báo cáo"
 COT_LO = "Lô"
 
 REPO_DIR = Path(__file__).parent.parent
@@ -216,6 +217,7 @@ def doc_actual_theo_nhom(df, tu_ngay, den_ngay):
         data[g][d].append({
             "lsx": str(lsx), "be": row[COT_BE], "be_cap": row[COT_BE_CAP],
             "luong": row[COT_LUONG], "nguoi": row[COT_NGUOI], "lo": row[COT_LO],
+            "trang_thai": str(row.get(COT_TRANG_THAI, "")).strip().lower(),
         })
     return data
 
@@ -359,6 +361,8 @@ def du_doan_buoc_ke_tiep(actual_data, hom_nay):
             be = r["be"]
             if not be or pd_isna(be):
                 continue
+            if r.get("trang_thai") == "skip":
+                continue  # bị skip = chưa thật sự làm, không dự đoán bước kế tiếp
             ket_qua[nhom_ke_tiep].append({
                 "be": be, "tu_nhom": nhom_hien_tai, "nguoi_hom_nay": r["nguoi"], "luong": r["luong"],
             })
