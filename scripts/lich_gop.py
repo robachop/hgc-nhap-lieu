@@ -437,6 +437,17 @@ def main():
     # doc_ke_hoach_hom_nay() tự trả về rỗng, code render sẽ fallback lặp lại
     # hôm nay như cũ.
     ke_hoach_ngay_mai = doc_ke_hoach_hom_nay(ngay_mai.strftime("%d%m%Y"))
+    # Ưu tiên WO THẬT của ĐÚNG từng ngày tương lai (không chỉ ngay_mai) — cùng
+    # gốc lỗi với dao_tron_ke_hoach ở dưới: khi ngay_mai là CN (không có WO),
+    # các nhóm KHÁC S-Đảo trộn (C-Kéo rút, P-Đấu, P-Tồn, Pha muối, S-Nhập cá...)
+    # vẫn chỉ biết nhìn ke_hoach_ngay_mai (rỗng) rồi lặp lại hôm nay — sai với
+    # WO thật đã đối chiếu/đổi việc cho ngày xa hơn (vd 27/07). Phát hiện
+    # 2026-07-25 khi Tim đổi việc Ha/Phong cho 27/07 nhưng báo cáo vẫn hiện tên
+    # cũ. Cache theo ngày để không đọc file lặp lại trong vòng lặp render.
+    ke_hoach_theo_ngay = {
+        d: doc_ke_hoach_hom_nay(d.strftime("%d%m%Y"))
+        for d in ngay_list if d > hom_nay
+    }
 
     # Đảo trộn: ƯU TIÊN đọc thẳng WO thật của ngày mai (nếu đã tồn tại, vd
     # sau khi chạy lap_ke_hoach_ngay.py) làm cột ngày mai — KHÔNG tự tính lại
@@ -488,6 +499,20 @@ def main():
                 elif c["loai"] == "het_ck":
                     dao_tron_ke_hoach[d].append({"be": row["be"], "lsx": "HẾT CK"})
 
+    # Ưu tiên WO THẬT cho BẤT KỲ ngày tương lai nào đã có file (không chỉ
+    # ngay_mai) — GHI ĐÈ mô phỏng tinh_du_bao(). Phát hiện 2026-07-25: cột
+    # ngay_mai+1 (vd 27/07, sau khi ngay_mai=26/07 là CN không có file) vẫn
+    # lấy từ mô phỏng thuần tuý dù mien-27072026.json đã đối chiếu xong với
+    # actual thật (tăng đúng +1, xoá bể hết chu kỳ) — báo cáo lệch WO thật.
+    for d in [x for x in ngay_list if x > hom_nay]:
+        p = PLAN_DIR / f"mien-{d.strftime('%d%m%Y')}.json"
+        if p.exists():
+            plan_that = json.loads(p.read_text(encoding="utf-8"))
+            items = [{"be": t["be_nhan"], "lsx": t["lsx"]}
+                     for t in plan_that["tasks"] if parse_lsx(t["lsx"])]
+            if items:
+                dao_tron_ke_hoach[d] = items
+
     hao_ke_hoach = defaultdict(list)
     for r in hao_kq:
         hao_ke_hoach[r["ngay"]].append(r)
@@ -533,6 +558,8 @@ def main():
                     noi_dung, trong = "😴 Nghỉ (CN)", True
                 elif nhom == "S-Đảo trộn":
                     noi_dung, trong = cell_ke_hoach_dao_tron(dao_tron_ke_hoach, d)
+                elif ke_hoach_theo_ngay.get(d, {}).get(nhom):
+                    noi_dung, trong = cell_ke_hoach_hom_nay(ke_hoach_theo_ngay[d], nhom, "[kế hoạch]")
                 elif nhom == "C-Kéo rút nước long":
                     if d == ngay_mai and ke_hoach_ngay_mai.get(nhom):
                         noi_dung, trong = cell_ke_hoach_hom_nay(ke_hoach_ngay_mai, nhom, "[kế hoạch]")
