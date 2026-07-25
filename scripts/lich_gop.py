@@ -220,6 +220,16 @@ def doc_actual_theo_nhom(df, tu_ngay, den_ngay):
     return data
 
 
+def co_wo_that(d):
+    """Kiểm tra có WO thật (Tim đã điều động) cho ngày d không — quét cả 4
+    file plan/<người>-<slug>.json. Dùng để phân biệt Chủ Nhật NGHỈ bình
+    thường (không file nào, mặc định) với Chủ Nhật CÓ tăng ca (Tim đã lên
+    WO riêng cho 1/nhiều người, xem mục 3b QUY_CHUAN_KE_HOACH_HGC.md)."""
+    slug = d.strftime("%d%m%Y")
+    return any((PLAN_DIR / f"{p}-{slug}.json").exists()
+               for p in ("phong", "ha", "mien", "hao"))
+
+
 def doc_ke_hoach_hom_nay(hom_nay_slug):
     """Đọc 4 file plan/<người>-<hom_nay_slug>.json (kế hoạch ĐÃ GỬI công nhân
     hôm nay), phân loại theo nhóm."""
@@ -494,7 +504,11 @@ def main():
     header_cells = ""
     for d in ngay_list:
         cls = "col-qua" if d < hom_nay else ("col-homnay" if d == hom_nay else "col-tuong-lai")
-        header_cells += f"<th class='{cls}'>{d.strftime('%d/%m')}<br><span class='dow'>{DOW[d.weekday()]}</span></th>"
+        nghi_tag = ""
+        if d.weekday() == 6 and not co_wo_that(d):
+            cls += " col-nghi"
+            nghi_tag = "<br><span class='dow' style='color:#dc2626'>😴 nghỉ</span>"
+        header_cells += f"<th class='{cls}'>{d.strftime('%d/%m')}<br><span class='dow'>{DOW[d.weekday()]}</span>{nghi_tag}</th>"
 
     rows_html = ""
     for nhom in tat_ca_nhom:
@@ -511,7 +525,9 @@ def main():
                 if trong:
                     noi_dung, trong = cell_ke_hoach_hom_nay(ke_hoach_hom_nay, nhom)
             else:
-                if nhom == "S-Đảo trộn":
+                if d.weekday() == 6 and not co_wo_that(d):
+                    noi_dung, trong = "😴 Nghỉ (CN)", True
+                elif nhom == "S-Đảo trộn":
                     noi_dung, trong = cell_ke_hoach_dao_tron(dao_tron_ke_hoach, d)
                 elif nhom == "C-Kéo rút nước long":
                     if d == ngay_mai and ke_hoach_ngay_mai.get(nhom):
