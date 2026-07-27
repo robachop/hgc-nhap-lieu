@@ -240,6 +240,30 @@
       "dvt": "lít",
       "cong": 5,
       "group": "other"
+    },
+    {
+      "id": "t21",
+      "nguoi": "Phong",
+      "lsx": "N207",
+      "mo_ta": "N-Cốt nhỉ (lặp lại tới khi chượp chuyển dãy)",
+      "be_cap": "T207",
+      "be_nhan": "T113",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "N_cot_nhi"
+    },
+    {
+      "id": "t22",
+      "nguoi": "Phong",
+      "lsx": "N200",
+      "mo_ta": "N-Cốt nhỉ (lặp lại tới khi chượp chuyển dãy)",
+      "be_cap": "T200",
+      "be_nhan": "T114",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "N_cot_nhi"
     }
   ]
 }
