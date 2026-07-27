@@ -1,0 +1,101 @@
+{
+  "date": "2026-07-28",
+  "tasks": [
+    {
+      "id": "t22",
+      "nguoi": "Mien",
+      "lsx": "S108",
+      "mo_ta": "S-Đảo trộn 1 ngày 5",
+      "be_cap": "T033",
+      "be_nhan": "L033",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t23",
+      "nguoi": "Mien",
+      "lsx": "S108",
+      "mo_ta": "S-Đảo trộn 1 ngày 5",
+      "be_cap": "T180",
+      "be_nhan": "L180",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t33",
+      "nguoi": "Mien",
+      "lsx": "S030",
+      "mo_ta": "S-Nhập cá",
+      "be_cap": "",
+      "be_nhan": "L002",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_nhap_ca"
+    },
+    {
+      "id": "t34",
+      "nguoi": "Mien",
+      "lsx": "S040",
+      "mo_ta": "S-Phân bổ cá",
+      "be_cap": "",
+      "be_nhan": "L002",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_nhap_ca"
+    },
+    {
+      "id": "t35",
+      "nguoi": "Mien",
+      "lsx": "S030",
+      "mo_ta": "S-Nhập cá",
+      "be_cap": "",
+      "be_nhan": "L023",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_nhap_ca"
+    },
+    {
+      "id": "t36",
+      "nguoi": "Mien",
+      "lsx": "S040",
+      "mo_ta": "S-Phân bổ cá",
+      "be_cap": "",
+      "be_nhan": "L023",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_nhap_ca"
+    },
+    {
+      "id": "t37",
+      "nguoi": "Mien",
+      "lsx": "S030",
+      "mo_ta": "S-Nhập cá",
+      "be_cap": "",
+      "be_nhan": "L030",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_nhap_ca"
+    },
+    {
+      "id": "t38",
+      "nguoi": "Mien",
+      "lsx": "S040",
+      "mo_ta": "S-Phân bổ cá",
+      "be_cap": "",
+      "be_nhan": "L030",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_nhap_ca"
+    }
+  ]
+}
