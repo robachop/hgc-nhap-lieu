@@ -33,6 +33,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import doi_chieu
+import kiem_tra_wo
 
 REPO_DIR = Path(__file__).parent.parent
 BASE_URL = "https://robachop.github.io/hgc-nhap-lieu/"
@@ -131,6 +132,30 @@ def main():
             print(f"   ⚠️  Lỗi: {r.stderr}")
     else:
         print("\n② Không có file Dãy kéo rút mới — giữ nguyên Phong/Hà hiện có")
+
+    # ── Bước 2b: KIỂM TRA LỖI trước khi phát hành — BẮT BUỘC, chặn
+    # commit+push nếu có lỗi (Tim chốt 2026-07-27 sau sự cố Phong kẹt nút Gửi
+    # do 2 task trùng id — xem _Giao Bang.md 2026-07-27). Không cần Cod nhớ
+    # chạy tay, script tự chặn nếu phát hiện lỗi cấu trúc trong bất kỳ file
+    # nào của cả 4 người, luôn nêu rõ đúng job/vị trí nào lỗi để sửa nhanh.
+    print("\n②b Kiểm tra lỗi trước khi phát hành WO...")
+    worker_files = [REPO_DIR / "plans" / f"{w}-{slug}.json" for w in WORKERS]
+    co_loi = False
+    for f in worker_files:
+        if not f.exists():
+            continue
+        loi = kiem_tra_wo.kiem_tra_plan(f)
+        if loi:
+            co_loi = True
+            print(f"   ❌ {f.name}:")
+            for l in loi:
+                print(f"      - {l}")
+        else:
+            print(f"   ✅ {f.name}: không phát hiện lỗi")
+    if co_loi:
+        print(f"\n🚫 CÓ LỖI trong file kế hoạch — DỪNG LẠI, KHÔNG commit/push/phát hành WO.")
+        print(f"   Sửa lỗi ở trên rồi chạy lại lệnh này (script tự kiểm tra lại từ đầu).")
+        sys.exit(1)
 
     # ── Bước 3: Commit + push (nếu bước 2 chưa tự push) ─────────
     print("\n③ Commit + push...")

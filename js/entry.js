@@ -7,6 +7,20 @@ let isSending = false;
 const MAX_SUBMIT_COUNT = 3;
 const MIN_SUBMIT_GAP_MS = 5 * 60 * 1000;
 
+// Mã khẩn cấp — Tim chốt 2026-07-27 sau sự cố Phong bị kẹt nút Gửi (2 task
+// trùng id, xem _Giao Bang.md 2026-07-27): giữ NGUYÊN yêu cầu "phải điền đủ
+// mới gửi được" cho luồng bình thường, nhưng mở thêm lối thoát khi app bị lỗi
+// chặn sai. KHÔNG phải bảo mật thật — chỉ là "khoá nhẹ" bắt công nhân PHẢI
+// hỏi Tim trước khi bấm (Tim tự cân nhắc có cho qua không), có dấu vết lại
+// trong currentResult.emergency để Tim/Cod rà soát sau. Tim tự tính nhẩm mỗi
+// ngày, không cần lưu ở đâu: ngày - tháng + năm(2 số) của ngày kế hoạch,
+// vd 27/07/2026 → 27-7+26 = 46.
+function emergencyCode(dateStr) {
+  const [y, m, d] = (dateStr || today()).split('-').map(Number);
+  const raw = d - m + (y % 100);
+  return String(((raw % 100) + 100) % 100).padStart(2, '0');
+}
+
 // Endpoint Apps Script (Google Sheet). Để rỗng "" = tắt, dùng Web Share như cũ.
 const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbzu8JigHnQszScbRmBEfrrDwR4XuCQl7rmaJiFNpYsd2OxgF3LqfDpi2n8cn5pM6Zrr4Q/exec";
 
@@ -212,7 +226,11 @@ function renderWorkerTasks(name, tasks) {
   const allDone = currentResult.results.every(r => r.status !== 'pending');
   html += `<div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
     ${renderSubmitButtonHTML()}
-    ${allDone ? '' : '<p style="font-size:11px;color:#94a3b8;text-align:center">Điền xong tất cả task rồi bấm Gửi</p>'}
+    ${allDone ? '' : `
+    <p style="font-size:11px;color:#94a3b8;text-align:center">Điền xong tất cả task rồi bấm Gửi</p>
+    <button onclick="submitResultEmergency()" style="background:#fff;border:1.5px dashed #f59e0b;color:#92400e;border-radius:10px;padding:10px;font-size:12.5px;font-weight:700;cursor:pointer">
+      🆘 Đã điền hết mà vẫn báo lỗi? Gửi khẩn cấp (cần mã Tim cho)
+    </button>`}
   </div>`;
 
   wrap.innerHTML = html;
@@ -440,7 +458,11 @@ function submitResult() {
 
   const pending = currentResult.results.filter(r => r.status === 'pending');
   if (pending.length > 0) {
-    toast(`⚠️ Còn ${pending.length} task chưa điền trạng thái`);
+    // Nêu RÕ tên/bể từng task còn thiếu (không chỉ đếm số) — Tim chốt
+    // 2026-07-27: cảnh báo phải chỉ đúng job nào lỗi để công nhân tìm nhanh.
+    const ten = pending.slice(0, 3).map(r => `${r.lsx}${r.be_nhan ? ' (' + r.be_nhan + ')' : ''}`).join(', ');
+    const con = pending.length > 3 ? ` +${pending.length - 3} nữa` : '';
+    toast(`⚠️ Còn ${pending.length} task chưa điền: ${ten}${con}`);
     return;
   }
 
@@ -454,17 +476,53 @@ function submitResult() {
     return !r.be_nhan || r.be_nhan === task?.be_nhan;
   });
   if (unresolvedPx.length > 0) {
-    toast(`⚠️ Còn ${unresolvedPx.length} lệnh "đấu bể TP" chưa chọn nơi đến — bấm nút bể ở trên`);
+    const ten = unresolvedPx.slice(0, 3).map(r => r.lsx).join(', ');
+    toast(`⚠️ Còn ${unresolvedPx.length} lệnh "đấu bể TP" chưa chọn nơi đến (${ten}) — bấm nút bể ở trên`);
     return;
   }
 
-  const prevCount = count;
+  doSubmit(false);
+}
+
+// Nút khẩn cấp — Tim chốt 2026-07-27 (xem ghi chú tại emergencyCode() phía
+// trên): dùng khi app chặn gửi SAI (bug hệ thống, vd trùng id từng xảy ra với
+// Phong 27/07) dù công nhân tin là đã điền hết. KHÔNG thay thế luồng bình
+// thường — vẫn phải hỏi Tim lấy mã mỗi lần, có ghi chú lý do + đếm số task
+// còn "pending" thật tại thời điểm gửi để Tim/Cod rà soát lại sau.
+function submitResultEmergency() {
+  if (!currentResult) return;
+  if (isSending) return;
+
+  const count = currentResult.submit_count || 0;
+  if (count >= MAX_SUBMIT_COUNT) {
+    toast(`⚠️ Đã gửi đủ ${MAX_SUBMIT_COUNT} lần — có sai sót báo Giám sát xử lý`);
+    return;
+  }
+
+  const ma = prompt('🆘 Gửi khẩn cấp\n\nGọi Tim xin mã 2 số rồi nhập vào đây:');
+  if (ma === null) return; // huỷ, không gửi
+  if (ma.trim() !== emergencyCode(currentResult.date)) {
+    toast('❌ Mã không đúng — gọi lại hỏi Tim');
+    return;
+  }
+
+  const lyDo = prompt('Lý do gửi khẩn cấp (vd: đã điền hết nhưng app vẫn báo thiếu):') || '';
+  const pending = currentResult.results.filter(r => r.status === 'pending');
+  currentResult.emergency = true;
+  currentResult.emergency_reason = lyDo;
+  currentResult.emergency_pending_count = pending.length;
+
+  doSubmit(true);
+}
+
+function doSubmit(isEmergency) {
+  const prevCount = currentResult.submit_count || 0;
   const prevAt = currentResult.submitted_at;
 
   isSending = true;
   setSubmitButtonState('sending');
 
-  currentResult.submit_count = count + 1;
+  currentResult.submit_count = prevCount + 1;
   currentResult.submitted_at = new Date().toISOString();
   currentResult.submitted = true;
   saveResult(currentResult);
@@ -475,9 +533,11 @@ function submitResult() {
 
   // Ưu tiên: gửi thẳng lên Google Sheet qua Apps Script (không cần thao tác gì)
   if (SHEET_ENDPOINT) {
-    toast(currentResult.submit_count > 1
-      ? `⏳ Đang gửi lại (lần ${currentResult.submit_count}/${MAX_SUBMIT_COUNT})...`
-      : '⏳ Đang gửi cho Giám sát...');
+    toast(isEmergency
+      ? '⏳ Đang gửi khẩn cấp cho Giám sát...'
+      : (currentResult.submit_count > 1
+          ? `⏳ Đang gửi lại (lần ${currentResult.submit_count}/${MAX_SUBMIT_COUNT})...`
+          : '⏳ Đang gửi cho Giám sát...'));
     fetch(SHEET_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -488,7 +548,7 @@ function submitResult() {
         // Apps Script trả HTTP 200 kể cả khi ghi Sheet thất bại (vd Sheet đầy) —
         // phải đọc field "ok" trong JSON, không thể coi fetch không lỗi là gửi thành công.
         if (!result || !result.ok) throw new Error(result && result.error || 'Ghi Sheet thất bại');
-        toast('✅ Đã gửi kết quả cho Giám sát!');
+        toast(isEmergency ? '✅ Đã gửi khẩn cấp — Tim sẽ kiểm tra lại sau!' : '✅ Đã gửi kết quả cho Giám sát!');
         isSending = false;
         setSubmitButtonState('idle');
       })
