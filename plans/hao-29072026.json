@@ -1,0 +1,53 @@
+{
+  "date": "2026-07-29",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Hao",
+      "lsx": "PP40",
+      "mo_ta": "P-Xuất TP Lô S080 — Nam Ngư — đi MBA — Bồn 12 khối (tiếp tục, ước lượng theo mẫu các lô trước ~12.080L — chưa có ảnh lịch giao mới)",
+      "be_cap": "L134",
+      "be_nhan": "XB00",
+      "luong_dk": 12080,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Hao",
+      "lsx": "PT10",
+      "mo_ta": "P-Thành phẩm tồn L113",
+      "be_cap": "",
+      "be_nhan": "L113",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Hao",
+      "lsx": "PT30",
+      "mo_ta": "P-Thành phẩm tồn L133",
+      "be_cap": "",
+      "be_nhan": "L133",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Hao",
+      "lsx": "PT40",
+      "mo_ta": "P-Thành phẩm tồn L134",
+      "be_cap": "",
+      "be_nhan": "L134",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    }
+  ]
+}
