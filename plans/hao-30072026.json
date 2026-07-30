@@ -1,0 +1,41 @@
+{
+  "date": "2026-07-30",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Hao",
+      "lsx": "PT10",
+      "mo_ta": "P-Thành phẩm tồn L113",
+      "be_cap": "L113",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Hao",
+      "lsx": "PT30",
+      "mo_ta": "P-Thành phẩm tồn L133",
+      "be_cap": "L133",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Hao",
+      "lsx": "PT40",
+      "mo_ta": "P-Thành phẩm tồn L134 (không xuất TP 30-31/07 — sự cố khách hàng không nhận, xuất lại từ 1/8, 12.000L/ngày)",
+      "be_cap": "L134",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    }
+  ]
+}

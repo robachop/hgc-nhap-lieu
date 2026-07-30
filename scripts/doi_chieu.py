@@ -195,9 +195,15 @@ def ap_dung(lech, plan_path):
         m = re.match(r"^S(\d)(\d\d)$", de_xuat)
         if not m:
             continue
-        ck = int(m.group(1))
+        ck, ngay = int(m.group(1)), int(m.group(2))
         task["lsx"] = de_xuat
-        task["mo_ta"] = re.sub(r"\(CK\d\)", f"(CK{ck})", task.get("mo_ta", "")) if "(CK" in task.get("mo_ta", "") else task.get("mo_ta", "")
+        if "(CK" in task.get("mo_ta", ""):
+            task["mo_ta"] = re.sub(r"\(CK\d\)", f"(CK{ck})", task["mo_ta"])
+        else:
+            # Regenerate đúng công thức tao_ke_hoach.py — tránh mô tả "ngày X"
+            # bị lệch khỏi mã LSX thật sau nhiều lần vá (phát hiện 2026-07-30:
+            # S109 nhưng mô tả cũ ghi "ngày 5" thay vì "ngày 9").
+            task["mo_ta"] = f"S-Đảo trộn {ck} ngày {ngay}"
         n_sua += 1
 
     plan_path.write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding="utf-8")
