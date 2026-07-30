@@ -17,7 +17,8 @@ Phân công 4 người:
 Cách đọc sheet "Dãy kéo rút" (Phong + Ha):
     - Row 0: header (col1=Bể cấp, col2=Bể Nhận, col3=LSX)
     - Rows 1+: data — đọc cols 1,2,3 cho đến hết dữ liệu
-    - be_cap: BM00 hoặc Xxxx → "" (để trống, tự điền); Txxx → dùng nguyên
+    - be_cap: Xxxx → "" (để trống, tự điền); Txxx/BM00 → dùng nguyên (BM00 = bể
+      muối thật của PM00, SỬA 2026-07-30 — trước đây bị xoá trắng nhầm với Xxxx)
 
 Cách suy ra đảo trộn cho Miên (sheet "S500"):
     - Lấy các bể Miên đang đảo trộn (S[cycle][day]) trong `LOOKBACK` ngày gần nhất
@@ -94,7 +95,10 @@ def read_day_keo_rut(excel_path):
         if not lsx or lsx == 'nan':
             continue
 
-        be_cap = '' if be_cap_raw.strip() in ('BM00', 'Xxxx', 'nan', '') else be_cap_raw.strip()
+        # SỬA 2026-07-30 (Tim xác nhận): "BM00" LÀ bể cấp THẬT của PM00 (bể
+        # muối/pha muối) — trước đây bị coi nhầm là placeholder giống "Xxxx"
+        # nên bị xoá trắng. Chỉ "Xxxx"/"nan"/rỗng mới là placeholder thật.
+        be_cap = '' if be_cap_raw.strip() in ('Xxxx', 'nan', '') else be_cap_raw.strip()
         w      = nguoi(lsx)
         counters[w] += 1
 
