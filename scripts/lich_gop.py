@@ -200,23 +200,25 @@ def kiem_chung_lich_xuat(hao_kq, be_thuc_te_theo_lo):
     return canh_bao
 
 
-def kiem_tra_px00_c010(df, hom_nay):
-    """PX00 (Phá xác) Done -> C010 (Rút kiệt đảo trong) phải vào WO ngày SAU,
-    CÙNG BỂ (field 'Bể / xe' dùng chung cho cả 2 mã) — Tim dạy 2026-07-28,
-    xem 'Quy tắc đã học' trong Nhật Ký Dự Đoán & Rút Kinh Nghiệm. Trả về
-    3 danh sách cảnh báo:
-      - thieu_c010: bể có PX00 Done nhưng CHƯA có C010 nào sau đó (tính đến
-        hom_nay) -> cần thêm C010 vào WO ngày mai cho người phụ trách.
-      - bo_qua_px00: bể có C010 nhưng KHÔNG có PX00 ngay trước (cùng bể),
-        lại có PM00 gần đó -> nghi ngờ công nhân đã bỏ qua báo cáo PX00,
-        cần tạo lệnh PX00 cho người phụ trách nhập bù.
-      - chuyen_s010_can_do_tay: bể thiếu C010 nhưng đã chuyển sang S010
-        (bể trống/lô mới) — Tim chốt 2026-07-30: KHÔNG còn tự loại ngầm
-        coi là "hợp lệ", mà báo riêng để Tim tự dò tay xác nhận có thật
-        sự bỏ qua C010 hay không (khác với thieu_c010, KHÔNG tự thêm
-        C010 vào WO cho nhóm này vì đã sang bước khác rồi).
+def kiem_tra_px00_s010(df, hom_nay):
+    """PX00 (Phá xác) Done -> S010 (Bể trống, mở vòng chượp MỚI) phải theo
+    sau, CÙNG BỂ (field 'Bể / xe' dùng chung) — ĐÚNG lưu đồ chuẩn xác nhận
+    2026-07-21 (LSX Mẫu + phỏng vấn Tim), xem
+    '00 Context/Quy Trình Vòng Quay Chượp — Toàn Nhà Máy.md' mục 1.
+
+    ⚠️ SỬA 2026-07-30: hàm cũ `kiem_tra_px00_c010()` (thêm 2026-07-28) dựa
+    trên tiền đề SAI "PX00 Done -> C010 phải vào WO ngày sau" — Tim chỉ rõ
+    lại đúng chuỗi thật là PX00 => S010 (mở vòng mới); còn C010 chỉ xuất
+    hiện SAU KHI xong cả 7 vòng đảo trộn (S7xx => S800/S900 => C000 =>
+    C010), một quãng đường dài (nhiều tháng), không phải "ngày hôm sau".
+    Tiền đề sai đó khiến banner cũ liên tục báo nhầm các bể ĐANG ĐÚNG quy
+    trình (PX00 rồi chuyển S010) thành "thiếu C010" hoặc "cần dò tay".
+
+    Trả về 1 danh sách: bể có PX00 Done nhưng CHƯA có S010 nào sau đó
+    (tính đến hom_nay), trễ >= 1 ngày -> nghi công nhân quên báo cáo mở
+    vòng mới (S010), cần nhắc thay vì im lặng chờ tự làm.
     """
-    px00_done, c010_rows, pm00_rows, s010_done = [], [], [], []
+    px00_done, s010_done = [], []
     for _, row in df.iterrows():
         lsx = row[COT_LSX]
         if pd.isna(lsx):
@@ -229,50 +231,19 @@ def kiem_tra_px00_c010(df, hom_nay):
         trang_thai = str(row.get(COT_TRANG_THAI, "") or "").strip().lower()
         if lsx == "PX00" and trang_thai == "done":
             px00_done.append((be, d))
-        elif lsx == "C010":
-            c010_rows.append((be, d))
-        elif lsx in ("PM00", "MP00", "MP01"):
-            pm00_rows.append((be, d))
         elif lsx == "S010" and trang_thai == "done":
-            # bể có thể đi đường KHÁC sau phá xác: quay lại làm bể trống cho
-            # 1 lô CÁ MỚI (Miên nhận) thay vì tiếp vòng đảo trong — cũng là
-            # kết quả HỢP LỆ, không phải khoảng trống (phát hiện 2026-07-28,
-            # L001/L032 đã đi đường này ngay sau PX00 25/07).
             s010_done.append((be, d))
 
-    gop_thieu, gop_s010 = {}, {}
+    gop_thieu = {}
     for be, d in px00_done:
-        if any(b2 == be and d2 > d for b2, d2 in c010_rows):
-            continue  # đã có C010 sau đó rồi, không cảnh báo
-        s010_sau = [d2 for b2, d2 in s010_done if b2 == be and d2 >= d]
-        if s010_sau:
-            # KHÔNG tự loại ngầm nữa (2026-07-30, Tim chốt) — báo riêng để
-            # Tim tự dò tay, không gộp vào thieu_c010 (không cần thêm C010
-            # vào WO cho nhóm này vì bể đã đi bước khác).
-            ngay_s010 = max(s010_sau)
-            if be not in gop_s010 or d > gop_s010[be]["ngay_px00"]:
-                gop_s010[be] = {"be": be, "ngay_px00": d, "ngay_s010": ngay_s010}
-            continue
+        if any(b2 == be and d2 >= d for b2, d2 in s010_done):
+            continue  # đã có S010 mở vòng mới rồi (có thể CÙNG NGÀY) — đúng quy trình
         so_ngay_tre = (hom_nay - d).days
         if so_ngay_tre < 1:
             continue  # PX00 mới done hôm nay, chưa tới hạn "ngày sau"
         if be not in gop_thieu or d > gop_thieu[be]["ngay_px00"]:
             gop_thieu[be] = {"be": be, "ngay_px00": d, "so_ngay_tre": so_ngay_tre}
-    thieu_c010 = sorted(gop_thieu.values(), key=lambda x: -x["so_ngay_tre"])
-    chuyen_s010_can_do_tay = sorted(gop_s010.values(), key=lambda x: x["be"])
-
-    bo_qua_px00 = []
-    da_xet = set()
-    for be, d in c010_rows:
-        if (be, d) in da_xet:
-            continue
-        da_xet.add((be, d))
-        if any(b2 == be and d2 <= d for b2, d2 in px00_done):
-            continue  # có PX00 hợp lệ trước đó rồi
-        pm00_gan = [d2 for b2, d2 in pm00_rows if b2 == be and abs((d2 - d).days) <= 2]
-        if pm00_gan:
-            bo_qua_px00.append({"be": be, "ngay_c010": d, "ngay_pm00_gan_nhat": max(pm00_gan)})
-    return thieu_c010, bo_qua_px00, chuyen_s010_can_do_tay
+    return sorted(gop_thieu.values(), key=lambda x: -x["so_ngay_tre"])
 
 
 def doc_actual_theo_nhom(df, tu_ngay, den_ngay):
@@ -562,22 +533,12 @@ def main():
     else:
         print("\n✅ Đối chiếu bể theo lô: không phát hiện lệch (hoặc lô còn quá mới, chưa có Đấu TP).")
 
-    thieu_c010, bo_qua_px00, chuyen_s010_can_do_tay = kiem_tra_px00_c010(df, hom_nay)
-    if thieu_c010:
-        print(f"\n⚠️  {len(thieu_c010)} bể PX00 Done nhưng CHƯA có C010 theo sau:")
-        for c in thieu_c010:
+    thieu_s010 = kiem_tra_px00_s010(df, hom_nay)
+    if thieu_s010:
+        print(f"\n⚠️  {len(thieu_s010)} bể PX00 Done nhưng CHƯA có S010 (mở vòng mới) theo sau:")
+        for c in thieu_s010:
             print(f"   Bể {c['be']}: PX00 done {c['ngay_px00'].strftime('%d/%m')} "
-                  f"— trễ {c['so_ngay_tre']} ngày, cần thêm C010 vào WO ngày mai!")
-    if bo_qua_px00:
-        print(f"\n⚠️  {len(bo_qua_px00)} bể có C010 nhưng KHÔNG có PX00 trước đó (nghi ngờ bỏ qua báo cáo):")
-        for c in bo_qua_px00:
-            print(f"   Bể {c['be']}: C010 ngày {c['ngay_c010'].strftime('%d/%m')}, "
-                  f"PM00 gần nhất {c['ngay_pm00_gan_nhat'].strftime('%d/%m')} — cần tạo PX00 nhập bù!")
-    if chuyen_s010_can_do_tay:
-        print(f"\n🔍 {len(chuyen_s010_can_do_tay)} bể thiếu C010 nhưng đã chuyển S010 — Tim cần dò tay:")
-        for c in chuyen_s010_can_do_tay:
-            print(f"   Bể {c['be']}: PX00 done {c['ngay_px00'].strftime('%d/%m')}, "
-                  f"S010 done {c['ngay_s010'].strftime('%d/%m')} — không rõ C010 có thật sự bị bỏ qua không")
+                  f"— trễ {c['so_ngay_tre']} ngày, nhắc Miên báo S010 mở vòng mới!")
 
     dao_tron_ke_hoach = defaultdict(list)
     for item in dao_tron_ngay_mai_that:
@@ -704,31 +665,14 @@ def main():
                           f'(Đấu TP/Tồn TP)</b> — kiểm tra trước khi ra WO xuất thành phẩm:'
                           f'<ul>{dong}</ul></div>')
 
-    if thieu_c010:
+    if thieu_s010:
         dong = "".join(
             f"<li>Bể <b>{c['be']}</b>: PX00 Done ngày {c['ngay_px00'].strftime('%d/%m')} "
-            f"— đã trễ <b>{c['so_ngay_tre']} ngày</b> chưa có C010 — thêm C010 vào WO ngày mai!</li>"
-            for c in thieu_c010)
-        canh_bao_html += (f'<div class="canh-bao">🚨 <b>PX00 ĐÃ DONE NHƯNG CHƯA CÓ C010</b> '
-                           f'(quy tắc Tim dạy 2026-07-28 — xem Nhật Ký Dự Đoán):<ul>{dong}</ul></div>')
-
-    if bo_qua_px00:
-        dong = "".join(
-            f"<li>Bể <b>{c['be']}</b>: có C010 ngày {c['ngay_c010'].strftime('%d/%m')} nhưng KHÔNG có PX00 "
-            f"trước đó — PM00 gần nhất {c['ngay_pm00_gan_nhat'].strftime('%d/%m')} — nghi công nhân bỏ qua "
-            f"báo cáo PX00, cần tạo lệnh PX00 nhập bù!</li>"
-            for c in bo_qua_px00)
-        canh_bao_html += (f'<div class="canh-bao">🚨 <b>NGHI NGỜ BỎ QUA BÁO CÁO PX00</b> '
-                           f'(có C010 nhưng thiếu PX00 trước đó):<ul>{dong}</ul></div>')
-
-    if chuyen_s010_can_do_tay:
-        dong = "".join(
-            f"<li>Bể <b>{c['be']}</b>: PX00 Done {c['ngay_px00'].strftime('%d/%m')}, "
-            f"sau đó S010 Done {c['ngay_s010'].strftime('%d/%m')} — thiếu C010 ở giữa, "
-            f"cần Tim dò tay xem có thật sự bỏ qua không</li>"
-            for c in chuyen_s010_can_do_tay)
-        canh_bao_html += (f'<div class="canh-bao">🔍 <b>THIẾU C010 NHƯNG ĐÃ CHUYỂN S010</b> '
-                           f'(Tim chốt 2026-07-30 — không tự loại nữa, cần Tim tự kiểm tra):<ul>{dong}</ul></div>')
+            f"— đã trễ <b>{c['so_ngay_tre']} ngày</b> chưa thấy S010 mở vòng mới — nhắc Miên báo cáo!</li>"
+            for c in thieu_s010)
+        canh_bao_html += (f'<div class="canh-bao">⚠️ <b>PX00 ĐÃ DONE NHƯNG CHƯA CÓ S010 (mở vòng mới)</b> '
+                           f'(lưu đồ chuẩn xác nhận 2026-07-21, sửa lại 2026-07-30 — xem Quy Trình Vòng Quay Chượp):'
+                           f'<ul>{dong}</ul></div>')
 
     html = f"""<!DOCTYPE html>
 <html lang="vi"><head>
