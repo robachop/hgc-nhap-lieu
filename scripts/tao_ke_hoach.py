@@ -71,10 +71,16 @@ def dvt(lsx):
     return "lít"
 
 # Phân công theo LSX trong sheet "Dãy kéo rút"
-#   C___  → Phong ; Px___ + PM00 → Ha
+# ⚠️ SỬA 2026-08-05 (Tim phát hiện): từ 27/07/2026 Tim đã đổi việc Ha ↔ Phong
+# cho nhau (xem _Giao Bang.md 2026-07-25 "tiếp 2") — C___ (kéo rút nước long)
+# → Ha; Px___/PM00/PX00 (thành phẩm + phá xác) → Phong. Hàm này VẪN giữ mapping
+# CŨ (ngược lại) suốt từ đó tới nay vì regen_phong_ha.py không được chạy lại
+# với file Dãy kéo rút mới nào — lỗi chỉ lộ ra khi Tim gửi file mới 04/08 làm
+# dãy 6 (thêm bể L087), regen sinh ra Phong/Ha bị đảo ngược hoàn toàn.
+#   C___  → Ha ; Px___ + PM00 + PX00 → Phong
 def nguoi(lsx):
-    if lsx.startswith('C'):  return 'Phong'
-    return 'Ha'
+    if lsx.startswith('C'):  return 'Ha'
+    return 'Phong'
 
 # ── Đọc sheet "Dãy kéo rút" → Phong + Ha ─────────────────────
 def read_day_keo_rut(excel_path):
