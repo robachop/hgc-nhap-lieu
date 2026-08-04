@@ -29,7 +29,7 @@
       "id": "t3",
       "nguoi": "Phong",
       "lsx": "PX00",
-      "mo_ta": "PX00",
+      "mo_ta": "P-Phá xác — nhập đầy đủ lượng xác + bể, không bấm bỏ qua (skip)",
       "be_cap": "BM00",
       "be_nhan": "L047",
       "luong_dk": 0,
@@ -228,6 +228,30 @@
       "dvt": "lít",
       "cong": 5,
       "group": "P_xuat_tp"
+    },
+    {
+      "id": "t20",
+      "nguoi": "Phong",
+      "lsx": "PX00",
+      "mo_ta": "P-Phá xác — nhập đầy đủ lượng xác + bể, không bấm bỏ qua (skip)",
+      "be_cap": "",
+      "be_nhan": "L201",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "other"
+    },
+    {
+      "id": "t21",
+      "nguoi": "Phong",
+      "lsx": "PX00",
+      "mo_ta": "P-Phá xác — nhập đầy đủ lượng xác + bể, không bấm bỏ qua (skip)",
+      "be_cap": "",
+      "be_nhan": "L202",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "other"
     }
   ]
 }

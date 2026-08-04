@@ -52,7 +52,15 @@ def phan_loai(lsx):
     2026-07-21, PX00 luôn xếp cuối cùng vòng quay chượp)."""
     lsx = str(lsx)
     if lsx == "S000": return "S-Khác"
-    if lsx in ("S010", "S020"): return "S-Bể trống"
+    # ⚠️ SỬA 2026-08-05 (Tim bắt lỗi 2 lần liên tiếp 04-05/08): trước đây S010
+    # VÀ S020 bị gộp chung nhãn "S-Bể trống" — khiến hàm dự đoán bên dưới lấy
+    # nhầm ngày L201/L202 làm S010 (mở vòng chượp MỚI, sau PX00) tưởng là
+    # "S-Bể trống" rồi tự đoán "ngày mai S-Nhập cá", trong khi thực tế đó là
+    # bước ĐẦU TIÊN sau phá xác, còn xa mới tới lúc nhập cá. Tách riêng S010
+    # thành nhãn của chính nó để không lẫn với S020 (bể trống, chuẩn bị nhận
+    # cá) nữa.
+    if lsx == "S010": return "S-Mở vòng mới"
+    if lsx == "S020": return "S-Bể trống"
     if lsx in ("S030", "S031", "S032"): return "S-Nhập cá"
     if lsx == "S040": return "S-Phân bổ cá"
     if re.match(r'^SM0[1-6]$', lsx): return "S-Bổ sung muối"
@@ -90,6 +98,7 @@ PHAN_LOAI = {
     "P-Tồn thành phẩm": ("do", "Cả Ha lẫn Hao cùng làm, không cố định 1 người"),
     "P-Xuất thành phẩm": ("xanh", "Theo lịch giao hàng đã biết trước (nguồn ngoài, đáng tin)"),
     "S-Bể trống": ("do", "Phụ thuộc cá về thực tế, Miên tự báo khi có"),
+    "S-Mở vòng mới": ("do", "Theo sau Phá xác, Miên tự báo khi mở vòng chượp mới — không đoán trước ngày"),
     "S-Nước bổi": ("vang", "Có hoạt động nhưng thưa, chưa rõ quy luật"),
 }
 DEFAULT_LOAI = ("vang", "Chưa đủ dữ liệu để đánh giá")
@@ -97,7 +106,7 @@ DEFAULT_LOAI = ("vang", "Chưa đủ dữ liệu để đánh giá")
 # ── Màu NỀN riêng theo luật S/C/P/khác — CHỐT 2026-07-21, CHỈ đổi nền, không
 # đụng chữ/nhãn ở trên. Theo CHỮ ĐẦU MÃ LSX THẬT, không theo tên hiển thị.
 NHOM_PREFIX_THAT = {
-    "S-Bể trống": "S", "S-Nhập cá": "S", "S-Phân bổ cá": "S", "S-Bổ sung muối": "S",
+    "S-Bể trống": "S", "S-Mở vòng mới": "S", "S-Nhập cá": "S", "S-Phân bổ cá": "S", "S-Bổ sung muối": "S",
     "S-Rút kiệt gài nén": "S", "S-Gài nén": "S", "S-Đảo trộn": "S", "S-Trống": "S",
     "S-Nước bổi": "B",
     "C-Cá chín": "C", "C-Rút kiệt đảo trong": "C", "C-Tách cốt": "C", "C-Kéo rút nước long": "C",
@@ -109,7 +118,7 @@ NEN_THEO_CHU = {"S": "#fee2e2", "C": "#fef9c3", "P": "#dcfce7"}
 NEN_MAC_DINH = "#f3e8ff"  # B/N/M/khác
 
 THU_TU_QUY_TRINH = [
-    "S-Bể trống", "S-Nhập cá", "S-Phân bổ cá", "S-Bổ sung muối",
+    "S-Mở vòng mới", "S-Bể trống", "S-Nhập cá", "S-Phân bổ cá", "S-Bổ sung muối",
     "S-Rút kiệt gài nén", "S-Gài nén", "S-Nước bổi",
     "S-Đảo trộn", "S-Trống",
     "C-Cá chín", "C-Rút kiệt đảo trong", "C-Tách cốt", "P-Cốt nhỉ",
@@ -214,11 +223,34 @@ def kiem_tra_px00_s010(df, hom_nay):
     Tiền đề sai đó khiến banner cũ liên tục báo nhầm các bể ĐANG ĐÚNG quy
     trình (PX00 rồi chuyển S010) thành "thiếu C010" hoặc "cần dò tay".
 
-    Trả về 1 danh sách: bể có PX00 Done nhưng CHƯA có S010 nào sau đó
-    (tính đến hom_nay), trễ >= 1 ngày -> nghi công nhân quên báo cáo mở
-    vòng mới (S010), cần nhắc thay vì im lặng chờ tự làm.
+    ⚠️ SỬA 2026-08-05 (Tim chỉ ra 2 case thật, L047 + L102): bản trước chỉ
+    kiểm tra "có S010 theo sau không" — nếu KHÔNG có S010 thì báo "trễ", dù
+    bể đã rõ ràng chuyển sang việc KHÁC (PM00, C-series...) từ lâu, tức là
+    KHÔNG hề bị "đứng yên chờ báo cáo". Cả 2 case thật đều lộ ra 2 vấn đề
+    khác nhau của bản cũ:
+      (1) L047: dòng "PX00 Done 24/07" (Phong, 1000L) tự nó là SAI —
+          trước và sau đó Phong/Hà đều báo "skip" liên tục cho đúng
+          LSX/bể này (19-31/07) — nghĩa là dòng "done" đó là 1 lần bấm
+          nhầm/sai nhân viên, không phải phá xác thật. Bản cũ không lọc
+          trường hợp 1 dòng "done" bị bao quanh bởi nhiều dòng "skip"
+          cùng LSX/bể.
+      (2) L102: dòng "PX00 Done 30/07" (Phong, 1300L) xảy ra giữa lúc bể
+          này đang liên tục nhận "C270" (nước long dãy 7, Hà/Phong báo cả
+          trước 29/07 lẫn sau 08/03-08/04) — tức object vẫn đang hoạt
+          động bình thường trong dây chuyền kéo rút, không hề "đứng yên".
+          Bản cũ chỉ nhìn đúng 2 mã LSX (PX00, S010), bỏ qua mọi hoạt
+          động khác của bể.
+    Cách sửa chung cho cả 2: nếu bể có BẤT KỲ hoạt động "done" nào (LSX
+    bất kỳ, không chỉ S010) SAU ngày PX00 — coi như bể đã "sống tiếp",
+    không báo "trễ" nữa. Đây là điều kiện RỘNG HƠN (rộng hơn cả yêu cầu
+    gốc "phải là S010"), chủ động không báo động giả khi bể rõ ràng vẫn
+    đang được dùng cho việc khác.
+
+    Trả về 1 danh sách: bể có PX00 Done nhưng CHƯA có hoạt động nào khác
+    sau đó (tính đến hom_nay), trễ >= 1 ngày -> nghi công nhân quên báo
+    cáo mở vòng mới (S010), cần nhắc thay vì im lặng chờ tự làm.
     """
-    px00_done, s010_done = [], []
+    px00_done, hoat_dong_sau = [], []
     for _, row in df.iterrows():
         lsx = row[COT_LSX]
         if pd.isna(lsx):
@@ -229,15 +261,29 @@ def kiem_tra_px00_s010(df, hom_nay):
             continue
         be, d = str(be), ngay.date()
         trang_thai = str(row.get(COT_TRANG_THAI, "") or "").strip().lower()
-        if lsx == "PX00" and trang_thai == "done":
+        if trang_thai != "done":
+            continue
+        if lsx == "PX00":
             px00_done.append((be, d))
-        elif lsx == "S010" and trang_thai == "done":
-            s010_done.append((be, d))
+        else:
+            hoat_dong_sau.append((be, d, lsx))
 
     gop_thieu = {}
     for be, d in px00_done:
-        if any(b2 == be and d2 >= d for b2, d2 in s010_done):
-            continue  # đã có S010 mở vòng mới rồi (có thể CÙNG NGÀY) — đúng quy trình
+        # Bỏ qua nếu dòng PX00 "done" này bị bao quanh bởi skip cùng LSX/bể
+        # trong vòng vài ngày trước/sau — dấu hiệu báo nhầm (case L047).
+        skip_quanh = any(
+            str(r[COT_BE]) == be and str(r[COT_LSX]) == "PX00"
+            and str(r.get(COT_TRANG_THAI, "") or "").strip().lower() == "skip"
+            and not pd.isna(r[COT_NGAY]) and abs((r[COT_NGAY].date() - d).days) <= 7
+            for _, r in df.iterrows()
+        )
+        if skip_quanh:
+            continue
+        # Bỏ qua nếu bể có BẤT KỲ hoạt động "done" nào khác sau ngày PX00
+        # (không chỉ riêng S010) — bể rõ ràng đã "sống tiếp" (case L102).
+        if any(b2 == be and d2 >= d for b2, d2, _lsx2 in hoat_dong_sau):
+            continue
         so_ngay_tre = (hom_nay - d).days
         if so_ngay_tre < 1:
             continue  # PX00 mới done hôm nay, chưa tới hạn "ngày sau"
