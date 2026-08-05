@@ -732,6 +732,30 @@
       "dvt": "lít",
       "cong": 5,
       "group": "C_rut_kiet_dao_trong"
+    },
+    {
+      "id": "t62",
+      "nguoi": "Ha",
+      "lsx": "C610",
+      "mo_ta": "C-Nước long 6 dãy 1",
+      "be_cap": "T041",
+      "be_nhan": "L045",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "C_keo_rut"
+    },
+    {
+      "id": "t63",
+      "nguoi": "Ha",
+      "lsx": "C160",
+      "mo_ta": "C-Nước long 1 dãy 6",
+      "be_cap": "T091",
+      "be_nhan": "L087",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "C_keo_rut"
     }
   ]
 }
