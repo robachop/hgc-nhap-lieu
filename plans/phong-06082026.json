@@ -228,6 +228,18 @@
       "dvt": "lít",
       "cong": 5,
       "group": "other"
+    },
+    {
+      "id": "t20",
+      "nguoi": "Phong",
+      "lsx": "P600",
+      "mo_ta": "P-Đấu thành phẩm dãy 6 (mã LSX/bể chưa chốt — Phong tự sửa khi làm)",
+      "be_cap": "",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "other"
     }
   ]
 }
