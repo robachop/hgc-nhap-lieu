@@ -1,0 +1,77 @@
+{
+ "date": "2026-08-06",
+ "tasks": [
+  {
+   "id": "t1",
+   "nguoi": "Hao",
+   "lsx": "PT10",
+   "mo_ta": "P-Thành phẩm tồn L113",
+   "be_cap": "L113",
+   "be_nhan": "",
+   "luong_dk": 0,
+   "dvt": "lít",
+   "cong": 0,
+   "group": "P_xuat_tp"
+  },
+  {
+   "id": "t2",
+   "nguoi": "Hao",
+   "lsx": "PT30",
+   "mo_ta": "P-Thành phẩm tồn L133",
+   "be_cap": "L133",
+   "be_nhan": "",
+   "luong_dk": 0,
+   "dvt": "lít",
+   "cong": 0,
+   "group": "P_xuat_tp"
+  },
+  {
+   "id": "t3",
+   "nguoi": "Hao",
+   "lsx": "PT40",
+   "mo_ta": "P-Thành phẩm tồn L134",
+   "be_cap": "L134",
+   "be_nhan": "",
+   "luong_dk": 0,
+   "dvt": "lít",
+   "cong": 0,
+   "group": "P_xuat_tp"
+  },
+  {
+   "id": "t4",
+   "nguoi": "Hao",
+   "lsx": "PP40",
+   "mo_ta": "P-Xuất TP 07NM028 (Đạm 28.46) Lô 250726-S080 — Nam Ngư — đi MBA — Tải 11 khối (nốt lô, gần xong)",
+   "be_cap": "L134",
+   "be_nhan": "XT00",
+   "luong_dk": 1025,
+   "dvt": "lít",
+   "cong": 5,
+   "group": "P_xuat_tp"
+  },
+  {
+   "id": "t5",
+   "nguoi": "Hao",
+   "lsx": "PP00",
+   "mo_ta": "P-Xuất TP 07NM00010 (Đạm 36.56) Lô 270726-S081 — Nam Ngư — đi MSI — 7.175L (LÔ MỚI, bể nguồn chưa chốt — Hao tự sửa mã LSX/bể đúng khi báo cáo)",
+   "be_cap": "",
+   "be_nhan": "",
+   "luong_dk": 7175,
+   "dvt": "lít",
+   "cong": 5,
+   "group": "P_xuat_tp"
+  },
+  {
+   "id": "t6",
+   "nguoi": "Hao",
+   "lsx": "PP00",
+   "mo_ta": "P-Xuất TP 07NM031 (Đạm 30.59) Lô 300726-S082 — Nam Ngư — đi MSI — 3.075L (LÔ MỚI, bể nguồn chưa chốt — Hao tự sửa mã LSX/bể đúng khi báo cáo)",
+   "be_cap": "",
+   "be_nhan": "",
+   "luong_dk": 3075,
+   "dvt": "lít",
+   "cong": 5,
+   "group": "P_xuat_tp"
+  }
+ ]
+}
