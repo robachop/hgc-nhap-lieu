@@ -77,7 +77,14 @@ def phan_loai(lsx):
     if lsx in ("CX00", "CY00", "CZ00"): return "C-Kéo rút nước long"
     if lsx in ("PM00", "MP00", "MP01"): return "Pha muối"
     if lsx == "PX00": return "Phá xác"
-    if re.match(r'^Px[1-9]0$', lsx): return "P-Đấu thành phẩm"  # mã tạm, be_nhan="Bể TP" chưa chốt
+    # ⚠️ Sửa 2026-08-09: TRƯỚC ĐÂY Px[1-9]0 (Thành phẩm dãy — rút kiệt, việc
+    # thường ngày của Phong, group="PX_rut_kiet" trong plan JSON) bị gộp
+    # NHẦM chung nhãn "P-Đấu thành phẩm" với mã P\d{3} (đấu thành phẩm THẬT,
+    # group="other") — comment cũ "mã tạm" là dấu vết quy ước đã đổi nhưng
+    # chưa cập nhật ở đây. Phát hiện khi Tim thêm lại nhóm Đấu thành phẩm
+    # (9 lệnh) cùng ngày với Thành phẩm dãy (9 lệnh) — báo cáo hiện "18 lệnh
+    # Đấu thành phẩm", Tim thắc mắc đúng vì thực tế chỉ có 9. Tách nhãn riêng.
+    if re.match(r'^Px[1-9]0$', lsx): return "Thành phẩm dãy"
     if re.match(r'^P\d{3}$', lsx): return "P-Đấu thành phẩm"
     if re.match(r'^PT\d{2}$', lsx): return "P-Tồn thành phẩm"
     if re.match(r'^PP\d{2}$', lsx): return "P-Xuất thành phẩm"
@@ -92,6 +99,7 @@ PHAN_LOAI = {
     "C-Kéo rút nước long": ("xanh", "Cấu trúc L/T đáng tin, không đoán được ngày cụ thể tiến triển"),
     "C-Rút kiệt đảo trong": ("vang", "Phong làm đều nhưng chưa đối chiếu chu kỳ rõ ràng"),
     "P-Cốt nhỉ": ("vang", "Ha làm nhưng rất hiếm gặp, chưa đủ dữ liệu thấy chu kỳ"),
+    "Thành phẩm dãy": ("xanh", "Việc rút kiệt thường ngày của Phong, 9 dãy cố định, bể nguồn đáng tin"),
     "P-Đấu thành phẩm": ("do", "Đích bể TP không cố định theo dãy, đổi tuỳ đợt"),
     "Pha muối": ("do", "Việc phát sinh, không đoán trước được"),
     "Phá xác": ("do", "Việc phát sinh, không đoán trước được"),
@@ -112,7 +120,7 @@ NHOM_PREFIX_THAT = {
     "C-Cá chín": "C", "C-Rút kiệt đảo trong": "C", "C-Tách cốt": "C", "C-Kéo rút nước long": "C",
     "P-Cốt nhỉ": "N",
     "Pha muối": "P", "Phá xác": "P",
-    "P-Đấu thành phẩm": "P", "P-Tồn thành phẩm": "P", "P-Xuất thành phẩm": "P",
+    "Thành phẩm dãy": "P", "P-Đấu thành phẩm": "P", "P-Tồn thành phẩm": "P", "P-Xuất thành phẩm": "P",
 }
 NEN_THEO_CHU = {"S": "#fee2e2", "C": "#fef9c3", "P": "#dcfce7"}
 NEN_MAC_DINH = "#f3e8ff"  # B/N/M/khác
@@ -124,7 +132,7 @@ THU_TU_QUY_TRINH = [
     "C-Cá chín", "C-Rút kiệt đảo trong", "C-Tách cốt", "P-Cốt nhỉ",
     "C-Kéo rút nước long",
     "Pha muối",
-    "P-Đấu thành phẩm", "P-Tồn thành phẩm", "P-Xuất thành phẩm",
+    "Thành phẩm dãy", "P-Đấu thành phẩm", "P-Tồn thành phẩm", "P-Xuất thành phẩm",
     "Phá xác",  # LUÔN CUỐI CÙNG
 ]
 
