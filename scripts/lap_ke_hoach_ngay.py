@@ -62,6 +62,37 @@ def git_commit_push(message):
     return ok, out
 
 
+REDIRECT_TEMPLATE = """<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8">
+<meta http-equiv="refresh" content="0;url=index.html?plan_file={plan_file}&w={W}">
+<title>HGC Kế Hoạch {W} — {date_display}</title>
+</head><body>
+<p>Đang chuyển hướng... <a href="index.html?plan_file={plan_file}&w={W}">Bấm đây nếu không tự chuyển</a></p>
+<script>window.location.replace("index.html?plan_file={plan_file}&w={W}");</script>
+</body></html>
+"""
+
+
+def sinh_redirect_html(slug, date_display):
+    """Tự sinh 4 file kehoach-{worker}-{slug}.html — trước đây phải làm tay
+    mỗi lần (đã lặp lại thiếu sót 7 lần liên tiếp từ 03/08 tới 11/08, xem
+    _Giao Bang.md mục H các entry liên quan), vá gốc tại đây 2026-08-11."""
+    ten_hien_thi = {"phong": "Phong", "ha": "Ha", "mien": "Mien", "hao": "Hao"}
+    da_sinh = []
+    for w in WORKERS:
+        plan_path = REPO_DIR / "plans" / f"{w}-{slug}.json"
+        if not plan_path.exists():
+            continue
+        plan_file = f"{w}-{slug}"
+        html_path = REPO_DIR / f"kehoach-{plan_file}.html"
+        html_path.write_text(
+            REDIRECT_TEMPLATE.format(plan_file=plan_file, W=ten_hien_thi[w], date_display=date_display),
+            encoding="utf-8",
+        )
+        da_sinh.append(html_path.name)
+    return da_sinh
+
+
 def nudge_pages():
     result = subprocess.run(
         f'cd "{REPO_DIR}" && git commit --allow-empty -m "Nudge Pages rebuild" && git push origin main',
@@ -156,6 +187,13 @@ def main():
         print(f"\n🚫 CÓ LỖI trong file kế hoạch — DỪNG LẠI, KHÔNG commit/push/phát hành WO.")
         print(f"   Sửa lỗi ở trên rồi chạy lại lệnh này (script tự kiểm tra lại từ đầu).")
         sys.exit(1)
+
+    # ── Bước 2c: Tự sinh 4 file redirect HTML (trước đây phải làm tay,
+    # thiếu 7 lần liên tiếp 03/08→11/08 gây 404 tạm thời sau mỗi lần push) ──
+    print("\n②c Sinh file redirect HTML...")
+    date_display = datetime.date.fromisoformat(args.ngay_ke_hoach).strftime("%d/%m/%Y")
+    da_sinh = sinh_redirect_html(slug, date_display)
+    print(f"   ✅ Đã sinh {len(da_sinh)} file: {da_sinh}")
 
     # ── Bước 3: Commit + push (nếu bước 2 chưa tự push) ─────────
     print("\n③ Commit + push...")
