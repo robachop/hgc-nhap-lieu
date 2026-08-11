@@ -1,0 +1,10 @@
+{
+  "date": "2026-08-11",
+  "tasks": [
+    {"id": "t1", "nguoi": "Mien", "lsx": "S111", "mo_ta": "S-Đảo trộn 1 ngày 11", "be_cap": "T215", "be_nhan": "L215", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "S_dao_tron"},
+    {"id": "t2", "nguoi": "Mien", "lsx": "S110", "mo_ta": "S-Đảo trộn 1 ngày 10", "be_cap": "T030", "be_nhan": "L030", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "S_dao_tron"},
+    {"id": "t3", "nguoi": "Mien", "lsx": "S110", "mo_ta": "S-Đảo trộn 1 ngày 10", "be_cap": "T032", "be_nhan": "L032", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "S_dao_tron"},
+    {"id": "t4", "nguoi": "Mien", "lsx": "S110", "mo_ta": "S-Đảo trộn 1 ngày 10", "be_cap": "T028", "be_nhan": "L028", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "S_dao_tron"},
+    {"id": "t5", "nguoi": "Mien", "lsx": "S040", "mo_ta": "S-Phân bổ cá lên các bể (bể nhận chưa chốt — Miên tự điền khi làm)", "be_cap": "", "be_nhan": "", "luong_dk": 80000, "dvt": "kg", "cong": 120, "group": "S_phan_bo_ca"}
+  ]
+}
