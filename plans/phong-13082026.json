@@ -1,0 +1,137 @@
+{
+  "date": "2026-08-13",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Phong",
+      "lsx": "Px10",
+      "mo_ta": "Thành phẩm dãy 1",
+      "be_cap": "T101",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Phong",
+      "lsx": "Px20",
+      "mo_ta": "Thành phẩm dãy 2",
+      "be_cap": "T105",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Phong",
+      "lsx": "Px30",
+      "mo_ta": "Thành phẩm dãy 3",
+      "be_cap": "T092",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Phong",
+      "lsx": "Px40",
+      "mo_ta": "Thành phẩm dãy 4",
+      "be_cap": "T085",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t5",
+      "nguoi": "Phong",
+      "lsx": "Px50",
+      "mo_ta": "Thành phẩm dãy 5",
+      "be_cap": "T076",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t6",
+      "nguoi": "Phong",
+      "lsx": "Px60",
+      "mo_ta": "Thành phẩm dãy 6",
+      "be_cap": "T087",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t7",
+      "nguoi": "Phong",
+      "lsx": "PM00",
+      "mo_ta": "P-Pha muối (bể nhận chưa chốt — Phong tự điền khi làm)",
+      "be_cap": "BM00",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PM_pha_muoi"
+    },
+    {
+      "id": "t8",
+      "nguoi": "Phong",
+      "lsx": "Px70",
+      "mo_ta": "Thành phẩm dãy 7",
+      "be_cap": "T083",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t9",
+      "nguoi": "Phong",
+      "lsx": "PM00",
+      "mo_ta": "P-Pha muối (bể nhận chưa chốt — Phong tự điền khi làm)",
+      "be_cap": "BM00",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PM_pha_muoi"
+    },
+    {
+      "id": "t10",
+      "nguoi": "Phong",
+      "lsx": "Px80",
+      "mo_ta": "Thành phẩm dãy 8",
+      "be_cap": "T116",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t11",
+      "nguoi": "Phong",
+      "lsx": "Px90",
+      "mo_ta": "Thành phẩm dãy 9",
+      "be_cap": "T094",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    }
+  ]
+}
