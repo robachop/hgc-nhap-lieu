@@ -1,0 +1,65 @@
+{
+  "date": "2026-08-15",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Hao",
+      "lsx": "PT10",
+      "mo_ta": "P-Thành phẩm tồn L113",
+      "be_cap": "L113",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Hao",
+      "lsx": "PT30",
+      "mo_ta": "P-Thành phẩm tồn L133",
+      "be_cap": "L133",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Hao",
+      "lsx": "PT40",
+      "mo_ta": "P-Thành phẩm tồn L134",
+      "be_cap": "L134",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Hao",
+      "lsx": "PP40",
+      "mo_ta": "P-Xuất TP 07NM023 Lô 080826-S087 — Tải 12 khối (theo file Kế hoạch giao Tim gửi 15/08; tổng lô dự kiến 12.080L, chia Tải+Bồn — số lượng thật do Hao báo cáo)",
+      "be_cap": "L134",
+      "be_nhan": "XT00",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t5",
+      "nguoi": "Hao",
+      "lsx": "PP40",
+      "mo_ta": "P-Xuất TP 07NM023 Lô 080826-S087 — Bồn 12 khối (theo file Kế hoạch giao Tim gửi 15/08; tổng lô dự kiến 12.080L, chia Tải+Bồn — số lượng thật do Hao báo cáo)",
+      "be_cap": "L134",
+      "be_nhan": "XB00",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    }
+  ]
+}
