@@ -1,0 +1,34 @@
+{
+  "date": "2026-08-16",
+  "tasks": [
+    {"id": "t1", "nguoi": "Phong", "lsx": "P440", "mo_ta": "P-Đấu bể TP-L134 dãy 4 — lô S093 (theo công thức Tim, 2.000L)", "be_cap": "T089", "be_nhan": "L134", "luong_dk": 2000, "dvt": "lít", "cong": 5, "group": "P_dau_TP"},
+    {"id": "t2", "nguoi": "Phong", "lsx": "P480", "mo_ta": "P-Đấu bể TP-L134 dãy 8 — lô S093 (theo công thức Tim, 2.000L)", "be_cap": "T077", "be_nhan": "L134", "luong_dk": 2000, "dvt": "lít", "cong": 5, "group": "P_dau_TP"},
+
+    {"id": "t3", "nguoi": "Phong", "lsx": "P610", "mo_ta": "P-Đấu bể TP-L213 dãy 1 — lô S092 (theo công thức Tim, 2.000L)", "be_cap": "T090", "be_nhan": "L213", "luong_dk": 2000, "dvt": "lít", "cong": 5, "group": "P_dau_TP"},
+    {"id": "t4", "nguoi": "Phong", "lsx": "P630", "mo_ta": "P-Đấu bể TP-L213 dãy 3 — lô S092 (theo công thức Tim, 2.000L)", "be_cap": "T110", "be_nhan": "L213", "luong_dk": 2000, "dvt": "lít", "cong": 5, "group": "P_dau_TP"},
+    {"id": "t5", "nguoi": "Phong", "lsx": "P660", "mo_ta": "P-Đấu bể TP-L213 dãy 6 — lô S092 (theo công thức Tim, 2.000L)", "be_cap": "T087", "be_nhan": "L213", "luong_dk": 2000, "dvt": "lít", "cong": 5, "group": "P_dau_TP"},
+    {"id": "t6", "nguoi": "Phong", "lsx": "P670", "mo_ta": "P-Đấu bể TP-L213 dãy 7 — lô S092 (theo công thức Tim, 2.000L)", "be_cap": "T083", "be_nhan": "L213", "luong_dk": 2000, "dvt": "lít", "cong": 5, "group": "P_dau_TP"},
+    {"id": "t7", "nguoi": "Phong", "lsx": "P680", "mo_ta": "P-Đấu bể TP-L213 dãy 8 (từ nước long bậc 2, T116) — lô S092 (theo công thức Tim, 1.000L)", "be_cap": "T116", "be_nhan": "L213", "luong_dk": 1000, "dvt": "lít", "cong": 5, "group": "P_dau_TP"},
+    {"id": "t8", "nguoi": "Phong", "lsx": "P690", "mo_ta": "P-Đấu bể TP-L213 dãy 9 — lô S092 (theo công thức Tim, 2.000L)", "be_cap": "T096", "be_nhan": "L213", "luong_dk": 2000, "dvt": "lít", "cong": 5, "group": "P_dau_TP"},
+
+    {"id": "t10", "nguoi": "Phong", "lsx": "C110", "mo_ta": "C-Kéo rút nước long bậc 1, dãy 1 (thay Hà, Chủ Nhật)", "be_cap": "T101", "be_nhan": "L090", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t11", "nguoi": "Phong", "lsx": "C120", "mo_ta": "C-Kéo rút nước long bậc 1, dãy 2 (thay Hà, Chủ Nhật)", "be_cap": "T111", "be_nhan": "L105", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t12", "nguoi": "Phong", "lsx": "C130", "mo_ta": "C-Kéo rút nước long bậc 1, dãy 3 (thay Hà, Chủ Nhật) — công thức Tim ghi thêm 2.000L cho T092, CHƯA RÕ có phải đúng là lượng bơm bậc 1 này không, cần Tim xác nhận", "be_cap": "T092", "be_nhan": "L110", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t13", "nguoi": "Phong", "lsx": "C140", "mo_ta": "C-Kéo rút nước long bậc 1, dãy 4 (thay Hà, Chủ Nhật)", "be_cap": "T085", "be_nhan": "L089", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t14", "nguoi": "Phong", "lsx": "C150", "mo_ta": "C-Kéo rút nước long bậc 1, dãy 5 (thay Hà, Chủ Nhật)", "be_cap": "T076", "be_nhan": "L057", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t15", "nguoi": "Phong", "lsx": "C160", "mo_ta": "C-Kéo rút nước long bậc 1, dãy 6 (thay Hà, Chủ Nhật)", "be_cap": "T091", "be_nhan": "L087", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t16", "nguoi": "Phong", "lsx": "C170", "mo_ta": "C-Kéo rút nước long bậc 1, dãy 7 (thay Hà, Chủ Nhật)", "be_cap": "T083", "be_nhan": "L123", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t17", "nguoi": "Phong", "lsx": "C180", "mo_ta": "C-Kéo rút nước long bậc 1, dãy 8 (thay Hà, Chủ Nhật)", "be_cap": "T116", "be_nhan": "L077", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t18", "nguoi": "Phong", "lsx": "C190", "mo_ta": "C-Kéo rút nước long bậc 1, dãy 9 (thay Hà, Chủ Nhật)", "be_cap": "T094", "be_nhan": "L096", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+
+    {"id": "t19", "nguoi": "Phong", "lsx": "C210", "mo_ta": "C-Kéo rút nước long bậc 2, dãy 1 (thay Hà, Chủ Nhật)", "be_cap": "T081", "be_nhan": "L101", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t20", "nguoi": "Phong", "lsx": "C220", "mo_ta": "C-Kéo rút nước long bậc 2, dãy 2 (thay Hà, Chủ Nhật)", "be_cap": "T107", "be_nhan": "L111", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t21", "nguoi": "Phong", "lsx": "C230", "mo_ta": "C-Kéo rút nước long bậc 2, dãy 3 (thay Hà, Chủ Nhật)", "be_cap": "T106", "be_nhan": "T092", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t22", "nguoi": "Phong", "lsx": "C240", "mo_ta": "C-Kéo rút nước long bậc 2, dãy 4 (thay Hà, Chủ Nhật)", "be_cap": "T082", "be_nhan": "L085", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t23", "nguoi": "Phong", "lsx": "C250", "mo_ta": "C-Kéo rút nước long bậc 2, dãy 5 (thay Hà, Chủ Nhật)", "be_cap": "T120", "be_nhan": "L076", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t24", "nguoi": "Phong", "lsx": "C260", "mo_ta": "C-Kéo rút nước long bậc 2, dãy 6 (thay Hà, Chủ Nhật)", "be_cap": "T093", "be_nhan": "L091", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t25", "nguoi": "Phong", "lsx": "C270", "mo_ta": "C-Kéo rút nước long bậc 2, dãy 7 (thay Hà, Chủ Nhật)", "be_cap": "T102", "be_nhan": "L083", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t26", "nguoi": "Phong", "lsx": "C280", "mo_ta": "C-Kéo rút nước long bậc 2, dãy 8 (thay Hà, Chủ Nhật)", "be_cap": "T080", "be_nhan": "L116", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"},
+    {"id": "t27", "nguoi": "Phong", "lsx": "C290", "mo_ta": "C-Kéo rút nước long bậc 2, dãy 9 (thay Hà, Chủ Nhật)", "be_cap": "T097", "be_nhan": "L094", "luong_dk": 0, "dvt": "lít", "cong": 5, "group": "C_keo_rut"}
+  ]
+}
