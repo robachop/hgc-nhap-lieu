@@ -365,14 +365,14 @@
       "id": "t31",
       "nguoi": "Mien",
       "lsx": "S010",
-      "mo_ta": "S-Bể trống",
+      "mo_ta": "S-Bể trống (mở vòng mới) — L004 đã Phá xác từ 12/08, trễ 6 ngày",
       "be_cap": "",
       "be_nhan": "L004",
       "luong_dk": 0,
       "dvt": "kg",
       "cong": 5,
       "group": "S_dao_tron",
-      "ghi_chu": "Nhắc: bể L004 Phá xác (PX00) từ 12/08, đã trễ 6 ngày chưa mở vòng mới — báo lại cho Tim"
+      "ghi_chu": "Nhắc Miên: xác nhận đã mở vòng mới cho L004 hay chưa"
     }
   ]
 }
