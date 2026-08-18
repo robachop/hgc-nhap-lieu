@@ -1,0 +1,137 @@
+{
+  "date": "2026-08-19",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Phong",
+      "lsx": "Px10",
+      "mo_ta": "Thành phẩm dãy 1",
+      "be_cap": "T090",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Phong",
+      "lsx": "PX00",
+      "mo_ta": "PX00",
+      "be_cap": "BM00",
+      "be_nhan": "L047",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "other"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Phong",
+      "lsx": "Px20",
+      "mo_ta": "Thành phẩm dãy 2",
+      "be_cap": "T105",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Phong",
+      "lsx": "Px30",
+      "mo_ta": "Thành phẩm dãy 3",
+      "be_cap": "T110",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t5",
+      "nguoi": "Phong",
+      "lsx": "Px40",
+      "mo_ta": "Thành phẩm dãy 4",
+      "be_cap": "T089",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t6",
+      "nguoi": "Phong",
+      "lsx": "Px50",
+      "mo_ta": "Thành phẩm dãy 5",
+      "be_cap": "T057",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t7",
+      "nguoi": "Phong",
+      "lsx": "Px60",
+      "mo_ta": "Thành phẩm dãy 6",
+      "be_cap": "T087",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t8",
+      "nguoi": "Phong",
+      "lsx": "Px70",
+      "mo_ta": "Thành phẩm dãy 7",
+      "be_cap": "T123",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t9",
+      "nguoi": "Phong",
+      "lsx": "Px80",
+      "mo_ta": "Thành phẩm dãy 8",
+      "be_cap": "T077",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t10",
+      "nguoi": "Phong",
+      "lsx": "Px90",
+      "mo_ta": "Thành phẩm dãy 9",
+      "be_cap": "T096",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t11",
+      "nguoi": "Phong",
+      "lsx": "PT00",
+      "mo_ta": "P-Thành phẩm tồn — kiểm tra lượng tồn thật tại bể đang làm",
+      "be_cap": "",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    }
+  ]
+}
