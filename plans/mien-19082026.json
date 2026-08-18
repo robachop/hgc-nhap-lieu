@@ -360,6 +360,19 @@
       "dvt": "lít",
       "cong": 5,
       "group": "S_dao_tron"
+    },
+    {
+      "id": "t31",
+      "nguoi": "Mien",
+      "lsx": "S010",
+      "mo_ta": "S-Bể trống",
+      "be_cap": "",
+      "be_nhan": "L004",
+      "luong_dk": 0,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "S_dao_tron",
+      "ghi_chu": "Nhắc: bể L004 Phá xác (PX00) từ 12/08, đã trễ 6 ngày chưa mở vòng mới — báo lại cho Tim"
     }
   ]
 }
