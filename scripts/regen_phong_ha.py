@@ -35,9 +35,9 @@ def main():
     print(f"📊 Đọc sheet 'Dãy kéo rút'...")
 
     by_worker = read_day_keo_rut(excel_path)
-    # Sửa 2026-08-05 cùng lúc với swap trong nguoi() (tao_ke_hoach.py):
-    # PT00 (kiểm tồn thành phẩm) đi cùng Px (thành phẩm) → nay là Phong.
-    append_pt00(by_worker, 'Phong')
+    # Sửa 2026-08-24 cùng lúc với swap lần 2 trong nguoi() (tao_ke_hoach.py):
+    # PT00 (kiểm tồn thành phẩm) đi cùng Px (thành phẩm) → nay là Hà.
+    append_pt00(by_worker, 'Ha')
 
     # Chỉ deploy Phong + Ha. deploy() sinh trang cho toàn bộ WORKERS, nên
     # ta giới hạn danh sách truyền vào — dùng phiên bản rút gọn thay vì
