@@ -1,0 +1,65 @@
+{
+  "date": "2026-09-03",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Hao",
+      "lsx": "PT10",
+      "mo_ta": "P-Thành phẩm tồn L113",
+      "be_cap": "L113",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Hao",
+      "lsx": "PT30",
+      "mo_ta": "P-Thành phẩm tồn L133",
+      "be_cap": "L133",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Hao",
+      "lsx": "PT40",
+      "mo_ta": "P-Thành phẩm tồn L134",
+      "be_cap": "L134",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Hao",
+      "lsx": "PT20",
+      "mo_ta": "P-Thành phẩm tồn L114",
+      "be_cap": "L114",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t5",
+      "lsx": "PP00",
+      "be_cap": "",
+      "be_nhan": "XB00",
+      "mo_ta": "P-Xuất TP 07NM036 (Đạm 35.58) Lô 030926-S095 — Nam Ngư — đi MSI — Bồn 12 khối (Hao tự điền bể)",
+      "nguoi": "Hao",
+      "luong_dk": 12080,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    }
+  ]
+}
