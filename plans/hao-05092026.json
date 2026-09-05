@@ -1,0 +1,65 @@
+{
+  "date": "2026-09-05",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Hao",
+      "lsx": "PT10",
+      "mo_ta": "P-Thành phẩm tồn L113",
+      "be_cap": "L113",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Hao",
+      "lsx": "PT30",
+      "mo_ta": "P-Thành phẩm tồn L133",
+      "be_cap": "L133",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Hao",
+      "lsx": "PT40",
+      "mo_ta": "P-Thành phẩm tồn L134",
+      "be_cap": "L134",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Hao",
+      "lsx": "PT20",
+      "mo_ta": "P-Thành phẩm tồn L114",
+      "be_cap": "L114",
+      "be_nhan": "",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 0,
+      "group": "P_xuat_tp"
+    },
+    {
+      "id": "t5",
+      "lsx": "PP30",
+      "be_cap": "L133",
+      "be_nhan": "XB00",
+      "mo_ta": "P-Xuất TP lô S097 tại L133 (tiếp tục theo actual 04/09 — CHƯA có file lịch giao hàng mới, Hao tự điền số lượng theo tình hình thực tế)",
+      "nguoi": "Hao",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "P_xuat_tp"
+    }
+  ]
+}
