@@ -1,0 +1,41 @@
+{
+  "date": "2026-09-08",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Mien",
+      "lsx": "S211",
+      "mo_ta": "S-Đảo trộn 2 ngày 11",
+      "be_cap": "T203",
+      "be_nhan": "L203",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Mien",
+      "lsx": "S211",
+      "mo_ta": "S-Đảo trộn 2 ngày 11",
+      "be_cap": "T209",
+      "be_nhan": "L209",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Mien",
+      "lsx": "S010",
+      "mo_ta": "S-Mở vòng chượp mới (tiếp theo PX00 done 07/09, GIẢ ĐỊNH — Phong Phá xác L040 hôm nay, chưa có S010 thật)",
+      "be_cap": "",
+      "be_nhan": "L040",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    }
+  ]
+}
