@@ -1,0 +1,53 @@
+{
+    "date": "2026-09-09",
+    "tasks": [
+        {
+            "id": "t1",
+            "nguoi": "Mien",
+            "lsx": "S212",
+            "mo_ta": "S-Đảo trộn 2 ngày 12 (tiếp lệnh Tim override 06/09 vượt CYCLE_MAX lý thuyết — đã 3 ngày liên tiếp 07-08/09, CẦN Tim xác nhận tiếp tục hay dừng)",
+            "be_cap": "T203",
+            "be_nhan": "L203",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "S_dao_tron"
+        },
+        {
+            "id": "t2",
+            "nguoi": "Mien",
+            "lsx": "S212",
+            "mo_ta": "S-Đảo trộn 2 ngày 12 (tiếp lệnh Tim override 06/09 vượt CYCLE_MAX lý thuyết — đã 3 ngày liên tiếp 07-08/09, CẦN Tim xác nhận tiếp tục hay dừng)",
+            "be_cap": "T209",
+            "be_nhan": "L209",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "S_dao_tron"
+        },
+        {
+            "id": "t3",
+            "nguoi": "Mien",
+            "lsx": "S011",
+            "mo_ta": "S-Đảo trộn 1 ngày 11 (tiếp S010 done 08/09 — 40.000L, xác nhận giả định trước đó đúng, chu kỳ 1 bình thường)",
+            "be_cap": "",
+            "be_nhan": "L040",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "S_dao_tron"
+        },
+        {
+            "id": "t4",
+            "nguoi": "Mien",
+            "lsx": "S203",
+            "mo_ta": "S-Đảo trộn 2 ngày 03 (GIẢ ĐỊNH — bể mới tự thêm 07/09 (Bể Thí nghiệm, 1500L) rồi 08/09 tiếp lượng bình thường 4000L, coi như đã thành mẻ thật, chưa hỏi Tim riêng)",
+            "be_cap": "",
+            "be_nhan": "L219",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "S_dao_tron"
+        }
+    ]
+}

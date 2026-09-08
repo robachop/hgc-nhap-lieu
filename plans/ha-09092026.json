@@ -1,0 +1,149 @@
+{
+    "date": "2026-09-09",
+    "tasks": [
+        {
+            "id": "t1",
+            "nguoi": "Ha",
+            "lsx": "PM00",
+            "mo_ta": "P-Pha muối (ĐOÁN dựa trên danh sách Dãy kéo rút 09/06 + lịch sử: danh sách gốc 7 bể L043/L068/L065/L060/L042/L040/L211 — 2 bể L040/L211 đã chuyển hẳn sang chượp (Miên S010/S011), không còn dùng được. 5 bể còn lại đều đang xoay vòng theo chuỗi C-Kéo rút của Phong (bận/rảnh đổi liên tục, không đoán được ngày nào rảnh). Hà thực tế 08/09 đã tự chọn 2 bể NGOÀI danh sách gốc (L007, L212) — cả 2 đều đang rảnh theo Phong (C860/C690 skip liên tục) nên có khả năng còn rảnh tiếp — GIỮ NGUYÊN 2 bể này cho 09/09, nhưng đây chỉ là suy đoán theo mẫu rảnh/bận, CHƯA chắc đúng)",
+            "be_cap": "BM00",
+            "be_nhan": "L007",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "PM_pha_muoi"
+        },
+        {
+            "id": "t2",
+            "nguoi": "Ha",
+            "lsx": "PM00",
+            "mo_ta": "P-Pha muối (ĐOÁN dựa trên danh sách Dãy kéo rút 09/06 + lịch sử: danh sách gốc 7 bể L043/L068/L065/L060/L042/L040/L211 — 2 bể L040/L211 đã chuyển hẳn sang chượp (Miên S010/S011), không còn dùng được. 5 bể còn lại đều đang xoay vòng theo chuỗi C-Kéo rút của Phong (bận/rảnh đổi liên tục, không đoán được ngày nào rảnh). Hà thực tế 08/09 đã tự chọn 2 bể NGOÀI danh sách gốc (L007, L212) — cả 2 đều đang rảnh theo Phong (C860/C690 skip liên tục) nên có khả năng còn rảnh tiếp — GIỮ NGUYÊN 2 bể này cho 09/09, nhưng đây chỉ là suy đoán theo mẫu rảnh/bận, CHƯA chắc đúng)",
+            "be_cap": "BM00",
+            "be_nhan": "L212",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "PM_pha_muoi"
+        },
+        {
+            "id": "t3",
+            "nguoi": "Ha",
+            "lsx": "Px10",
+            "mo_ta": "Thành phẩm dãy 1",
+            "be_cap": "T130",
+            "be_nhan": "L134",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "PX_rut_kiet"
+        },
+        {
+            "id": "t4",
+            "nguoi": "Ha",
+            "lsx": "Px20",
+            "mo_ta": "Thành phẩm dãy 2",
+            "be_cap": "T095",
+            "be_nhan": "L134",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "PX_rut_kiet"
+        },
+        {
+            "id": "t5",
+            "nguoi": "Ha",
+            "lsx": "Px30",
+            "mo_ta": "Thành phẩm dãy 3",
+            "be_cap": "T110",
+            "be_nhan": "L134",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "PX_rut_kiet"
+        },
+        {
+            "id": "t6",
+            "nguoi": "Ha",
+            "lsx": "Px40",
+            "mo_ta": "Thành phẩm dãy 4",
+            "be_cap": "T128",
+            "be_nhan": "L134",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "PX_rut_kiet"
+        },
+        {
+            "id": "t7",
+            "nguoi": "Ha",
+            "lsx": "Px50",
+            "mo_ta": "Thành phẩm dãy 5",
+            "be_cap": "T115",
+            "be_nhan": "L134",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "PX_rut_kiet"
+        },
+        {
+            "id": "t8",
+            "nguoi": "Ha",
+            "lsx": "Px60",
+            "mo_ta": "Thành phẩm dãy 6",
+            "be_cap": "T121",
+            "be_nhan": "L134",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "PX_rut_kiet"
+        },
+        {
+            "id": "t9",
+            "nguoi": "Ha",
+            "lsx": "Px70",
+            "mo_ta": "Thành phẩm dãy 7",
+            "be_cap": "T123",
+            "be_nhan": "L134",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "PX_rut_kiet"
+        },
+        {
+            "id": "t10",
+            "nguoi": "Ha",
+            "lsx": "Px80",
+            "mo_ta": "Thành phẩm dãy 8",
+            "be_cap": "T077",
+            "be_nhan": "L134",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "PX_rut_kiet"
+        },
+        {
+            "id": "t11",
+            "nguoi": "Ha",
+            "lsx": "Px90",
+            "mo_ta": "Thành phẩm dãy 9",
+            "be_cap": "T096",
+            "be_nhan": "L134",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "PX_rut_kiet"
+        },
+        {
+            "id": "t12",
+            "nguoi": "Ha",
+            "lsx": "PT00",
+            "mo_ta": "P-Thành phẩm tồn — kiểm tra lượng tồn thật tại bể đang làm",
+            "be_cap": "",
+            "be_nhan": "",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "P_xuat_tp"
+        }
+    ]
+}
