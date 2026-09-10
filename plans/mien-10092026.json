@@ -444,6 +444,18 @@
             "dvt": "lít",
             "cong": 5,
             "group": "S_dao_tron"
+        },
+        {
+            "id": "t38",
+            "nguoi": "Mien",
+            "lsx": "S010",
+            "mo_ta": "S-Mở vòng chượp mới (NHẮC — đã mở 07/09, im lặng 2 ngày liền 08-09/09, Tim yêu cầu nhắc Miên điền tiếp)",
+            "be_cap": "",
+            "be_nhan": "L211",
+            "luong_dk": 0,
+            "dvt": "lít",
+            "cong": 5,
+            "group": "S_dao_tron"
         }
     ]
 }
