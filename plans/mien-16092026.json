@@ -1,0 +1,41 @@
+{
+  "date": "2026-09-16",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Mien",
+      "lsx": "S103",
+      "mo_ta": "S-Đảo trộn 1 ngày 3",
+      "be_cap": "T004",
+      "be_nhan": "L004",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Mien",
+      "lsx": "SM02",
+      "mo_ta": "S-Bổ sung muối mặt bể (dự đoán — hôm nay 15/09 vừa xong S-Phân bổ cá, chờ Tim/Miên xác nhận)",
+      "be_cap": "",
+      "be_nhan": "L038",
+      "luong_dk": 5,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "S_bo_sung_muoi"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Mien",
+      "lsx": "SM02",
+      "mo_ta": "S-Bổ sung muối mặt bể (dự đoán — hôm nay 15/09 vừa xong S-Phân bổ cá, chờ Tim/Miên xác nhận)",
+      "be_cap": "",
+      "be_nhan": "L040",
+      "luong_dk": 5,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "S_bo_sung_muoi"
+    }
+  ]
+}
