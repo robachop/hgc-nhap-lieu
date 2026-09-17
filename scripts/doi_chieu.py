@@ -32,6 +32,14 @@ COT_NGAY = "Ngày thực hiện"
 COT_LSX = "Lệnh sản xuất"
 COT_BE = "Bể / xe"
 COT_TRANG_THAI = "Trạng thái báo cáo"
+COT_GHI_CHU = "Ghi chú"
+
+# Bể ĐẶC BIỆT: Tim chốt 2026-09-17 (xem Nhật Ký Dự Đoán & Rút Kinh Nghiệm,
+# mục "Quy tắc đã học" — "L219 sẽ tiếp tục cho đến khi Miên báo trong ghi
+# chú là kết thúc") — KHÔNG áp CYCLE_MAX cho các bể này, chỉ dừng khi actual
+# mới nhất có Ghi chú chứa "Kết thúc". Case khác (vd L203/L209 cũ) vẫn cần
+# hỏi Tim riêng lẻ mỗi lần — KHÔNG tự thêm bể mới vào set này.
+BE_KHONG_AP_CYCLE_MAX = {219}
 
 # ⚠️ Sửa 2026-07-23: TRƯỚC ĐÂY suy bể từ regex trên "Diễn giải" (chỉ khớp
 # mẫu cũ "Đảo trộn bể NNN (CKx)") — mẫu Diễn giải đã đổi thành "S-Đảo trộn
@@ -110,7 +118,11 @@ def doi_chieu_dao_tron(df, worker, ngay_actual):
         prev = ket_qua.get(be)
         if prev is None or ngay > prev["actual_day"]:
             ngay_ke = ngay + 1
-            het_chu_ky = ngay_ke > CYCLE_MAX.get(ck, 5)
+            if be in BE_KHONG_AP_CYCLE_MAX:
+                ghi_chu = str(row.get(COT_GHI_CHU, "") or "").strip().lower()
+                het_chu_ky = "kết thúc" in ghi_chu
+            else:
+                het_chu_ky = ngay_ke > CYCLE_MAX.get(ck, 5)
             ket_qua[be] = {
                 "actual_lsx": lsx,
                 "actual_ck": ck,

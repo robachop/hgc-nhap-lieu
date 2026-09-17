@@ -28,7 +28,7 @@ Ví dụ tối thiểu (chỉ đối chiếu + verify, không có file Dãy kéo
     python3 scripts/lap_ke_hoach_ngay.py --ketqua ketqua.xlsx \\
         --ngay-actual 2026-07-11 --ngay-ke-hoach 2026-07-12
 """
-import os, sys, subprocess, argparse, time, datetime
+import os, sys, subprocess, argparse, time, datetime, json
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -130,10 +130,33 @@ def main():
     args = ap.parse_args()
 
     slug = datetime.date.fromisoformat(args.ngay_ke_hoach).strftime("%d%m%Y")
+    slug_actual = datetime.date.fromisoformat(args.ngay_actual).strftime("%d%m%Y")
 
     print(f"{'═'*60}")
     print(f"  LẬP KẾ HOẠCH {args.ngay_ke_hoach} (đối chiếu actual {args.ngay_actual})")
     print(f"{'═'*60}\n")
+
+    # ── Bước 0: Copy-forward bản nền nếu chưa có file cho ngày kế
+    # hoạch — trước đây Cod vẫn làm việc này bằng tay mỗi phiên (xem lịch
+    # sử "copy-forward nguyên X, không đổi gì" trong _Giao Bang.md), script
+    # coi như tiền đề đã có sẵn nên KHÔNG tự làm, gây lỗi crash khi thiếu
+    # file (2026-09-17, phát hiện sau 1 phiên trước bị đứt giữa chừng để
+    # lại file 18/09 SAI — dán nhãn ngày mới nhưng nội dung y hệt ngày cũ,
+    # không tăng ck/ngày). Chỉ copy khi file đích CHƯA TỒN TẠI — không bao
+    # giờ ghi đè file đã có (an toàn nếu chạy lại nhiều lần trong ngày).
+    print("① Copy-forward bản nền (nếu thiếu)...")
+    for w in WORKERS:
+        dich = REPO_DIR / "plans" / f"{w}-{slug}.json"
+        nguon = REPO_DIR / "plans" / f"{w}-{slug_actual}.json"
+        if dich.exists():
+            continue
+        if not nguon.exists():
+            print(f"   ⚠️  {w}: không có file nguồn {nguon.name} để copy-forward — bỏ qua")
+            continue
+        du_lieu = json.loads(nguon.read_text(encoding="utf-8"))
+        du_lieu["date"] = args.ngay_ke_hoach
+        dich.write_text(json.dumps(du_lieu, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"   📋 {w}: copy-forward {nguon.name} → {dich.name} ({len(du_lieu.get('tasks', []))} task, chưa đổi gì)")
 
     # ── Bước 1: Đối chiếu + vá Miên ─────────────────────────────
     print("① Đối chiếu Miên (đảo trộn)...")
