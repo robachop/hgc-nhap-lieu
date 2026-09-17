@@ -300,6 +300,33 @@ def kiem_tra_px00_s010(df, hom_nay):
     return sorted(gop_thieu.values(), key=lambda x: -x["so_ngay_tre"])
 
 
+CA_4_NGUOI = ["Phong", "Ha", "Mien", "Hao"]
+
+
+def kiem_tra_bao_cao_hom_nay(df, hom_nay):
+    """Kiểm tra cả 4 công nhân (Phong/Ha/Mien/Hao) đã có ÍT NHẤT 1 dòng
+    actual (kể cả 'skip') cho ngày `hom_nay` chưa — thêm 2026-09-17, Tim
+    yêu cầu sau khi Hà không báo cáo cả ngày mà Cod không tự phát hiện,
+    phải đợi Tim hỏi thẳng mới lộ ra. Không phân biệt LSX/nhóm — chỉ cần
+    có BẤT KỲ dòng nào là coi như "đã báo cáo hôm đó" (kể cả toàn skip).
+
+    Bỏ qua kiểm tra nếu `hom_nay` là ngày KHÔNG có WO thật (Chủ Nhật nghỉ
+    bình thường, dùng co_wo_that() để phân biệt với CN có tăng ca) — ngày
+    nghỉ thì không ai phải báo cáo, không nên báo động giả."""
+    if not co_wo_that(hom_nay):
+        return []
+    da_bao_cao = set()
+    for _, row in df.iterrows():
+        ng = row[COT_NGAY]
+        if pd.isna(ng) or ng.date() != hom_nay:
+            continue
+        nguoi = row.get(COT_NGUOI)
+        if pd.isna(nguoi):
+            continue
+        da_bao_cao.add(str(nguoi).strip())
+    return [n for n in CA_4_NGUOI if n not in da_bao_cao]
+
+
 def doc_actual_theo_nhom(df, tu_ngay, den_ngay):
     """Gộp actual KetQua theo nhóm + ngày, cho khung [tu_ngay, den_ngay]."""
     data = defaultdict(lambda: defaultdict(list))
@@ -594,6 +621,11 @@ def main():
             print(f"   Bể {c['be']}: PX00 done {c['ngay_px00'].strftime('%d/%m')} "
                   f"— trễ {c['so_ngay_tre']} ngày, nhắc Miên báo S010 mở vòng mới!")
 
+    thieu_bao_cao = kiem_tra_bao_cao_hom_nay(df, hom_nay)
+    if thieu_bao_cao:
+        print(f"\n🚨 {len(thieu_bao_cao)} người CHƯA có dòng actual nào ngày {hom_nay.strftime('%d/%m')}: "
+              f"{', '.join(thieu_bao_cao)} — nhắc báo cáo trước khi ra WO!")
+
     dao_tron_ke_hoach = defaultdict(list)
     for item in dao_tron_ngay_mai_that:
         dao_tron_ke_hoach[ngay_mai].append(item)
@@ -727,6 +759,11 @@ def main():
         canh_bao_html += (f'<div class="canh-bao">⚠️ <b>PX00 ĐÃ DONE NHƯNG CHƯA CÓ S010 (mở vòng mới)</b> '
                            f'(lưu đồ chuẩn xác nhận 2026-07-21, sửa lại 2026-07-30 — xem Quy Trình Vòng Quay Chượp):'
                            f'<ul>{dong}</ul></div>')
+
+    if thieu_bao_cao:
+        dong = "".join(f"<li><b>{n}</b></li>" for n in thieu_bao_cao)
+        canh_bao_html += (f'<div class="canh-bao">🚨 <b>CHƯA CÓ DÒNG ACTUAL NÀO NGÀY {hom_nay.strftime("%d/%m")}</b> '
+                           f'— nhắc báo cáo trước khi ra WO:<ul>{dong}</ul></div>')
 
     html = f"""<!DOCTYPE html>
 <html lang="vi"><head>
