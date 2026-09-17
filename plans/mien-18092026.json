@@ -84,6 +84,18 @@
       "dvt": "lít",
       "cong": 5,
       "group": "S_dao_tron"
+    },
+    {
+      "id": "t8",
+      "nguoi": "Mien",
+      "lsx": "S211",
+      "mo_ta": "S-Đảo trộn 2 ngày 11",
+      "be_cap": "T219",
+      "be_nhan": "L219",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
     }
   ]
 }
