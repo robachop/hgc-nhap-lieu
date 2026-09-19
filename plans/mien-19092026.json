@@ -1,0 +1,101 @@
+{
+  "date": "2026-09-19",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Mien",
+      "lsx": "S106",
+      "mo_ta": "S-Đảo trộn 1 ngày 6",
+      "be_cap": "T004",
+      "be_nhan": "L004",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Mien",
+      "lsx": "S103",
+      "mo_ta": "S-Đảo trộn 1 ngày 3",
+      "be_cap": "",
+      "be_nhan": "L038",
+      "luong_dk": 5,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "S_bo_sung_muoi"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Mien",
+      "lsx": "SM02",
+      "mo_ta": "S-Bổ sung muối mặt bể (bị skip 16/09, giữ lại bù 17/09 — chưa rõ lý do skip, cần Tim xác nhận)",
+      "be_cap": "",
+      "be_nhan": "L040",
+      "luong_dk": 5,
+      "dvt": "kg",
+      "cong": 5,
+      "group": "S_bo_sung_muoi"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Mien",
+      "lsx": "S105",
+      "mo_ta": "S-Đảo trộn 1 ngày 5",
+      "be_cap": "T201",
+      "be_nhan": "L201",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t5",
+      "nguoi": "Mien",
+      "lsx": "S105",
+      "mo_ta": "S-Đảo trộn 1 ngày 5",
+      "be_cap": "T202",
+      "be_nhan": "L202",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t6",
+      "nguoi": "Mien",
+      "lsx": "S104",
+      "mo_ta": "S-Đảo trộn 1 ngày 4",
+      "be_cap": "T045",
+      "be_nhan": "L045",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t7",
+      "nguoi": "Mien",
+      "lsx": "S104",
+      "mo_ta": "S-Đảo trộn 1 ngày 4",
+      "be_cap": "T013",
+      "be_nhan": "L013",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    },
+    {
+      "id": "t8",
+      "nguoi": "Mien",
+      "lsx": "S212",
+      "mo_ta": "S-Đảo trộn 2 ngày 12",
+      "be_cap": "T219",
+      "be_nhan": "L219",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "S_dao_tron"
+    }
+  ]
+}
