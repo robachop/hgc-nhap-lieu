@@ -1,0 +1,882 @@
+{
+  "L001": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L002": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L003": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L004": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 8",
+    "cap_nhat": "2026-09-22"
+  },
+  "L005": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L006": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 9",
+    "cap_nhat": "2026-08-25"
+  },
+  "L007": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L008": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L009": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L010": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L011": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L012": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L013": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 6",
+    "cap_nhat": "2026-09-22"
+  },
+  "L014": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 4",
+    "cap_nhat": "2026-08-28"
+  },
+  "L015": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L016": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 4",
+    "cap_nhat": "2026-08-28"
+  },
+  "L017": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L018": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 4",
+    "cap_nhat": "2026-08-28"
+  },
+  "L019": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L020": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 2",
+    "cap_nhat": "2026-09-22"
+  },
+  "L021": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-20"
+  },
+  "L022": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-20"
+  },
+  "L023": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L024": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 1",
+    "cap_nhat": "2026-09-22"
+  },
+  "L025": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L026": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L027": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-20"
+  },
+  "L028": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L029": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-20"
+  },
+  "L030": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 4",
+    "cap_nhat": "2026-08-28"
+  },
+  "L031": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 4",
+    "cap_nhat": "2026-08-28"
+  },
+  "L032": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L033": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L034": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L035": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L036": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L037": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L038": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 5",
+    "cap_nhat": "2026-09-22"
+  },
+  "L039": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L040": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 2",
+    "cap_nhat": "2026-09-22"
+  },
+  "L041": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 9",
+    "cap_nhat": "2026-08-25"
+  },
+  "L042": {
+    "trang_thai": "Pha muối",
+    "cap_nhat": "2026-09-21"
+  },
+  "L043": {
+    "trang_thai": "Pha muối",
+    "cap_nhat": "2026-09-22"
+  },
+  "L044": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L045": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 6",
+    "cap_nhat": "2026-09-22"
+  },
+  "L046": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L047": {
+    "trang_thai": "Đang phân bổ cá vào bể",
+    "cap_nhat": "2026-09-21"
+  },
+  "L048": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L049": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L050": {
+    "trang_thai": "Đã phá xác, chuẩn bị mở vòng ủ mới",
+    "cap_nhat": "2026-09-22"
+  },
+  "L051": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L052": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L053": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L054": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L055": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L056": {
+    "trang_thai": "Pha muối",
+    "cap_nhat": "2026-09-22"
+  },
+  "L057": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L058": {
+    "trang_thai": "Pha muối",
+    "cap_nhat": "2026-09-22"
+  },
+  "L059": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L060": {
+    "trang_thai": "Pha muối",
+    "cap_nhat": "2026-09-22"
+  },
+  "L061": {
+    "trang_thai": "Pha muối",
+    "cap_nhat": "2026-09-22"
+  },
+  "L062": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L063": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 9",
+    "cap_nhat": "2026-08-25"
+  },
+  "L064": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L065": {
+    "trang_thai": "Pha muối",
+    "cap_nhat": "2026-09-22"
+  },
+  "L066": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L067": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L068": {
+    "trang_thai": "Vừa mở vòng ủ chượp mới",
+    "cap_nhat": "2026-09-15"
+  },
+  "L069": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L070": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L071": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L072": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L073": {
+    "trang_thai": "Pha muối",
+    "cap_nhat": "2026-09-22"
+  },
+  "L074": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L075": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L076": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L077": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L078": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L079": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L080": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L081": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L082": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L083": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L084": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L085": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L086": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L087": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L088": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L089": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L090": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L091": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L092": {
+    "trang_thai": "C080",
+    "cap_nhat": "2026-08-03"
+  },
+  "L093": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L094": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L095": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L096": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L097": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L098": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L099": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L100": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L101": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L102": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L103": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L104": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L105": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L106": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L107": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L108": {
+    "trang_thai": "P-Cốt nhỉ",
+    "cap_nhat": "2026-08-13"
+  },
+  "L109": {
+    "trang_thai": "P-Cốt nhỉ",
+    "cap_nhat": "2026-08-11"
+  },
+  "L110": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L111": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L112": {
+    "trang_thai": "P-Cốt nhỉ",
+    "cap_nhat": "2026-09-22"
+  },
+  "L113": {
+    "trang_thai": "P-Cốt nhỉ",
+    "cap_nhat": "2026-09-22"
+  },
+  "L114": {
+    "trang_thai": "P-Cốt nhỉ",
+    "cap_nhat": "2026-09-22"
+  },
+  "L115": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L116": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L117": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L118": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-17"
+  },
+  "L119": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L120": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L121": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L122": {
+    "trang_thai": "P-Cốt nhỉ",
+    "cap_nhat": "2026-09-21"
+  },
+  "L123": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L124": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-15"
+  },
+  "L125": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L126": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L127": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-07-25"
+  },
+  "L128": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L129": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-21"
+  },
+  "L130": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L131": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L132": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L133": {
+    "trang_thai": "P-Tồn thành phẩm",
+    "cap_nhat": "2026-09-22"
+  },
+  "L134": {
+    "trang_thai": "P-Tồn thành phẩm",
+    "cap_nhat": "2026-09-22"
+  },
+  "L135": {
+    "trang_thai": "Đã phá xác, chuẩn bị mở vòng ủ mới",
+    "cap_nhat": "2025-11-14"
+  },
+  "L136": {
+    "trang_thai": "Đã phá xác, chuẩn bị mở vòng ủ mới",
+    "cap_nhat": "2025-11-02"
+  },
+  "L137": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-07-25"
+  },
+  "L138": {
+    "trang_thai": "P-Đấu thành phẩm",
+    "cap_nhat": "2026-09-22"
+  },
+  "L139": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-21"
+  },
+  "L140": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-07-27"
+  },
+  "L141": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 5, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L142": {
+    "trang_thai": "Đã phá xác, chuẩn bị mở vòng ủ mới",
+    "cap_nhat": "2025-10-09"
+  },
+  "L143": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L144": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L145": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L146": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L147": {
+    "trang_thai": "C-Kéo rút nước long",
+    "cap_nhat": "2026-09-22"
+  },
+  "L148": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L149": {
+    "trang_thai": "Đã phá xác, chuẩn bị mở vòng ủ mới",
+    "cap_nhat": "2025-10-27"
+  },
+  "L150": {
+    "trang_thai": "Đã phá xác, chuẩn bị mở vòng ủ mới",
+    "cap_nhat": "2025-09-15"
+  },
+  "L151": {
+    "trang_thai": "Đã phá xác, chuẩn bị mở vòng ủ mới",
+    "cap_nhat": "2025-10-14"
+  },
+  "L152": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L153": {
+    "trang_thai": "Đã phá xác, chuẩn bị mở vòng ủ mới",
+    "cap_nhat": "2025-11-23"
+  },
+  "L154": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L155": {
+    "trang_thai": "Đã phá xác, chuẩn bị mở vòng ủ mới",
+    "cap_nhat": "2025-10-10"
+  },
+  "L156": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L157": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 6, ngày 4",
+    "cap_nhat": "2026-08-28"
+  },
+  "L158": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L159": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L160": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L161": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 5, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L162": {
+    "trang_thai": "Đã phá xác, chuẩn bị mở vòng ủ mới",
+    "cap_nhat": "2025-10-27"
+  },
+  "L163": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L164": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 6, ngày 4",
+    "cap_nhat": "2026-08-28"
+  },
+  "L165": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 6, ngày 4",
+    "cap_nhat": "2026-08-28"
+  },
+  "L166": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L167": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L168": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 6, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L169": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 6, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L170": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L171": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L172": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L173": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L174": {
+    "trang_thai": "Đã phá xác, chuẩn bị mở vòng ủ mới",
+    "cap_nhat": "2025-11-13"
+  },
+  "L175": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L176": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L177": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L178": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L179": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L180": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 13",
+    "cap_nhat": "2026-08-03"
+  },
+  "L181": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L182": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L183": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L184": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L185": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L186": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L187": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 6, ngày 4",
+    "cap_nhat": "2026-08-28"
+  },
+  "L188": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 7, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L189": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L190": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L191": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 6, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L192": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 6, ngày 4",
+    "cap_nhat": "2026-08-28"
+  },
+  "L193": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 6, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L194": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L195": {
+    "trang_thai": "tự do",
+    "cap_nhat": "2026-09-22"
+  },
+  "L196": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L197": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 5, ngày 5",
+    "cap_nhat": "2026-07-16"
+  },
+  "L198": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L199": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-08-22"
+  },
+  "L200": {
+    "trang_thai": "Pha muối",
+    "cap_nhat": "2026-08-19"
+  },
+  "L201": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 7",
+    "cap_nhat": "2026-09-22"
+  },
+  "L202": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 1, ngày 7",
+    "cap_nhat": "2026-09-22"
+  },
+  "L203": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 13",
+    "cap_nhat": "2026-09-10"
+  },
+  "L204": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L205": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L206": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 4, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L207": {
+    "trang_thai": "Pha muối",
+    "cap_nhat": "2026-08-18"
+  },
+  "L208": {
+    "trang_thai": "Đang phân bổ cá vào bể",
+    "cap_nhat": "2026-09-22"
+  },
+  "L209": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 13",
+    "cap_nhat": "2026-09-10"
+  },
+  "L210": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 5, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L211": {
+    "trang_thai": "Đang phân bổ cá vào bể",
+    "cap_nhat": "2026-09-22"
+  },
+  "L212": {
+    "trang_thai": "Pha muối",
+    "cap_nhat": "2026-09-16"
+  },
+  "L213": {
+    "trang_thai": "P-Cốt nhỉ",
+    "cap_nhat": "2026-09-21"
+  },
+  "L214": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L215": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 5",
+    "cap_nhat": "2026-08-26"
+  },
+  "L216": {
+    "trang_thai": "Đang rút kiệt đảo trong",
+    "cap_nhat": "2026-09-22"
+  },
+  "L217": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 5, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L218": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 5, ngày 5",
+    "cap_nhat": "2026-09-15"
+  },
+  "L219": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 2, ngày 13",
+    "cap_nhat": "2026-09-21"
+  },
+  "L220": {
+    "trang_thai": "Đang đảo trộn — chu kỳ 3, ngày 5",
+    "cap_nhat": "2026-08-29"
+  }
+}

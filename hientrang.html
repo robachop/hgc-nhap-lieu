@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hiện trạng bể — HGC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1e293b;
+     line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+
+.topbar{background:#0f172a;color:#fff;padding:16px 20px;display:flex;align-items:center;gap:10px}
+.topbar .logo{font-size:20px;font-weight:900;color:#60a5fa}
+.topbar h1{font-size:15px;font-weight:600}
+
+.container{max-width:480px;margin:0 auto;padding:24px 16px;width:100%;flex:1}
+
+.card{background:#fff;border-radius:14px;padding:24px 20px;
+      box-shadow:0 1px 6px rgba(0,0,0,.08);text-align:center}
+
+.be-id{font-size:13px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.be-name{font-size:32px;font-weight:900;color:#0f172a;margin:6px 0 18px}
+
+.trang-thai{background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:12px;
+            padding:18px 16px;margin-bottom:14px}
+.trang-thai .nhan{font-size:11px;color:#1e40af;font-weight:700;text-transform:uppercase;
+                   letter-spacing:.5px;margin-bottom:6px}
+.trang-thai .noi-dung{font-size:18px;font-weight:700;color:#1e3a8a}
+
+.cap-nhat{font-size:12px;color:#94a3b8}
+
+.loi{background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;
+     padding:18px 16px;color:#991b1b;font-size:14px}
+
+.footer-note{text-align:center;font-size:11px;color:#94a3b8;padding:16px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">HGC</div>
+  <h1>Hiện trạng bể — Nhà máy Hương Giang</h1>
+</div>
+
+<div class="container">
+  <div class="card" id="card">
+    <div class="be-id">Đang tải…</div>
+  </div>
+</div>
+
+<div class="footer-note">Dữ liệu cập nhật theo lần nhập liệu gần nhất, không phải trực tiếp tức thời.</div>
+
+<script>
+function hienLoi(msg) {
+  document.getElementById('card').innerHTML =
+    '<div class="loi">' + msg + '</div>';
+}
+
+function fmtNgay(iso) {
+  if (!iso) return 'chưa rõ';
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+async function main() {
+  const params = new URLSearchParams(location.search);
+  const be = (params.get('be') || '').trim().toUpperCase();
+
+  if (!be) {
+    hienLoi('Thiếu mã bể trong đường link. Vui lòng quét lại QR dán tại bể.');
+    return;
+  }
+
+  let data;
+  try {
+    const res = await fetch('be-status.json?v=' + Date.now());
+    if (!res.ok) throw new Error('fetch lỗi ' + res.status);
+    data = await res.json();
+  } catch (e) {
+    hienLoi('Không tải được dữ liệu hiện trạng. Kiểm tra kết nối mạng và thử lại.');
+    return;
+  }
+
+  const info = data[be];
+  if (!info) {
+    hienLoi(`Không tìm thấy dữ liệu cho bể <b>${be}</b>.`);
+    return;
+  }
+
+  document.getElementById('card').innerHTML = `
+    <div class="be-id">Bể</div>
+    <div class="be-name">${be}</div>
+    <div class="trang-thai">
+      <div class="nhan">Hiện trạng</div>
+      <div class="noi-dung">${info.trang_thai}</div>
+    </div>
+    <div class="cap-nhat">Cập nhật lúc: ${fmtNgay(info.cap_nhat)}</div>
+  `;
+}
+
+main();
+</script>
+
+</body>
+</html>
