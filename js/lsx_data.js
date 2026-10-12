@@ -1,5 +1,17 @@
 // Auto-generated from Excel LSX Mẫu — 2026-06-27
 const LSX_DATA = {
+  'C1X0': {mo_ta:'C-Nước long 1 dãy 10',dvt:'lít',cong:5},
+  'C2X0': {mo_ta:'C-Nước long 2 dãy 10',dvt:'lít',cong:5},
+  'C3X0': {mo_ta:'C-Nước long 3 dãy 10',dvt:'lít',cong:5},
+  'C4X0': {mo_ta:'C-Nước long 4 dãy 10',dvt:'lít',cong:5},
+  'C5X0': {mo_ta:'C-Nước long 5 dãy 10',dvt:'lít',cong:5},
+  'P1X0': {mo_ta:'P-Đấu thành phẩm dãy 10 vào L113',dvt:'lít',cong:5},
+  'P2X0': {mo_ta:'P-Đấu thành phẩm dãy 10 vào L114',dvt:'lít',cong:5},
+  'P3X0': {mo_ta:'P-Đấu thành phẩm dãy 10 vào L133',dvt:'lít',cong:5},
+  'P4X0': {mo_ta:'P-Đấu thành phẩm dãy 10 vào L134',dvt:'lít',cong:5},
+  'P5X0': {mo_ta:'P-Đấu thành phẩm dãy 10 vào L138',dvt:'lít',cong:5},
+  'P6X0': {mo_ta:'P-Đấu thành phẩm dãy 10 vào L213',dvt:'lít',cong:5},
+
   'B003': {mo_ta:'S-Nước bổi - L003',dvt:'lít',cong:10},
   'B005': {mo_ta:'S-Nước bổi - L005',dvt:'lít',cong:10},
   'B014': {mo_ta:'S-Nước bổi - L014',dvt:'lít',cong:10},

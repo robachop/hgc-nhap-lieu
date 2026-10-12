@@ -52,10 +52,10 @@ def next_workday(ref=None):
 
 def mo_ta(lsx):
     if lsx == "PM00": return "P-Pha muối"
-    if lsx.startswith("C") and len(lsx) == 4 and lsx[1:].isdigit():
-        return f"C-Nước long {int(lsx[1])} dãy {int(lsx[2])}"
+    if lsx.startswith("C") and len(lsx) == 4 and re.match(r'^C[1-9][1-9X]0$', lsx):
+        return f"C-Nước long {int(lsx[1])} dãy {(10 if lsx[2] == 'X' else int(lsx[2]))}"
     if lsx.startswith("Px") and len(lsx) == 4:
-        return f"Thành phẩm dãy {int(lsx[2])}"
+        return f"Thành phẩm dãy {(10 if lsx[2] == 'X' else int(lsx[2]))}"
     if re.match(r'^S[1-7]\d\d$', lsx):
         return f"S-Đảo trộn {int(lsx[1])} ngày {int(lsx[2:])}"
     return lsx

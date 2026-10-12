@@ -144,7 +144,7 @@ function renderWorkerTasks(name, tasks) {
     const capFlow = task.be_cap
       ? `<span class="w-be">${task.be_cap}</span><span class="w-arrow">→</span>` : '';
 
-    const isPx = /^Px\d0$/.test(task.lsx);
+    const isPx = /^Px[1-9X]0$/.test(task.lsx);
     const curLsx = res.lsx || task.lsx;
     const curBeNhan = res.be_nhan || task.be_nhan || '';
     const pxFinalized = isPx && curLsx !== task.lsx;
@@ -310,7 +310,7 @@ const TP_MAP = {
 
 function pxNewLsx(baseLsx, x) {
   // Px10 + x=1 → P110 | Px20 + x=2 → P220
-  const day = baseLsx[2]; // '1'..'9'
+  const day = baseLsx[2]; // '1'..'9', 'X' (dãy 10)
   return `P${x}${day}0`;
 }
 
@@ -471,7 +471,7 @@ function submitResult() {
   // Chọn Txxx (tạm chứa tại bể trổ) là kết quả hợp lệ, không đấu TP thật — chỉ chặn khi be_nhan
   // vẫn còn rỗng hoặc còn nguyên placeholder "Bể TP" từ kế hoạch (nghĩa là chưa bấm chọn gì).
   const unresolvedPx = currentResult.results.filter(r => {
-    if (r.status === 'skip' || !/^Px\d0$/.test(r.lsx || '')) return false;
+    if (r.status === 'skip' || !/^Px[1-9X]0$/.test(r.lsx || '')) return false;
     const task = state.plan?.tasks.find(t => t.id === r.task_id);
     return !r.be_nhan || r.be_nhan === task?.be_nhan;
   });
