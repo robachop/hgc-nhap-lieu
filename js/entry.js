@@ -144,10 +144,10 @@ function renderWorkerTasks(name, tasks) {
     const capFlow = task.be_cap
       ? `<span class="w-be">${task.be_cap}</span><span class="w-arrow">→</span>` : '';
 
-    const isPx = /^Px[1-9X]0$/.test(task.lsx);
+    const isPx = isPendingProductCode(task.lsx);
     const curLsx = res.lsx || task.lsx;
     const curBeNhan = res.be_nhan || task.be_nhan || '';
-    const pxFinalized = isPx && curLsx !== task.lsx;
+    const pxFinalized = isPx && !isPendingProductCode(curLsx);
     const lsxEditable = true;   // tất cả LSX sửa được (trước chỉ Mien/S_dao_tron)
 
     html += `<div class="w-card ${st !== 'pending' ? st : ''} ${task.worker_added ? 'worker-added' : ''} ${isPx ? 'px-card' : ''}" id="wcard-${task.id}">
@@ -300,7 +300,7 @@ function setBeNhan(taskId, val) {
 
 function setLsx(taskId, val) {
   const res = currentResult.results.find(r => r.task_id === taskId);
-  if (res) { res.lsx = val.trim().toUpperCase(); saveResult(currentResult); }
+  if (res) { res.lsx = resolveProductCode(val, res.be_nhan); saveResult(currentResult); }
 }
 
 // ── Px task helpers ───────────────────────────────────────────
@@ -327,7 +327,7 @@ function updatePxCard(taskId, beNhan, newLsx) {
   const task = state.plan?.tasks.find(t => t.id === taskId);
   const stateEl = document.getElementById('pxstate-' + taskId);
   if (stateEl && task) {
-    const finalized = newLsx !== task.lsx;
+    const finalized = !isPendingProductCode(newLsx);
     stateEl.className = 'px-state ' + (finalized ? 'px-done' : 'px-pending');
     stateEl.textContent = finalized ? `✅ Đã đấu bể ${beNhan}` : '⏳ Tạm ở bể trổ — chưa đấu TP';
   }
@@ -471,9 +471,9 @@ function submitResult() {
   // Chọn Txxx (tạm chứa tại bể trổ) là kết quả hợp lệ, không đấu TP thật — chỉ chặn khi be_nhan
   // vẫn còn rỗng hoặc còn nguyên placeholder "Bể TP" từ kế hoạch (nghĩa là chưa bấm chọn gì).
   const unresolvedPx = currentResult.results.filter(r => {
-    if (r.status === 'skip' || !/^Px[1-9X]0$/.test(r.lsx || '')) return false;
-    const task = state.plan?.tasks.find(t => t.id === r.task_id);
-    return !r.be_nhan || r.be_nhan === task?.be_nhan;
+    r.lsx = resolveProductCode(r.lsx, r.be_nhan);
+    if (r.status === 'skip' || !isPendingProductCode(r.lsx)) return false;
+    return !/^T\d{3}$/i.test(r.be_nhan || '');
   });
   if (unresolvedPx.length > 0) {
     const ten = unresolvedPx.slice(0, 3).map(r => r.lsx).join(', ');
@@ -717,7 +717,7 @@ function aiSelectSt(st) {
 }
 
 function submitWorkerTask() {
-  const lsx   = (document.getElementById('ai-lsx')?.value   || '').trim().toUpperCase();
+  const baseCode = normalizeProductCode(document.getElementById('ai-lsx')?.value || '');
   const cap   = (document.getElementById('ai-cap')?.value   || '').trim().toUpperCase();
   const nhan  = (document.getElementById('ai-nhan')?.value  || '').trim().toUpperCase();
   const lo    = (document.getElementById('ai-lo')?.value    || '').trim();
@@ -725,6 +725,7 @@ function submitWorkerTask() {
   const ghi   = (document.getElementById('ai-ghichu')?.value|| '').trim();
   const ngay  = (document.getElementById('ai-ngay')?.value  || '').trim();
 
+  const lsx = resolveProductCode(baseCode, nhan);
   if (!lsx)    { toast('⚠️ Chưa nhập mã lệnh SX'); return; }
   if (!nhan)   { toast('⚠️ Chưa nhập Nơi nhận');   return; }
   if (!ngay)   { toast('⚠️ Chưa chọn ngày thực hiện'); return; }
@@ -743,7 +744,7 @@ function submitWorkerTask() {
   // Thêm vào plan local
   if (!state.plan) state.plan = { date: state.date, tasks: [] };
   state.plan.tasks.push({
-    id: newId, be_cap: cap, lsx, mo_ta: info.mo_ta||lsx,
+    id: newId, be_cap: cap, lsx: baseCode, mo_ta: info.mo_ta||lsx,
     dvt: info.dvt||'lít', cong: info.cong||5,
     be_nhan: nhan, luong_dk: 0, nguoi: state.workerName,
     ghi_chu: ghi, worker_added: true

@@ -582,3 +582,22 @@ const BE_LIST = [
 ];
 
 const LSX_TOP = ["C040", "PM00", "S030", "S010", "S040", "S701", "S702", "S703", "S704", "C010", "C270", "C180", "C150", "C480", "C280", "C670", "C190", "C170", "C390", "C240"];
+
+// Pending finished-product codes use z to avoid confusing x with PX00.
+function normalizeProductCode(value) {
+  const code = String(value || '').trim().toUpperCase();
+  const match = /^P[XZ]([1-9X])0$/.exec(code);
+  return match ? `Pz${match[1]}0` : code;
+}
+function isPendingProductCode(value) {
+  return /^Pz[1-9X]0$/.test(normalizeProductCode(value));
+}
+function resolveProductCode(value, destination) {
+  const code = normalizeProductCode(value);
+  const tank = String(destination || '').trim().toUpperCase();
+  const tp = {L113:'1', L114:'2', L133:'3', L134:'4', L138:'5', L213:'6'}[tank];
+  return isPendingProductCode(code) && tp ? `P${tp}${code[2]}0` : code;
+}
+for (const chain of '123456789X') {
+  LSX_DATA[`Pz${chain}0`] = {mo_ta:`Thành phẩm dãy ${chain === 'X' ? 10 : chain} - chờ chọn bể TP`, dvt:'lít', cong:5};
+}

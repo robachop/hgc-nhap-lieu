@@ -71,7 +71,7 @@ function updateLSXHint(code) {
 
 // ── Add task ─────────────────────────────────────────────────
 function addTask() {
-  const lsx    = document.getElementById('inp-lsx').value.trim().toUpperCase();
+  const lsx    = normalizeProductCode(document.getElementById('inp-lsx').value);
   const beNhan = document.getElementById('inp-be-nhan').value.trim().toUpperCase();
   const beCap  = document.getElementById('inp-be-cap').value.trim().toUpperCase();
   const luong  = parseInt(document.getElementById('inp-luong').value) || 0;

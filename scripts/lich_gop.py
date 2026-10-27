@@ -84,7 +84,7 @@ def phan_loai(lsx):
     # chưa cập nhật ở đây. Phát hiện khi Tim thêm lại nhóm Đấu thành phẩm
     # (9 lệnh) cùng ngày với Thành phẩm dãy (9 lệnh) — báo cáo hiện "18 lệnh
     # Đấu thành phẩm", Tim thắc mắc đúng vì thực tế chỉ có 9. Tách nhãn riêng.
-    if re.match(r'^Px[1-9]0$', lsx): return "Thành phẩm dãy"
+    if re.fullmatch(r'P[XZ][1-9X]0', lsx, re.I): return "Thành phẩm dãy"
     if re.match(r'^P\d{3}$', lsx): return "P-Đấu thành phẩm"
     if re.match(r'^PT\d{2}$', lsx): return "P-Tồn thành phẩm"
     if re.match(r'^PP\d{2}$', lsx): return "P-Xuất thành phẩm"

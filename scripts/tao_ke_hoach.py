@@ -50,19 +50,25 @@ def next_workday(ref=None):
         d += datetime.timedelta(days=1)
     return d
 
+def canonical_product_code(lsx):
+    match = re.fullmatch(r'P[XZ]([1-9X])0', str(lsx).strip(), re.I)
+    return f'Pz{match.group(1).upper()}0' if match else lsx
+
 def mo_ta(lsx):
+    lsx = canonical_product_code(lsx)
     if lsx == "PM00": return "P-Pha muối"
     if lsx.startswith("C") and len(lsx) == 4 and re.match(r'^C[1-9][1-9X]0$', lsx):
         return f"C-Nước long {int(lsx[1])} dãy {(10 if lsx[2] == 'X' else int(lsx[2]))}"
-    if lsx.startswith("Px") and len(lsx) == 4:
+    if lsx.startswith("Pz") and len(lsx) == 4:
         return f"Thành phẩm dãy {(10 if lsx[2] == 'X' else int(lsx[2]))}"
     if re.match(r'^S[1-7]\d\d$', lsx):
         return f"S-Đảo trộn {int(lsx[1])} ngày {int(lsx[2:])}"
     return lsx
 
 def group(lsx):
+    lsx = canonical_product_code(lsx)
     if lsx == "PM00":               return "PM_pha_muoi"
-    if lsx.startswith("Px"):        return "PX_rut_kiet"
+    if lsx.startswith("Pz"):        return "PX_rut_kiet"
     if lsx.startswith("C"):         return "C_keo_rut"
     if re.match(r'^S[1-7]\d\d$', lsx): return "S_dao_tron"
     return "other"
@@ -107,6 +113,7 @@ def read_day_keo_rut(excel_path):
         # muối/pha muối) — trước đây bị coi nhầm là placeholder giống "Xxxx"
         # nên bị xoá trắng. Chỉ "Xxxx"/"nan"/rỗng mới là placeholder thật.
         be_cap = '' if be_cap_raw.strip() in ('Xxxx', 'nan', '') else be_cap_raw.strip()
+        lsx = canonical_product_code(lsx)
         w      = nguoi(lsx)
         counters[w] += 1
 
@@ -208,6 +215,8 @@ def read_dao_tron(excel_path, target_date):
 # ── Deploy ────────────────────────────────────────────────────
 def deploy_worker(target_date, worker, tasks):
     """Tạo plan JSON + redirect HTML cho 1 người, trả về link."""
+    for task in tasks:
+        task['lsx'] = canonical_product_code(task['lsx'])
     slug     = target_date.strftime("%d%m%Y")
     date_str = target_date.strftime("%d/%m/%Y")
     w_lower  = worker.lower()

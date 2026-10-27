@@ -1,0 +1,137 @@
+{
+  "date": "2026-10-28",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Mien",
+      "lsx": "S109",
+      "mo_ta": "S-Đảo trộn 1 ngày 9",
+      "be_cap": "T073",
+      "be_nhan": "L073",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Mien",
+      "lsx": "S106",
+      "mo_ta": "S-Đảo trộn 1 ngày 6",
+      "be_cap": "T049",
+      "be_nhan": "L049",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Mien",
+      "lsx": "S106",
+      "mo_ta": "S-Đảo trộn 1 ngày 6",
+      "be_cap": "T050",
+      "be_nhan": "L050",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Mien",
+      "lsx": "S105",
+      "mo_ta": "S-Đảo trộn 1 ngày 5",
+      "be_cap": "T067",
+      "be_nhan": "L067",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t5",
+      "nguoi": "Mien",
+      "lsx": "S102",
+      "mo_ta": "S-Đảo trộn 1 ngày 2",
+      "be_cap": "T061",
+      "be_nhan": "L061",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t6",
+      "nguoi": "Mien",
+      "lsx": "S102",
+      "mo_ta": "S-Đảo trộn 1 ngày 2",
+      "be_cap": "T059",
+      "be_nhan": "L059",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t7",
+      "nguoi": "Mien",
+      "lsx": "S102",
+      "mo_ta": "S-Đảo trộn 1 ngày 2",
+      "be_cap": "T078",
+      "be_nhan": "L078",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t8",
+      "nguoi": "Mien",
+      "lsx": "S101",
+      "mo_ta": "S-Đảo trộn 1 ngày 1",
+      "be_cap": "T054",
+      "be_nhan": "L054",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t9",
+      "nguoi": "Mien",
+      "lsx": "S101",
+      "mo_ta": "S-Đảo trộn 1 ngày 1",
+      "be_cap": "T056",
+      "be_nhan": "L056",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t10",
+      "nguoi": "Mien",
+      "lsx": "S101",
+      "mo_ta": "S-Đảo trộn 1 ngày 1",
+      "be_cap": "T074",
+      "be_nhan": "L074",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t11",
+      "nguoi": "Mien",
+      "lsx": "S101",
+      "mo_ta": "S-Đảo trộn 1 ngày 1",
+      "be_cap": "T072",
+      "be_nhan": "L072",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    }
+  ]
+}
