@@ -546,11 +546,11 @@
       "nguoi": "Phong",
       "lsx": "C770",
       "mo_ta": "C-Nước long 7 dãy 7",
-      "be_cap": "T104",
-      "be_nhan": "L103",
+      "be_cap": "T103",
+      "be_nhan": "L102",
       "luong_dk": 0,
       "dvt": "lít",
-      "cong": 5.0,
+      "cong": 5,
       "group": "C_keo_rut"
     },
     {
@@ -558,11 +558,11 @@
       "nguoi": "Phong",
       "lsx": "C670",
       "mo_ta": "C-Nước long 6 dãy 7",
-      "be_cap": "T103",
-      "be_nhan": "L102",
+      "be_cap": "T102",
+      "be_nhan": "L123",
       "luong_dk": 0,
       "dvt": "lít",
-      "cong": 5.0,
+      "cong": 5,
       "group": "C_keo_rut"
     },
     {
@@ -570,11 +570,11 @@
       "nguoi": "Phong",
       "lsx": "C570",
       "mo_ta": "C-Nước long 5 dãy 7",
-      "be_cap": "T102",
-      "be_nhan": "L123",
+      "be_cap": "T123",
+      "be_nhan": "L131",
       "luong_dk": 0,
       "dvt": "lít",
-      "cong": 5.0,
+      "cong": 5,
       "group": "C_keo_rut"
     },
     {
@@ -582,11 +582,11 @@
       "nguoi": "Phong",
       "lsx": "C470",
       "mo_ta": "C-Nước long 4 dãy 7",
-      "be_cap": "T123",
-      "be_nhan": "L131",
+      "be_cap": "T131",
+      "be_nhan": "L145",
       "luong_dk": 0,
       "dvt": "lít",
-      "cong": 5.0,
+      "cong": 5,
       "group": "C_keo_rut"
     },
     {
@@ -594,11 +594,11 @@
       "nguoi": "Phong",
       "lsx": "C370",
       "mo_ta": "C-Nước long 3 dãy 7",
-      "be_cap": "T131",
-      "be_nhan": "L145",
+      "be_cap": "T145",
+      "be_nhan": "L150",
       "luong_dk": 0,
       "dvt": "lít",
-      "cong": 5.0,
+      "cong": 5,
       "group": "C_keo_rut"
     },
     {
@@ -606,11 +606,11 @@
       "nguoi": "Phong",
       "lsx": "C270",
       "mo_ta": "C-Nước long 2 dãy 7",
-      "be_cap": "T145",
-      "be_nhan": "L150",
+      "be_cap": "T150",
+      "be_nhan": "L137",
       "luong_dk": 0,
       "dvt": "lít",
-      "cong": 5.0,
+      "cong": 5,
       "group": "C_keo_rut"
     },
     {
@@ -618,11 +618,11 @@
       "nguoi": "Phong",
       "lsx": "C170",
       "mo_ta": "C-Nước long 1 dãy 7",
-      "be_cap": "T150",
-      "be_nhan": "L137",
+      "be_cap": "T137",
+      "be_nhan": "L160",
       "luong_dk": 0,
       "dvt": "lít",
-      "cong": 5.0,
+      "cong": 5,
       "group": "C_keo_rut"
     },
     {
@@ -650,18 +650,6 @@
       "group": "C_dao_trong"
     },
     {
-      "id": "t55",
-      "nguoi": "Phong",
-      "lsx": "C040",
-      "mo_ta": "C-Đảo trong",
-      "be_cap": "T160",
-      "be_nhan": "L160",
-      "luong_dk": 0,
-      "dvt": "lít",
-      "cong": 15.0,
-      "group": "C_dao_trong"
-    },
-    {
       "lsx": "C040",
       "be_cap": "T164",
       "be_nhan": "L164",
@@ -671,7 +659,7 @@
       "mo_ta": "C-Đảo trong",
       "group": "C_dao_trong",
       "nguoi": "Phong",
-      "id": "t56"
+      "id": "t55"
     },
     {
       "lsx": "C040",
@@ -683,10 +671,10 @@
       "mo_ta": "C-Đảo trong",
       "group": "C_dao_trong",
       "nguoi": "Phong",
-      "id": "t57"
+      "id": "t56"
     },
     {
-      "id": "t58",
+      "id": "t57",
       "nguoi": "Phong",
       "lsx": "C040",
       "mo_ta": "C-Đảo trong",
@@ -698,7 +686,7 @@
       "group": "C_dao_trong"
     },
     {
-      "id": "t59",
+      "id": "t58",
       "nguoi": "Phong",
       "lsx": "C040",
       "mo_ta": "C-Đảo trong",
@@ -710,7 +698,7 @@
       "group": "C_dao_trong"
     },
     {
-      "id": "t60",
+      "id": "t59",
       "nguoi": "Phong",
       "lsx": "C660",
       "mo_ta": "C-Nước long 6 dãy 6",
@@ -722,7 +710,7 @@
       "group": "C_keo_rut"
     },
     {
-      "id": "t61",
+      "id": "t60",
       "nguoi": "Phong",
       "lsx": "C560",
       "mo_ta": "C-Nước long 5 dãy 6",
@@ -734,7 +722,7 @@
       "group": "C_keo_rut"
     },
     {
-      "id": "t62",
+      "id": "t61",
       "nguoi": "Phong",
       "lsx": "C460",
       "mo_ta": "C-Nước long 4 dãy 6",
@@ -746,7 +734,7 @@
       "group": "C_keo_rut"
     },
     {
-      "id": "t63",
+      "id": "t62",
       "nguoi": "Phong",
       "lsx": "C360",
       "mo_ta": "C-Nước long 3 dãy 6",
@@ -758,7 +746,7 @@
       "group": "C_keo_rut"
     },
     {
-      "id": "t64",
+      "id": "t63",
       "nguoi": "Phong",
       "lsx": "C260",
       "mo_ta": "C-Nước long 2 dãy 6",
@@ -770,7 +758,7 @@
       "group": "C_keo_rut"
     },
     {
-      "id": "t65",
+      "id": "t64",
       "nguoi": "Phong",
       "lsx": "C160",
       "mo_ta": "C-Nước long 1 dãy 6",
@@ -782,7 +770,7 @@
       "group": "C_keo_rut"
     },
     {
-      "id": "t66",
+      "id": "t65",
       "nguoi": "Phong",
       "lsx": "C790",
       "mo_ta": "C-Nước long 7 dãy 9",
@@ -794,7 +782,7 @@
       "group": "C_keo_rut"
     },
     {
-      "id": "t67",
+      "id": "t66",
       "nguoi": "Phong",
       "lsx": "C690",
       "mo_ta": "C-Nước long 6 dãy 9",
@@ -806,7 +794,7 @@
       "group": "C_keo_rut"
     },
     {
-      "id": "t68",
+      "id": "t67",
       "nguoi": "Phong",
       "lsx": "C590",
       "mo_ta": "C-Nước long 5 dãy 9",
@@ -818,7 +806,7 @@
       "group": "C_keo_rut"
     },
     {
-      "id": "t69",
+      "id": "t68",
       "nguoi": "Phong",
       "lsx": "C490",
       "mo_ta": "C-Nước long 4 dãy 9",
@@ -830,7 +818,7 @@
       "group": "C_keo_rut"
     },
     {
-      "id": "t70",
+      "id": "t69",
       "nguoi": "Phong",
       "lsx": "C390",
       "mo_ta": "C-Nước long 3 dãy 9",
@@ -842,7 +830,7 @@
       "group": "C_keo_rut"
     },
     {
-      "id": "t71",
+      "id": "t70",
       "nguoi": "Phong",
       "lsx": "C290",
       "mo_ta": "C-Nước long 2 dãy 9",
@@ -854,7 +842,7 @@
       "group": "C_keo_rut"
     },
     {
-      "id": "t72",
+      "id": "t71",
       "nguoi": "Phong",
       "lsx": "C190",
       "mo_ta": "C-Nước long 1 dãy 9",
@@ -875,7 +863,7 @@
       "mo_ta": "C-Đảo trong",
       "group": "C_dao_trong",
       "nguoi": "Phong",
-      "id": "t73"
+      "id": "t72"
     },
     {
       "lsx": "C040",
@@ -887,7 +875,7 @@
       "mo_ta": "C-Đảo trong",
       "group": "C_dao_trong",
       "nguoi": "Phong",
-      "id": "t74"
+      "id": "t73"
     },
     {
       "lsx": "C040",
@@ -899,7 +887,7 @@
       "mo_ta": "C-Đảo trong",
       "group": "C_dao_trong",
       "nguoi": "Phong",
-      "id": "t75"
+      "id": "t74"
     },
     {
       "lsx": "C040",
@@ -911,7 +899,7 @@
       "mo_ta": "C-Đảo trong",
       "group": "C_dao_trong",
       "nguoi": "Phong",
-      "id": "t76"
+      "id": "t75"
     },
     {
       "lsx": "C040",
@@ -923,7 +911,7 @@
       "mo_ta": "C-Đảo trong",
       "group": "C_dao_trong",
       "nguoi": "Phong",
-      "id": "t77"
+      "id": "t76"
     },
     {
       "lsx": "C040",
@@ -935,7 +923,7 @@
       "mo_ta": "C-Đảo trong",
       "group": "C_dao_trong",
       "nguoi": "Phong",
-      "id": "t78"
+      "id": "t77"
     }
   ]
 }
