@@ -1,0 +1,65 @@
+{
+  "date": "2026-11-26",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Mien",
+      "lsx": "S112",
+      "mo_ta": "S-Đảo trộn 1 ngày 12",
+      "be_cap": "T088",
+      "be_nhan": "L088",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Mien",
+      "lsx": "S107",
+      "mo_ta": "S-Đảo trộn 1 ngày 7",
+      "be_cap": "T079",
+      "be_nhan": "L079",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Mien",
+      "lsx": "S106",
+      "mo_ta": "S-Đảo trộn 1 ngày 6",
+      "be_cap": "T082",
+      "be_nhan": "L082",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Mien",
+      "lsx": "S102",
+      "mo_ta": "S-Đảo trộn 1 ngày 2",
+      "be_cap": "T071",
+      "be_nhan": "L071",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    },
+    {
+      "id": "t5",
+      "nguoi": "Mien",
+      "lsx": "SM02",
+      "mo_ta": "S-Bổ sung muối",
+      "be_cap": null,
+      "be_nhan": "L081",
+      "luong_dk": 5,
+      "dvt": "lít",
+      "cong": 5.0,
+      "group": "S_gai_nen"
+    }
+  ]
+}
