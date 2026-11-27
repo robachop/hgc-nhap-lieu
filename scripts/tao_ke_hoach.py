@@ -8,9 +8,10 @@ Usage:
     Nếu không truyền file  → tìm file mới nhất trong ~/Downloads
     Nếu không truyền ngày  → ngày làm việc tiếp theo (bỏ qua CN)
 
-Phân công 4 người:
-    - Phong : C___          (bơm nước long / kéo rút)     ← sheet "Dãy kéo rút"
-    - Ha    : Px___ + PM00  (phá xác + pha muối)          ← sheet "Dãy kéo rút"
+Phân công 4 người (cập nhật 2026-11-28, swap LẦN 3 — xem nguoi()):
+    - Ha    : C___          (bơm nước long / kéo rút)     ← sheet "Dãy kéo rút"
+    - Phong : Px___ + PM00  (phá xác thành phẩm + pha muối), PX00 (ngoại lệ)
+                                                           ← sheet "Dãy kéo rút"
     - Mien  : S[1-7]__      (đảo trộn) — suy ra +1 ngày   ← sheet "S500"
     - Hao   : (khung trống thành phẩm — tự nhập tại chỗ)
 
@@ -77,18 +78,19 @@ def dvt(lsx):
     return "lít"
 
 # Phân công theo LSX trong sheet "Dãy kéo rút"
-# ⚠️ SỬA 2026-08-24 (Tim báo trước cho WO 25/08, xem _Giao Bang.md 2026-08-23
-# "Tim báo thêm"): Phong ↔ Hà đổi ca LẦN 2, đảo ngược lại mapping 2026-08-05
-# — C___ (kéo rút nước long, đảo trong) nay → Phong; Px___/PM00 (thành phẩm
-# dãy, pha muối) nay → Hà. PX00 (Phá xác) là NGOẠI LỆ — Tim xác nhận
-# "PX00 là đặc thù của Phong, không đổi cho Hà" dù không bắt đầu bằng 'C'.
-# PX00 không nằm trong sheet "Dãy kéo rút" (không đi qua hàm này) nên ngoại
-# lệ này không ảnh hưởng code — chỉ ghi chú lại để nếu sau này PX00 được
-# đưa vào 1 luồng sinh kế hoạch tự động nào khác, đừng gán theo hàm này.
-#   C___  → Phong ; Px___ + PM00 → Hà ; PX00 → Phong (xử lý riêng, ngoài hàm này)
+# ⚠️ SỬA 2026-11-28 (Tim báo "Phong đã đổi với Hà. Từ hôm qua" 26/11, hiệu
+# lực từ 25/11, xem _Giao Bang.md 2026-11-26 và 2026-11-28): Phong ↔ Hà đổi
+# ca LẦN 3, đảo ngược lại mapping 2026-08-24 — C___ (kéo rút nước long, đảo
+# trong) nay → Hà; Px___/PM00 (thành phẩm dãy, pha muối) nay → Phong. PX00
+# (Phá xác) VẪN là ngoại lệ thuộc Phong — Tim xác nhận lại 2026-11-28 "Phong,
+# không đổi" dù PX00 không bắt đầu bằng 'C'. PX00 không nằm trong sheet "Dãy
+# kéo rút" (không đi qua hàm này) nên ngoại lệ này không ảnh hưởng code — chỉ
+# ghi chú lại để nếu sau này PX00 được đưa vào 1 luồng sinh kế hoạch tự động
+# nào khác, đừng gán theo hàm này.
+#   C___  → Hà ; Px___ + PM00 → Phong ; PX00 → Phong (xử lý riêng, ngoài hàm này)
 def nguoi(lsx):
-    if lsx.startswith('C'):  return 'Phong'
-    return 'Ha'
+    if lsx.startswith('C'):  return 'Ha'
+    return 'Phong'
 
 # ── Đọc sheet "Dãy kéo rút" → Phong + Ha ─────────────────────
 def read_day_keo_rut(excel_path):
