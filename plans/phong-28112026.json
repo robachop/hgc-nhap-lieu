@@ -1,0 +1,137 @@
+{
+  "date": "2026-11-28",
+  "tasks": [
+    {
+      "id": "t1",
+      "nguoi": "Phong",
+      "lsx": "Pz10",
+      "mo_ta": "Thành phẩm dãy 1",
+      "be_cap": "T140",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t2",
+      "nguoi": "Phong",
+      "lsx": "Pz20",
+      "mo_ta": "Thành phẩm dãy 2",
+      "be_cap": "T171",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t3",
+      "nguoi": "Phong",
+      "lsx": "Pz30",
+      "mo_ta": "Thành phẩm dãy 3",
+      "be_cap": "T154",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t4",
+      "nguoi": "Phong",
+      "lsx": "Pz40",
+      "mo_ta": "Thành phẩm dãy 4",
+      "be_cap": "T127",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t5",
+      "nguoi": "Phong",
+      "lsx": "Pz50",
+      "mo_ta": "Thành phẩm dãy 5",
+      "be_cap": "T167",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t6",
+      "nguoi": "Phong",
+      "lsx": "Pz60",
+      "mo_ta": "Thành phẩm dãy 6",
+      "be_cap": "T187",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t7",
+      "nguoi": "Phong",
+      "lsx": "Pz70",
+      "mo_ta": "Thành phẩm dãy 7",
+      "be_cap": "T160",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t8",
+      "nguoi": "Phong",
+      "lsx": "Pz80",
+      "mo_ta": "Thành phẩm dãy 8",
+      "be_cap": "T216",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t9",
+      "nguoi": "Phong",
+      "lsx": "Pz90",
+      "mo_ta": "Thành phẩm dãy 9",
+      "be_cap": "T142",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t10",
+      "nguoi": "Phong",
+      "lsx": "PzX0",
+      "mo_ta": "Thành phẩm dãy 10",
+      "be_cap": "T192",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "PX_rut_kiet"
+    },
+    {
+      "id": "t11",
+      "nguoi": "Phong",
+      "lsx": "N191",
+      "mo_ta": "N191",
+      "be_cap": "T191",
+      "be_nhan": "Bể TP",
+      "luong_dk": 0,
+      "dvt": "lít",
+      "cong": 5,
+      "group": "N_cot_nhi"
+    }
+  ]
+}
